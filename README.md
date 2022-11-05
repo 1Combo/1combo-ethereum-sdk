@@ -1,8 +1,10 @@
 # 1combo-ethereum-sdk
 
+![image](https://user-images.githubusercontent.com/107178656/200139005-293f306f-2294-462b-aa6d-77ead4edf524.png)
+
 # Usages
 
-## Mint combo
+## Mint a combo NFT
 ```js
 const {
     Client,
@@ -40,29 +42,15 @@ ComboProxy.mint(
 ```js
 var client = new Client();
 
-# Get user owned addons and non-addons.
+# Fetch non-combo NFTs in a wallet.
 # *wallet_address* Required.
 # *page_size* Optional.
 # *filterCollection* Optional, address, which collection to query.
 const result = await client.getOwnedNFTByAccount(<wallet_address>, <page_size>, <filterCollection>);
 
-# Get user owned combo NFTs
+# Fetch combo NFTs in a wallet.
 # *wallet_address* Required.
 # *page_size* Optional.
 # *continuation* Optional, string, the start point for next page, '' for 1st page.
 const result = await client.getOwnedComboByAccount(<wallet_address>, <page_size>, <continuation>);
-```
-
-## Only buy addons
-```js
-let mintParamsBuilder = new ParamBuilders.MintParamsBuilder();
-...
-...
-let { ingredients, itemsToBuy } = mintParamsBuilder.build();
-
-CollectionProxy.mint(
-    to,
-    true,   // true - pay in ether, false - pay in WETH
-    itemsToBuy
-);
 ```
