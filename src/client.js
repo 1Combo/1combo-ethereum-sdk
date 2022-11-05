@@ -1,18 +1,15 @@
 const Web3 = require("web3");
 const got = require("got");
-const fs = require("fs");
-const path = require("path");
 
 const ParamBuilders = require("./params-builders.js");
-const { exit } = require("process");
-const ABI = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../abi/ABI.json")));
+const ABI = require("../abi/ABI.json");
 const COMBO_PROXY_ADDRESS = "0x3A7c3955573CdF0Fb6FcAD8DD5115Eb1B81Ca4D8";
+const COMBO_FACTORY_ADDRESS = "0x29297388fd1f74a30C71a224e01a298efcEd1F56";
 const COLLECTION_PROXY_ADDRESS = "0xc14202310c1A601004b3243a54568726D31Ea5ed";
 
 const ENDPOINT_GOERLI = "https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161";
 
 const RETURN_OK = 0;
-
 
 function encode(queryParams) {
     if (Object.keys(queryParams).length > 0) {
@@ -131,10 +128,15 @@ Client.prototype.getOwnedComboByAccount = async function(user, pageSize, continu
     }
 };
 
+Client.prototype.createContractMetaHash = async function() {
+    // TODO:
+};
+
 module.exports = {
     Client,
     ParamBuilders,
     ABI,
     COMBO_PROXY_ADDRESS,
     COLLECTION_PROXY_ADDRESS,
+    COMBO_FACTORY_ADDRESS,
 };

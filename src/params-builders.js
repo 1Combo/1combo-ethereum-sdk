@@ -194,7 +194,7 @@ MintParamsBuilder.prototype.build = function() {
  *      ComboCollFactory.createCombo(
  *          name,
  *          symbol,
- *          contractURIPath,
+ *          contractMetaHash,
  *          mintFee,
  *          comboRule
  *      );
@@ -207,11 +207,12 @@ function ComboRuleBuilder() {
 }
 
 /**
+ * Optional
  * 
- * @param {address} collection 
- * @param {boolean} lock 
- * @param {unsigned} min 
- * @param {unsigned} max 
+ * @param {address} collection Specify NFT collection, repeat additions are not allowed.
+ * @param {boolean} lock Whether NFTs from the specified collection should be locked or not.
+ * @param {unsigned} min [0, Uint128_MAX] The minimum number of NFTs from the specified collection in a combo mint. 
+ * @param {unsigned} max [min, Uint128_MAX] The maximum number of NFTs from the specified collection in a combo mint. 
  */
 ComboRuleBuilder.prototype.addCollectionRule = function(collection, lock, min, max) {
     if (!web3.utils.isAddress(collection)) {
@@ -244,11 +245,12 @@ ComboRuleBuilder.prototype.addCollectionRule = function(collection, lock, min, m
 }
 
 /**
+ * Optional
  * 
- * @param {unsigned} setId 
- * @param {boolean} lock 
- * @param {unsigned} min [0, ∞)
- * @param {unsigned} max [min, ∞)
+ * @param {unsigned} setId Specify set, repeat additions are not allowed.
+ * @param {boolean} lock Whether NFTs from the specified set should be locked or not.
+ * @param {unsigned} min [0, Uint128_MAX] The minimum number of NFTs from the specified set in a combo mint.
+ * @param {unsigned} max [min, Uint128_MAX] The maximum number of NFTs from the specified set in a combo mint.
  */
 ComboRuleBuilder.prototype.addSetRule = function(setId, lock, min, max) {
     if (setId <= 0) {
@@ -282,9 +284,10 @@ ComboRuleBuilder.prototype.addSetRule = function(setId, lock, min, max) {
 }
 
 /**
+ * Optional
  * 
- * @param {address} collection 
- * @param {unsigned} maxUsage (0, ∞)
+ * @param {address} collection Which collection's token will be limited, must be ERC721.
+ * @param {unsigned} maxUsage (0, ∞) The maximum number of times the same NFT(token id) can be used in the combo collection.
  */
 ComboRuleBuilder.prototype.addLimitRule = function(collection, maxUsage) {
     if (!web3.utils.isAddress(collection)) {
@@ -316,6 +319,10 @@ ComboRuleBuilder.prototype.build = function() {
     this._limitRules.sort((a, b) => {
         return a.collection.toLowerCase() > b.collection.toLowerCase() ? 1 : -1;
     });
+
+    if (this._collectionRules.length == 0 && this._setRules.length == 0) {
+        throw new Error("At least one collection/set rule is required");
+    }
 
     return {
         factors: this._collectionRules.concat(this._setRules),

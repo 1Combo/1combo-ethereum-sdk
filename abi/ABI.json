@@ -226,6 +226,92 @@
             "type": "function"
         }
     ],
+    "IComboFactory": [
+        {
+            "inputs": [
+                {
+                    "internalType": "string",
+                    "name": "name_",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "symbol_",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "metaHash_",
+                    "type": "string"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "mintFee_",
+                    "type": "uint256"
+                },
+                {
+                    "components": [
+                        {
+                            "components": [
+                                {
+                                    "internalType": "uint128",
+                                    "name": "max",
+                                    "type": "uint128"
+                                },
+                                {
+                                    "internalType": "uint128",
+                                    "name": "min",
+                                    "type": "uint128"
+                                },
+                                {
+                                    "internalType": "address",
+                                    "name": "collection",
+                                    "type": "address"
+                                },
+                                {
+                                    "internalType": "uint64",
+                                    "name": "setId",
+                                    "type": "uint64"
+                                },
+                                {
+                                    "internalType": "bool",
+                                    "name": "lock",
+                                    "type": "bool"
+                                }
+                            ],
+                            "internalType": "struct Factor[]",
+                            "name": "factors",
+                            "type": "tuple[]"
+                        },
+                        {
+                            "components": [
+                                {
+                                    "internalType": "address",
+                                    "name": "collection",
+                                    "type": "address"
+                                },
+                                {
+                                    "internalType": "uint128",
+                                    "name": "maxTokenUsage",
+                                    "type": "uint128"
+                                }
+                            ],
+                            "internalType": "struct Limit[]",
+                            "name": "limits",
+                            "type": "tuple[]"
+                        }
+                    ],
+                    "internalType": "struct ComboRules",
+                    "name": "rules_",
+                    "type": "tuple"
+                }
+            ],
+            "name": "createCombo",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        }
+    ],
     "IComboProxy": [
         {
             "inputs": [

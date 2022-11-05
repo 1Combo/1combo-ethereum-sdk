@@ -5,6 +5,7 @@ const files = [
     'ICollectionProxy',
     'ICombo',
     'IComboProxy',
+    'IComboFactory',
 ];
 
 function run() {
