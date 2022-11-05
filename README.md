@@ -10,6 +10,11 @@ npm install @1combo/1combo-ethereum-sdk
 
 ## Mint a combo NFT
 ```js
+// sdk.Client - Some methods for querying.
+// sdk.ParamBuilders - Tools for building parameters for contract writing.
+// sdk.ABI - Contract ABIs.
+// sdk.COMBO_PROXY_ADDRESS - Contract address of combo proxy on Goerli.
+// sdk.COLLECTION_PROXY_ADDRESS - Contract address of collection proxy on Goerli.
 const sdk = require("@1combo/1combo-ethereum-sdk");
 
 # Make mint params
