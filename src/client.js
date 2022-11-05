@@ -1,19 +1,23 @@
-import * as Web3 from "web3";
-import got from "got";
+const Web3 = require("web3");
+const got = require("got");
+const fs = require("fs");
+const path = require("path");
 
-import * as ABI from "../abi/ABI.json";
-import * as ParamBuilders from "./params-builders";
-
+const ParamBuilders = require("./params-builders.js");
+const { exit } = require("process");
+const ABI = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../abi/ABI.json")));
 const COMBO_PROXY_ADDRESS = "0x3A7c3955573CdF0Fb6FcAD8DD5115Eb1B81Ca4D8";
 const COLLECTION_PROXY_ADDRESS = "0xc14202310c1A601004b3243a54568726D31Ea5ed";
+
 const ENDPOINT_GOERLI = "https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161";
 
 const RETURN_OK = 0;
 
-function stringify(queryParams) {
+
+function encode(queryParams) {
     if (Object.keys(queryParams).length > 0) {
         const arr = [];
-        for (const [key, value] of queryParams) {
+        for (const [key, value] of Object.entries(queryParams)) {
             arr.push(`${key}=${value}`);
         }
         return arr.join('&');
@@ -36,8 +40,8 @@ var Client = function() {
  * @returns 
  * {
  *     data: {
- *         nfts: [],
- *         addons: []
+ *         nfts: [],    // none-addon NFTs
+ *         addons: []   // addon NFTs
  *     },
  *     info: {
  *         total_addon: <number>,
@@ -46,21 +50,21 @@ var Client = function() {
  * }
  */
 Client.prototype.getOwnedNFTByAccount = async function(user, pageSize, filterCollection) {
-    let url = `https://testnet.1combo.io/api/accessory/owned/${user}`;
+    let url = `https://testnet.1combo.io/api/nft/owned/${user}`;
     const params = {};
     if (pageSize > 0) {
         params.size = pageSize;
     }
 
     if (filterCollection != '') {
-        if (!web3.utils.isAddress(filterCollection)) {
+        if (!this.web3.utils.isAddress(filterCollection)) {
             throw new Error('Invalid collection address');
         }
         params.contract = filterCollection;
     }
     
-    const paramsStr = stringify(params);
-    if (str !== '') {
+    const paramsStr = encode(params);
+    if (paramsStr !== '') {
         url = `${url}?${paramsStr}`;
     }
 
@@ -104,17 +108,24 @@ Client.prototype.getOwnedComboByAccount = async function(user, pageSize, continu
     if (continuation !== '') {
         params.continuation = continuation;
     }
-    const paramsStr = stringify(params);
-    if (str !== '') {
+    const paramsStr = encode(params);
+    if (paramsStr !== '') {
         url = `${url}?${paramsStr}`;
     }
 
     const json = await got(url).json();
     if (json.code.code == RETURN_OK) {
-        return {
-            data: json.data,
-            info: json.info,
-        };
+        if (json.info['total']) {
+            return {
+                data: json.data,
+                info: json.info,
+            };
+        } else {
+            return {
+                data: json.data,
+                info: { total: 0, continuation: '' },
+            };
+        }
     } else {
         throw `Failed ${json.code.code} - ${json.code.message}`;
     }

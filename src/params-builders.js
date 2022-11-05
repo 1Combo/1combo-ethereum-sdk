@@ -1,4 +1,4 @@
-const Web3 = require('web3');
+const Web3 = require("web3");
 
 const web3 = new Web3();
 const BN = web3.utils.BN;
@@ -21,7 +21,7 @@ const BN = web3.utils.BN;
  *  let { ingredients, itemsToBuy } = mintParamsBuilder.build();
  * 
  *  ==================================
- *      ComboCollProxy.mint(
+ *      ComboProxy.mint(
  *          combo,
  *          to,
  *          true/false,
@@ -99,19 +99,6 @@ MintParamsBuilder.prototype.build = function() {
         }
         return a.setId.cmp(b.setId);
     });
-
-    // this._itemsToBuy.sort((a, b) => {
-    //     let sa = a.collection.toLowerCase();
-    //     let sb = b.collection.toLowerCase();
-    //     if (sa < sb) {
-    //         return -1;
-    //     }
-    //     if (sa > sb) {
-    //         return 1;
-    //     }
-
-    //     return a.tokenId.cmp(b.tokenId);
-    // });
 
     // ingredients
     var ingredients = {

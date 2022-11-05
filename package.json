@@ -17,7 +17,8 @@
   },
   "homepage": "https://github.com/1Combo/1combo-ethereum-sdk#readme",
   "dependencies": {
-    "got": "^12.5.2",
+    "got": "^11.8.3",
     "web3": "^1.8.0"
-  }
+  },
+  "devDependencies": {}
 }
