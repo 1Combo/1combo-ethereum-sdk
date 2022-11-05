@@ -191,7 +191,7 @@ MintParamsBuilder.prototype.build = function() {
  *  let comboRule = comboRuleBuilder.build();
  * 
  *  ==================================
- *      ComboCollFactory.createCombo(
+ *      ComboFactory.createCombo(
  *          name,
  *          symbol,
  *          contractMetaHash,
