@@ -4,7 +4,7 @@ const path = require('path');
 const files = [
     'ICollectionProxy',
     'ICombo',
-    'IComboCollProxy',
+    'IComboProxy',
 ];
 
 function run() {

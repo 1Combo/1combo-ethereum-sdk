@@ -3,7 +3,7 @@ pragma solidity >=0.8.4 <0.9.0;
 
 import {Ingredients, CollectionItems, ComboCollMeta} from "./Structs.sol";
 
-interface IComboCollProxy {
+interface IComboProxy {
     function mint(
         address combo,
         address to,

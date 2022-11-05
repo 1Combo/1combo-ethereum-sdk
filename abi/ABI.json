@@ -226,7 +226,7 @@
             "type": "function"
         }
     ],
-    "IComboCollProxy": [
+    "IComboProxy": [
         {
             "inputs": [
                 {
