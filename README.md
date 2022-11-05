@@ -31,4 +31,19 @@ ComboProxy.mint(
     ingredients,
     itemsToBuy
 );
+
+
+var client = new Client();
+
+# Get user owned addons and non-addons.
+# *wallet_address* Required.
+# *page_size* Optional.
+# *filterCollection* Optional, address, which collection to query.
+const result = await client.getOwnedNFTByAccount(<wallet_address>, <page_size>, <filterCollection>);
+
+# Get user owned combo NFTs
+# *wallet_address* Required.
+# *page_size* Optional.
+# *continuation* Optional, string, the start point for next page, '' for 1st page.
+const result = await client.getOwnedComboByAccount(<wallet_address>, <page_size>, <continuation>);
 ```
