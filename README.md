@@ -20,15 +20,16 @@ const sdk = require("@1combo/1combo-ethereum-sdk");
 # Make mint params
 let mintParamsBuilder = new sdk.ParamBuilders.MintParamsBuilder();
  
-// Use 100 minter-held non-addon(i.e. setId is 0) NFTs with id 0.
-mintParamsBuilder.use('0x727cB81C955e1D....dfDFe07281', 0, 100, 0);      
+// Use 100 minter-held non-addon(i.e. setId is 0) NFTs with id 1.
+mintParamsBuilder.use('0x727cB81C955e1D....dfDFe07281', 1, 100, 0);      
   
 // Use minter-held NFT(ERC721, non-addon) with id 103.
 mintParamsBuilder.use('0xF27B8D220249fb....A6a71914E2', 103, 1, 0);
 
 // Buy 15 addons(setId is 10000000) with id 932 in the same mint transaction.
-// NOTE: 10000000 is the default addon set id.
-//       You can add any number of 'use' or 'buy'.
+// NOTE: 1. 10000000 is the default addon set id.
+//       2. You can add any number of 'use' or 'buy'.
+//       3. 'buy' requires set id 10000000.
 mintParamsBuilder.buy('0x10c01D6B0396D9....F60b9cB1F6', 932, 15, 10000000);
 
 let { ingredients, itemsToBuy } = mintParamsBuilder.build();
