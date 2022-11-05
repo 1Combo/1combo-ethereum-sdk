@@ -1,6 +1,8 @@
 # 1combo-ethereum-sdk
 
-## Usage
+# Usages
+
+## Mint combo
 ```js
 const {
     Client,
@@ -19,8 +21,9 @@ mintParamsBuilder.use('0x727cB81C955e1D....dfDFe07281', 0, 100, 0);
 // Use minter-held NFT(ERC721, non-addon) with id 103.
 mintParamsBuilder.use('0xF27B8D220249fb....A6a71914E2', 103, 1, 0);
 
-// Buy 15 addons(setId is 10000000) with id 932 before mint.
+// Buy 15 addons(setId is 10000000) with id 932 in the same mint transaction.
 // NOTE: 10000000 is the default addon set id.
+//       You can add any number of 'use' or 'buy'.
 mintParamsBuilder.buy('0x10c01D6B0396D9....F60b9cB1F6', 932, 15, 10000000);
 
 let { ingredients, itemsToBuy } = mintParamsBuilder.build();
@@ -31,8 +34,10 @@ ComboProxy.mint(
     ingredients,
     itemsToBuy
 );
+```
 
-
+## Query NFTs
+```js
 var client = new Client();
 
 # Get user owned addons and non-addons.
@@ -46,4 +51,18 @@ const result = await client.getOwnedNFTByAccount(<wallet_address>, <page_size>, 
 # *page_size* Optional.
 # *continuation* Optional, string, the start point for next page, '' for 1st page.
 const result = await client.getOwnedComboByAccount(<wallet_address>, <page_size>, <continuation>);
+```
+
+## Only buy addons
+```js
+let mintParamsBuilder = new ParamBuilders.MintParamsBuilder();
+...
+...
+let { ingredients, itemsToBuy } = mintParamsBuilder.build();
+
+CollectionProxy.mint(
+    to,
+    true,   // true - pay in ether, false - pay in WETH
+    itemsToBuy
+);
 ```
