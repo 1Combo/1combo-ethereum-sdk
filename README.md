@@ -10,16 +10,10 @@ npm install @1combo/1combo-ethereum-sdk
 
 ## Mint a combo NFT
 ```js
-const {
-    Client,
-    ABI,
-    ParamBuilders,
-    COMBO_PROXY_ADDRESS,
-    COLLECTION_PROXY_ADDRESS
-} = require("../src/client.js");
+const sdk = require("@1combo/1combo-ethereum-sdk");
 
 # Make mint params
-let mintParamsBuilder = new ParamBuilders.MintParamsBuilder();
+let mintParamsBuilder = new sdk.ParamBuilders.MintParamsBuilder();
  
 // Use 100 minter-held non-addon(i.e. setId is 0) NFTs with id 0.
 mintParamsBuilder.use('0x727cB81C955e1D....dfDFe07281', 0, 100, 0);      
@@ -44,7 +38,7 @@ ComboProxy.mint(
 
 ## Query NFTs
 ```js
-var client = new Client();
+var client = new sdk.Client();
 
 # Fetch non-combo NFTs in a wallet.
 # *wallet_address* Required.
