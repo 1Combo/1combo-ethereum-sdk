@@ -20,17 +20,17 @@ const sdk = require("@1combo/1combo-ethereum-sdk");
 # Make mint params
 let mintParamsBuilder = new sdk.ParamBuilders.MintParamsBuilder();
  
-// Use 100 minter-held non-addon(i.e. setId is 0) NFTs with id 1.
-mintParamsBuilder.use('0x727cB81C955e1D....dfDFe07281', 1, 100, 0);      
+// Select 2 NFTs with ID 75 in the ERC-1155 collection
+// Note: the 2 NFTs should be owned by the minter
+mintParamsBuilder.use('0x727cB81C955e1D....dfDFe07281', 75, 2, 0);      
   
-// Use minter-held NFT(ERC721, non-addon) with id 103.
+// Select the NFT with ID 103 in the ERC-721 collection
+// Note: the NFT should be owned by the minter
 mintParamsBuilder.use('0xF27B8D220249fb....A6a71914E2', 103, 1, 0);
 
-// Buy 15 addons(setId is 10000000) with id 932 in the same mint transaction.
-// NOTE: 1. 10000000 is the default addon set id.
-//       2. You can add any number of 'use' or 'buy'.
-//       3. 'buy' requires set id 10000000.
-mintParamsBuilder.buy('0x10c01D6B0396D9....F60b9cB1F6', 932, 15, 10000000);
+// Purchase & Select 5 NFTs with ID 932 in the ERC-1155 collection in the set with ID 10000000
+// Note: minter can purchase the missing required add-on NFTs while minting a combo NFT
+mintParamsBuilder.buy('0x10c01D6B0396D9....F60b9cB1F6', 932, 5, 10000000);
 
 let { ingredients, itemsToBuy } = mintParamsBuilder.build();
 ComboProxy.mint(
