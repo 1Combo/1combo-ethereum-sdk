@@ -40,7 +40,7 @@ var Client = function() {
  * @returns 
  * {
  *     data: {
- *         nfts: [],    // none-addon NFTs
+ *         nfts: [],    // non-addon NFTs
  *         addons: []   // addon NFTs
  *     },
  *     info: {
