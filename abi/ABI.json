@@ -1,0 +1,494 @@
+{
+    "ICollectionProxy": [
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "to",
+                    "type": "address"
+                },
+                {
+                    "internalType": "bool",
+                    "name": "payInEther",
+                    "type": "bool"
+                },
+                {
+                    "components": [
+                        {
+                            "internalType": "address[]",
+                            "name": "collections",
+                            "type": "address[]"
+                        },
+                        {
+                            "internalType": "uint256[][]",
+                            "name": "tokenIds",
+                            "type": "uint256[][]"
+                        },
+                        {
+                            "internalType": "uint256[][]",
+                            "name": "amounts",
+                            "type": "uint256[][]"
+                        }
+                    ],
+                    "internalType": "struct CollectionItems",
+                    "name": "items",
+                    "type": "tuple"
+                }
+            ],
+            "name": "mint",
+            "outputs": [
+                {
+                    "internalType": "uint256[]",
+                    "name": "",
+                    "type": "uint256[]"
+                }
+            ],
+            "stateMutability": "payable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address[]",
+                    "name": "collections",
+                    "type": "address[]"
+                }
+            ],
+            "name": "collectionMetasOf",
+            "outputs": [
+                {
+                    "components": [
+                        {
+                            "internalType": "address",
+                            "name": "creator",
+                            "type": "address"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "claimable",
+                            "type": "uint256"
+                        }
+                    ],
+                    "internalType": "struct CollectionMeta[]",
+                    "name": "",
+                    "type": "tuple[]"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        }
+    ],
+    "ICombo": [
+        {
+            "inputs": [],
+            "name": "getComboRules",
+            "outputs": [
+                {
+                    "components": [
+                        {
+                            "components": [
+                                {
+                                    "internalType": "uint128",
+                                    "name": "max",
+                                    "type": "uint128"
+                                },
+                                {
+                                    "internalType": "uint128",
+                                    "name": "min",
+                                    "type": "uint128"
+                                },
+                                {
+                                    "internalType": "address",
+                                    "name": "collection",
+                                    "type": "address"
+                                },
+                                {
+                                    "internalType": "uint64",
+                                    "name": "setId",
+                                    "type": "uint64"
+                                },
+                                {
+                                    "internalType": "bool",
+                                    "name": "lock",
+                                    "type": "bool"
+                                }
+                            ],
+                            "internalType": "struct Factor[]",
+                            "name": "factors",
+                            "type": "tuple[]"
+                        },
+                        {
+                            "components": [
+                                {
+                                    "internalType": "address",
+                                    "name": "collection",
+                                    "type": "address"
+                                },
+                                {
+                                    "internalType": "uint128",
+                                    "name": "maxTokenUsage",
+                                    "type": "uint128"
+                                }
+                            ],
+                            "internalType": "struct Limit[]",
+                            "name": "limits",
+                            "type": "tuple[]"
+                        }
+                    ],
+                    "internalType": "struct ComboRules",
+                    "name": "",
+                    "type": "tuple"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256[]",
+                    "name": "uuids",
+                    "type": "uint256[]"
+                }
+            ],
+            "name": "getLimitedTokenUsages",
+            "outputs": [
+                {
+                    "internalType": "uint256[]",
+                    "name": "",
+                    "type": "uint256[]"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256[]",
+                    "name": "comboIds",
+                    "type": "uint256[]"
+                }
+            ],
+            "name": "comboMetasOf",
+            "outputs": [
+                {
+                    "components": [
+                        {
+                            "internalType": "address",
+                            "name": "creator",
+                            "type": "address"
+                        },
+                        {
+                            "components": [
+                                {
+                                    "internalType": "uint256",
+                                    "name": "uuid",
+                                    "type": "uint256"
+                                },
+                                {
+                                    "internalType": "uint128",
+                                    "name": "amount",
+                                    "type": "uint128"
+                                },
+                                {
+                                    "internalType": "uint64",
+                                    "name": "setId",
+                                    "type": "uint64"
+                                },
+                                {
+                                    "internalType": "uint8",
+                                    "name": "typ",
+                                    "type": "uint8"
+                                },
+                                {
+                                    "internalType": "bool",
+                                    "name": "lock",
+                                    "type": "bool"
+                                },
+                                {
+                                    "internalType": "bool",
+                                    "name": "limit",
+                                    "type": "bool"
+                                }
+                            ],
+                            "internalType": "struct Item[]",
+                            "name": "items",
+                            "type": "tuple[]"
+                        }
+                    ],
+                    "internalType": "struct ComboMeta[]",
+                    "name": "",
+                    "type": "tuple[]"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        }
+    ],
+    "IComboCollProxy": [
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "combo",
+                    "type": "address"
+                },
+                {
+                    "internalType": "address",
+                    "name": "to",
+                    "type": "address"
+                },
+                {
+                    "internalType": "bool",
+                    "name": "payInEther",
+                    "type": "bool"
+                },
+                {
+                    "internalType": "string",
+                    "name": "hash",
+                    "type": "string"
+                },
+                {
+                    "components": [
+                        {
+                            "internalType": "address[]",
+                            "name": "collections",
+                            "type": "address[]"
+                        },
+                        {
+                            "internalType": "uint256[][]",
+                            "name": "itemsForCollections",
+                            "type": "uint256[][]"
+                        },
+                        {
+                            "internalType": "uint128[][]",
+                            "name": "amountsForItems",
+                            "type": "uint128[][]"
+                        },
+                        {
+                            "internalType": "uint64[][]",
+                            "name": "setsForItems",
+                            "type": "uint64[][]"
+                        }
+                    ],
+                    "internalType": "struct Ingredients",
+                    "name": "ingredients",
+                    "type": "tuple"
+                },
+                {
+                    "components": [
+                        {
+                            "internalType": "address[]",
+                            "name": "collections",
+                            "type": "address[]"
+                        },
+                        {
+                            "internalType": "uint256[][]",
+                            "name": "tokenIds",
+                            "type": "uint256[][]"
+                        },
+                        {
+                            "internalType": "uint256[][]",
+                            "name": "amounts",
+                            "type": "uint256[][]"
+                        }
+                    ],
+                    "internalType": "struct CollectionItems",
+                    "name": "collectionItemsToBuy",
+                    "type": "tuple"
+                }
+            ],
+            "name": "mint",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "bytes32",
+                    "name": "",
+                    "type": "bytes32"
+                }
+            ],
+            "stateMutability": "payable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "combo",
+                    "type": "address"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "comboId",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "bool",
+                    "name": "payInEther",
+                    "type": "bool"
+                },
+                {
+                    "internalType": "string",
+                    "name": "hash",
+                    "type": "string"
+                },
+                {
+                    "components": [
+                        {
+                            "internalType": "address[]",
+                            "name": "collections",
+                            "type": "address[]"
+                        },
+                        {
+                            "internalType": "uint256[][]",
+                            "name": "itemsForCollections",
+                            "type": "uint256[][]"
+                        },
+                        {
+                            "internalType": "uint128[][]",
+                            "name": "amountsForItems",
+                            "type": "uint128[][]"
+                        },
+                        {
+                            "internalType": "uint64[][]",
+                            "name": "setsForItems",
+                            "type": "uint64[][]"
+                        }
+                    ],
+                    "internalType": "struct Ingredients",
+                    "name": "ingredients",
+                    "type": "tuple"
+                },
+                {
+                    "components": [
+                        {
+                            "internalType": "address[]",
+                            "name": "collections",
+                            "type": "address[]"
+                        },
+                        {
+                            "internalType": "uint256[][]",
+                            "name": "tokenIds",
+                            "type": "uint256[][]"
+                        },
+                        {
+                            "internalType": "uint256[][]",
+                            "name": "amounts",
+                            "type": "uint256[][]"
+                        }
+                    ],
+                    "internalType": "struct CollectionItems",
+                    "name": "collectionItemsToBuy",
+                    "type": "tuple"
+                }
+            ],
+            "name": "edit",
+            "outputs": [
+                {
+                    "internalType": "bytes32",
+                    "name": "",
+                    "type": "bytes32"
+                }
+            ],
+            "stateMutability": "payable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "combo",
+                    "type": "address"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "comboId",
+                    "type": "uint256"
+                }
+            ],
+            "name": "dismantle",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "combo",
+                    "type": "address"
+                },
+                {
+                    "internalType": "address",
+                    "name": "spender",
+                    "type": "address"
+                },
+                {
+                    "internalType": "address[]",
+                    "name": "tokenAddresses",
+                    "type": "address[]"
+                },
+                {
+                    "internalType": "uint256[][]",
+                    "name": "tokenIds",
+                    "type": "uint256[][]"
+                },
+                {
+                    "internalType": "uint256[][]",
+                    "name": "amounts",
+                    "type": "uint256[][]"
+                }
+            ],
+            "name": "approve",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address[]",
+                    "name": "combos",
+                    "type": "address[]"
+                }
+            ],
+            "name": "comboCollMetasOf",
+            "outputs": [
+                {
+                    "components": [
+                        {
+                            "internalType": "uint256",
+                            "name": "price",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "address",
+                            "name": "creator",
+                            "type": "address"
+                        },
+                        {
+                            "internalType": "address",
+                            "name": "locker",
+                            "type": "address"
+                        },
+                        {
+                            "internalType": "address",
+                            "name": "authority",
+                            "type": "address"
+                        }
+                    ],
+                    "internalType": "struct ComboCollMeta[]",
+                    "name": "",
+                    "type": "tuple[]"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        }
+    ]
+}
