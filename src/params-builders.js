@@ -60,6 +60,9 @@ MintParamsBuilder.prototype.buy = function(collection, tokenId, amount, setId) {
     if (!web3.utils.isAddress(collection)) {
         throw new Error('Invalid collection address');
     }
+    if (setId == 0) {
+        throw new Error('setId is zero');
+    }
 
     var item = {
         collection: collection,

@@ -1,3 +1,4 @@
 contract-interface/build/
 node_modules/
 package-lock.json
+test/

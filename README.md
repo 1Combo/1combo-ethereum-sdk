@@ -1,6 +1,10 @@
 # 1combo-ethereum-sdk
 
 ![image](https://user-images.githubusercontent.com/107178656/200139005-293f306f-2294-462b-aa6d-77ead4edf524.png)
+# Install
+```sh
+npm install @1combo/1combo-ethereum-sdk
+```
 
 # Usages
 
