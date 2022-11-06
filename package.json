@@ -1,6 +1,6 @@
 {
   "name": "@1combo/1combo-ethereum-sdk",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "",
   "main": "src/client.js",
   "scripts": {

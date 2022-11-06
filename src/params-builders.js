@@ -328,9 +328,104 @@ ComboRuleBuilder.prototype.build = function() {
         factors: this._collectionRules.concat(this._setRules),
         limits: this._limitRules,
     };
+};
+
+/**
+ * 
+ * Usage:
+ * 
+ *  let mintAddOnBuilder = new MintAddOnBuilder();
+ * 
+ *  // purchase 15 add-ons with id 932
+ *  mintAddOnBuilder.add('0x10c01D6B0396D9....F60b9cB1F6', 932, 15);
+ * 
+ *  let items = mintAddOnBuilder.build();
+ * 
+ *  ==================================
+ *      CollectionProxy.mint(
+ *          to,
+ *          true/false,
+ *          items
+ *      );
+ *  ==================================
+ */
+function MintAddOnBuilder() {
+    this._frozen = false;
+    this._itemsToBuy = [];
+}
+
+
+MintAddOnBuilder.prototype.add = function(collection, tokenId, amount) {
+    if (this._frozen) {
+        throw new Error('Already frozen');
+    }
+    if (!web3.utils.isAddress(collection)) {
+        throw new Error('Invalid collection address');
+    }
+
+    this._itemsToBuy.push({
+        collection: collection,
+        tokenId: new BN(tokenId),
+        amount: new BN(amount),
+    });
+    return this;
+}
+
+
+MintAddOnBuilder.prototype.build = function() {
+    if (this._frozen) {
+        throw new Error('Already frozen');
+    }
+    this._frozen = true;
+
+    this._itemsToBuy.sort((a, b) => {
+        let sa = a.collection.toLowerCase();
+        let sb = b.collection.toLowerCase();
+        if (sa < sb) {
+            return -1;
+        }
+        if (sa > sb) {
+            return 1;
+        }
+
+        return a.tokenId.cmp(b.tokenId);
+    });
+
+    var itemsToBuy = {
+        collections: [],
+        tokenIds: [],
+        amounts: [],
+    };
+
+    let lastCollection = '';
+    let batch = {};
+    for (let item of this._itemsToBuy) {
+        if (item.collection.toLowerCase() != lastCollection.toLowerCase()) {
+            if (lastCollection != '') {
+                itemsToBuy.collections.push(lastCollection);
+                itemsToBuy.tokenIds.push(batch.tokenIds);
+                itemsToBuy.amounts.push(batch.amounts);
+            }
+            batch = {
+                tokenIds: [],
+                amounts: []
+            }
+            lastCollection = item.collection;
+        }
+        batch.tokenIds.push(item.tokenId.toString());
+        batch.amounts.push(item.amount.toString());
+    }
+    if (lastCollection != '') {
+        itemsToBuy.collections.push(lastCollection);
+        itemsToBuy.tokenIds.push(batch.tokenIds);
+        itemsToBuy.amounts.push(batch.amounts);
+    }
+
+    return itemsToBuy;
 }
 
 module.exports = {
     MintParamsBuilder,
+    MintAddOnBuilder,
     ComboRuleBuilder,
 };

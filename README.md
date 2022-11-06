@@ -44,16 +44,19 @@ ComboProxy.mint(
 
 ## Purchase add-on NFTs
 ```js
-let mintParamsBuilder = new ParamBuilders.MintParamsBuilder();
+let mintAddOnBuilder = new sdk.ParamBuilders.MintAddOnBuilder();
 
-// Only 'buy' is required
-mintParamsBuilder.buy('0x10c01D6B0396D9....F60b9cB1F6', 932, 5, 10000000);
+// Purchase 5 add-ons with id '932' of collection '0x10c01D6B0396D9....F60b9cB1F6'.
+// NOTE: Add-ons are all ERC1155 NFTs.
+mintAddOnBuilder.add('0x10c01D6B0396D9....F60b9cB1F6', 932, 5);
 ...
-let { ingredients, itemsToBuy } = mintParamsBuilder.build();
+mintAddOnBuilder.add(,,)
+...
+let items = mintAddOnBuilder.build();
 CollectionProxy.mint(
     to,
     true,   // true - pay in ether, false - pay in WETH
-    itemsToBuy
+    items
 );
 ```
 
