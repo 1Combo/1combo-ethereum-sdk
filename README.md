@@ -37,6 +37,7 @@ ComboProxy.mint(
     combo,
     to,
     true,   // true - pay in ether, false - pay in WETH
+    metaHash, 
     ingredients,
     itemsToBuy
 );
