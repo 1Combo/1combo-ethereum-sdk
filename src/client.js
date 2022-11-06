@@ -1,5 +1,6 @@
 const Web3Utils = require("web3-utils");
-const got = require("got");
+// const got = require("got");
+const axios = require("axios");
 
 const ParamBuilders = require("./params-builders.js");
 const ABI = require("../abi/ABI.json");
@@ -65,7 +66,8 @@ Client.prototype.getOwnedNFTByAccount = async function(user, pageSize, filterCol
         url = `${url}?${paramsStr}`;
     }
 
-    const json = await got(url).json();
+    // const json = await got(url).json();
+    const json = (await axios.get(url)).data;
     if (json.code.code == RETURN_OK) {
         return {
             data: {
@@ -110,7 +112,8 @@ Client.prototype.getOwnedComboByAccount = async function(user, pageSize, continu
         url = `${url}?${paramsStr}`;
     }
 
-    const json = await got(url).json();
+    // const json = await got(url).json();
+    const json = (await axios.get(url)).data;
     if (json.code.code == RETURN_OK) {
         if (json.info['total']) {
             return {
