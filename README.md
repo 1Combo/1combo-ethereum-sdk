@@ -42,6 +42,19 @@ ComboProxy.mint(
 );
 ```
 
+## Only buy addons
+```js
+let mintParamsBuilder = new ParamBuilders.MintParamsBuilder();
+...
+...
+let { ingredients, itemsToBuy } = mintParamsBuilder.build();
+CollectionProxy.mint(
+    to,
+    true,   // true - pay in ether, false - pay in WETH
+    itemsToBuy
+);
+```
+
 ## Query NFTs
 ```js
 var client = new sdk.Client();
