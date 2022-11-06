@@ -211,8 +211,8 @@ function ComboRuleBuilder() {
  * 
  * @param {address} collection Specify NFT collection, repeat additions are not allowed.
  * @param {boolean} lock Whether NFTs from the specified collection should be locked or not.
- * @param {unsigned} min [0, Uint128_MAX] The minimum number of NFTs from the specified collection in a combo mint. 
- * @param {unsigned} max [min, Uint128_MAX] The maximum number of NFTs from the specified collection in a combo mint. 
+ * @param {number} min [0, Uint128_MAX] The minimum number of NFTs from the specified collection in a combo mint. 
+ * @param {number} max [min, Uint128_MAX] The maximum number of NFTs from the specified collection in a combo mint. 
  */
 ComboRuleBuilder.prototype.addCollectionRule = function(collection, lock, min, max) {
     if (!web3.utils.isAddress(collection)) {
@@ -249,8 +249,8 @@ ComboRuleBuilder.prototype.addCollectionRule = function(collection, lock, min, m
  * 
  * @param {unsigned} setId Specify set, repeat additions are not allowed.
  * @param {boolean} lock Whether NFTs from the specified set should be locked or not.
- * @param {unsigned} min [0, Uint128_MAX] The minimum number of NFTs from the specified set in a combo mint.
- * @param {unsigned} max [min, Uint128_MAX] The maximum number of NFTs from the specified set in a combo mint.
+ * @param {number} min [0, Uint128_MAX] The minimum number of NFTs from the specified set in a combo mint.
+ * @param {number} max [min, Uint128_MAX] The maximum number of NFTs from the specified set in a combo mint.
  */
 ComboRuleBuilder.prototype.addSetRule = function(setId, lock, min, max) {
     if (setId <= 0) {
@@ -287,7 +287,7 @@ ComboRuleBuilder.prototype.addSetRule = function(setId, lock, min, max) {
  * Optional
  * 
  * @param {address} collection Which collection's token will be limited, must be ERC721.
- * @param {unsigned} maxUsage (0, ∞) The maximum number of times the same NFT(token id) can be used in the combo collection.
+ * @param {number} maxUsage (0, ∞) The maximum number of times the same NFT(token id) can be used in the combo collection.
  */
 ComboRuleBuilder.prototype.addLimitRule = function(collection, maxUsage) {
     if (!web3.utils.isAddress(collection)) {
@@ -354,7 +354,13 @@ function MintAddOnBuilder() {
     this._itemsToBuy = [];
 }
 
-
+/**
+ * 
+ * @param {address} collection Address of add-on collection.
+ * @param {number|string} tokenId Token id to purchase.
+ * @param {number|string} amount
+ * @returns 
+ */
 MintAddOnBuilder.prototype.add = function(collection, tokenId, amount) {
     if (this._frozen) {
         throw new Error('Already frozen');
