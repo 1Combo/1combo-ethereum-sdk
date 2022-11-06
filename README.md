@@ -42,7 +42,7 @@ ComboProxy.mint(
 );
 ```
 
-## Only buy addons
+## Purchase add-on NFTs
 ```js
 let mintParamsBuilder = new ParamBuilders.MintParamsBuilder();
 ...
