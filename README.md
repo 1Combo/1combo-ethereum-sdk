@@ -45,7 +45,9 @@ ComboProxy.mint(
 ## Purchase add-on NFTs
 ```js
 let mintParamsBuilder = new ParamBuilders.MintParamsBuilder();
-...
+
+// Only 'buy' is required
+mintParamsBuilder.buy('0x10c01D6B0396D9....F60b9cB1F6', 932, 5, 10000000);
 ...
 let { ingredients, itemsToBuy } = mintParamsBuilder.build();
 CollectionProxy.mint(
