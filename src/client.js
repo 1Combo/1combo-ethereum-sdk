@@ -1,4 +1,4 @@
-const Web3 = require("web3");
+const Web3Utils = require("web3-utils");
 const got = require("got");
 
 const ParamBuilders = require("./params-builders.js");
@@ -24,7 +24,7 @@ function encode(queryParams) {
 }
 
 var Client = function() {
-    this.web3 = new Web3(ENDPOINT_GOERLI);
+    // this.web3 = new Web3(ENDPOINT_GOERLI);
     // this.comboProxy = new this.web3.eth.Contract(ABI.IComboProxy, COMBO_PROXY_ADDRESS);
     // this.collectionProxy = new this.web3.eth.Contract(ABI.ICollectionProxy, COLLECTION_PROXY_ADDRESS);
 };
@@ -54,7 +54,7 @@ Client.prototype.getOwnedNFTByAccount = async function(user, pageSize, filterCol
     }
 
     if (filterCollection != '') {
-        if (!this.web3.utils.isAddress(filterCollection)) {
+        if (!Web3Utils.isAddress(filterCollection)) {
             throw new Error('Invalid collection address');
         }
         params.contract = filterCollection;

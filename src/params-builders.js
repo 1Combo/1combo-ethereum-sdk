@@ -1,7 +1,8 @@
-const Web3 = require("web3");
-
-const web3 = new Web3();
-const BN = web3.utils.BN;
+// const Web3 = require("web3");
+const Web3Utils = require("web3-utils");
+// const web3 = new Web3();
+// const BN = web3.utils.BN;
+const BN = Web3Utils.BN;
 
 /**
  * 
@@ -40,7 +41,7 @@ MintParamsBuilder.prototype.use = function(collection, tokenId, amount, setId) {
     if (this._frozen) {
         throw new Error('Already frozen');
     }
-    if (!web3.utils.isAddress(collection)) {
+    if (!Web3Utils.isAddress(collection)) {
         throw new Error('Invalid collection address');
     }
 
@@ -57,7 +58,7 @@ MintParamsBuilder.prototype.buy = function(collection, tokenId, amount, setId) {
     if (this._frozen) {
         throw new Error('Already frozen');
     }
-    if (!web3.utils.isAddress(collection)) {
+    if (!Web3Utils.isAddress(collection)) {
         throw new Error('Invalid collection address');
     }
     if (setId == 0) {
@@ -215,7 +216,7 @@ function ComboRuleBuilder() {
  * @param {number} max [min, Uint128_MAX] The maximum number of NFTs from the specified collection in a combo mint. 
  */
 ComboRuleBuilder.prototype.addCollectionRule = function(collection, lock, min, max) {
-    if (!web3.utils.isAddress(collection)) {
+    if (!Web3Utils.isAddress(collection)) {
         throw new Error('Invalid collection address');
     }
 
@@ -290,7 +291,7 @@ ComboRuleBuilder.prototype.addSetRule = function(setId, lock, min, max) {
  * @param {number} maxUsage (0, ∞) The maximum number of times the same NFT(token id) can be used in the combo collection.
  */
 ComboRuleBuilder.prototype.addLimitRule = function(collection, maxUsage) {
-    if (!web3.utils.isAddress(collection)) {
+    if (!Web3Utils.isAddress(collection)) {
         throw new Error('Invalid collection address');
     }
     maxUsage = new BN(maxUsage);
@@ -365,7 +366,7 @@ MintAddOnBuilder.prototype.add = function(collection, tokenId, amount) {
     if (this._frozen) {
         throw new Error('Already frozen');
     }
-    if (!web3.utils.isAddress(collection)) {
+    if (!Web3Utils.isAddress(collection)) {
         throw new Error('Invalid collection address');
     }
 
