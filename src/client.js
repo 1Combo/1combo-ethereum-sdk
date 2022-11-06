@@ -128,15 +128,10 @@ Client.prototype.getOwnedComboByAccount = async function(user, pageSize, continu
     }
 };
 
-Client.prototype.createContractMetaHash = async function() {
-    // TODO:
-};
-
 module.exports = {
     Client,
     ParamBuilders,
     ABI,
     COMBO_PROXY_ADDRESS,
     COLLECTION_PROXY_ADDRESS,
-    COMBO_FACTORY_ADDRESS,
 };
