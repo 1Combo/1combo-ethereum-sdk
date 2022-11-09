@@ -14,4 +14,9 @@ interface ICollectionProxy {
         external
         view
         returns (CollectionMeta[] memory);
+
+    function pricesOf(
+        address[] calldata collections,
+        uint256[][] calldata tokenIds
+    ) external view returns (uint256[][] memory prices);
 }

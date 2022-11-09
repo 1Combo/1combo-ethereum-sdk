@@ -76,6 +76,30 @@
             ],
             "stateMutability": "view",
             "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address[]",
+                    "name": "collections",
+                    "type": "address[]"
+                },
+                {
+                    "internalType": "uint256[][]",
+                    "name": "tokenIds",
+                    "type": "uint256[][]"
+                }
+            ],
+            "name": "pricesOf",
+            "outputs": [
+                {
+                    "internalType": "uint256[][]",
+                    "name": "prices",
+                    "type": "uint256[][]"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
         }
     ],
     "ICombo": [
