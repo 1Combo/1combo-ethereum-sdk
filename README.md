@@ -43,6 +43,18 @@ ComboProxy.mint(
 );
 ```
 
+## Query mint fee
+```js
+const comboCollections = ['0x..', '0x..'];
+
+// Returns:
+// struct {
+//     price: number,
+//     ...
+// }
+ComboProxy.comboCollMetasOf(comboCollections);
+```
+
 ## Purchase add-on NFTs
 ```js
 let mintAddOnBuilder = new sdk.ParamBuilders.MintAddOnBuilder();
@@ -59,6 +71,15 @@ CollectionProxy.mint(
     true,   // true - pay in ether, false - pay in WETH
     items
 );
+```
+
+## Query the unit price of each add-on.
+```js
+const collections = ['0x..', '0x..'];
+const tokenIdsOfEachCollection = [[1,2], [13]];
+
+// Returns price of each token: [ ['100000000', '2000000'], ['300000000000']]
+CollectionProxy.pricesOf(collections, tokenIdsOfEachCollection);
 ```
 
 ## Query NFTs
