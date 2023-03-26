@@ -2,7 +2,7 @@ import { ethers, BigNumber as BN } from 'ethers';
 import { MAX_UINT128 } from '../constants';
 import { Logger, log, ErrorLocation } from '../Logger';
 import artifact from './artifacts/Indexer';
-import { isDefined, isValidNonNegInteger, addGasPriceToOptions, isAllValidAddress, isAllValidNonNegInteger } from '../utils';
+import { addGasPriceToOptions, isAllValidAddress, isAllValidNonNegInteger } from '../utils';
 import preparePolygonTransaction from './utils';
 import { Chains } from '../Auth/availableChains';
 

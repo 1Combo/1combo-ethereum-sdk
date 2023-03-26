@@ -62,6 +62,14 @@ export enum ErrorLocation {
   COLLECTION_ADDITEMS = '[Collection.addItems]',
   COLLECTION_METADATASOF = '[Collection.metadatasOf]',
 
+  // CollectionFactory
+  COLLECTIONFACTORY_LOADCONTRACT = '[CollectionFactory.loadContract]',
+  COLLECTIONFACTORY_ADDGASPRICETOOPTIONS = '[CollectionFactory.addGasPriceToOptions]',
+  COLLECTIONFACTORY_DEPLOYCOLLECTION = '[CollectionFactory.deployCollection]',
+  COLLECTIONFACTORY_TOTALCOLLECTION = '[CollectionFactory.totalCollection]',
+  COLLECTIONFACTORY_GETCOLLECTIONS = '[CollectionFactory.getCollections]',
+  COLLECTIONFACTORY_GETCOLLECTIONSBYCREATOR = '[CollectionFactory.getCollectionsByCreator]',
+
   // CollectionProxy
   COLLECTIONPROXY_ADDGASPRICETOOPTIONS = '[CollectionProxy.addGasPriceToOptions]',
   COLLECTIONPROXY_LOADCONTRACT = '[CollectionProxy.loadContract]',

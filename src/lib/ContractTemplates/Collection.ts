@@ -138,9 +138,9 @@ export default class Collection {
     }
 
     /**
- * Returns number of items
- * @returns {Promise<BigNumber>} Total number
- */
+     * Returns number of items
+     * @returns {Promise<BigNumber>} Total number
+     */
     async totalItem(): Promise<BN> {
         this.assertContractLoaded(Logger.location.COLLECTION_TOTALITEM);
 
