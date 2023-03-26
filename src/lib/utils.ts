@@ -66,6 +66,54 @@ export const isValidPositiveNumber = (n: number) => {
   return !Number.isNaN(n);
 };
 
-export const isValidNonnegativeInteger = (n: number) => {
+export const isValidNonNegInteger = (n: number) => {
   return Number.isInteger(n) && n >= 0;
+};
+
+export const isAllValidAddress = (value: string | Array<string>) => {
+  if (!value) {
+    return false;
+  }
+  if (typeof value === 'string') {
+    return ethers.utils.isAddress(value);
+  } else {
+    if (value.length == 0) {
+      return false;
+    }
+    for (let v of value) {
+      if (!v || !ethers.utils.isAddress(v)) {
+        return false;
+      }
+    }
+    return true;
+  }
+};
+
+export const isAllValidNonNegInteger = (value: number | Array<number> | Array<Array<number>>) => {
+  if (!value) {
+    return false;
+  }
+  if (typeof value === 'number') {
+    return isValidNonNegInteger(value);
+  }
+  if (value.length == 0) {
+    return false;
+  }
+  for (let v of value) {
+    if (!v) {
+      return false;
+    }
+    if (typeof v === 'number') {
+      if (!isValidNonNegInteger(v)) {
+        return false;
+      }
+    } else {
+      for (let vv of v) {
+        if (!vv || !isValidNonNegInteger(vv)) {
+          return false;
+        }
+      }
+    }
+  }
+  return true;
 };

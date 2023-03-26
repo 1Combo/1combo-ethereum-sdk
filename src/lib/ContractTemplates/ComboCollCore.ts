@@ -1,9 +1,9 @@
 import { ethers, BigNumber as BN } from 'ethers';
-import { MAX_UINT128 } from '../constants';
+import { MAX_UINT128, MAX_UINT32 } from '../constants';
 import BaseERC721 from '../ContractComponents/baseERC721';
 import { Logger, log, ErrorLocation } from '../Logger';
 import artifact from './artifacts/ComboCollCore';
-import { isDefined, isValidNonnegativeInteger } from '../utils';
+import { isAllValidAddress, isAllValidNonNegInteger, isDefined, isValidNonNegInteger } from '../utils';
 
 type ContractAddressOptions = {
     contractAddress: string;
@@ -71,7 +71,7 @@ export default class ComboCollCore {
             );
         }
 
-        if (!params.contractAddress || !ethers.utils.isAddress(params.contractAddress)) {
+        if (!isAllValidAddress(params.contractAddress)) {
             log.throwMissingArgumentError(Logger.message.invalid_contract_address, {
                 location: Logger.location.COMBOCOLLCORE_LOADCONTRACT,
             });
@@ -120,7 +120,7 @@ export default class ComboCollCore {
         });
 
         params.setIds.forEach(setId => {
-            if (!isValidNonnegativeInteger(setId)) {
+            if (!isValidNonNegInteger(setId) || setId > MAX_UINT32) {
                 log.throwMissingArgumentError(Logger.message.no_setId_or_not_valid, {
                     location: Logger.location.COMBOCOLLCORE_GET_LIMITED_TOKEN_USAGES,
                 });
@@ -140,13 +140,11 @@ export default class ComboCollCore {
     async getIngredients(params: GetIngredientsOptions): Promise<object> {
         this.assertContractLoaded(Logger.location.COMBOCOLLCORE_GET_INGREDIENTS);
 
-        params.comboIds.forEach(comboId => {
-            if (!isValidNonnegativeInteger(comboId)) {
-                log.throwMissingArgumentError(Logger.message.no_tokenId_or_not_valid, {
-                    location: Logger.location.COMBOCOLLCORE_GET_INGREDIENTS,
-                });
-            }
-        });
+        if (!isAllValidNonNegInteger(params.comboIds)) {
+            log.throwMissingArgumentError(Logger.message.no_tokenId_or_not_valid, {
+                location: Logger.location.COMBOCOLLCORE_GET_INGREDIENTS,
+            });
+        }
 
         try {
             return this.contractDeployed.getIngredients(params.comboIds);
@@ -161,13 +159,13 @@ export default class ComboCollCore {
     async royaltyInfo(params: RoyaltyInfoOptions): Promise<RoyaltyInfo> {
         this.assertContractLoaded(Logger.location.COMBOCOLLCORE_ROYALTYINFO);
 
-        if (!isValidNonnegativeInteger(params.tokenId)) {
+        if (!isValidNonNegInteger(params.tokenId)) {
             log.throwMissingArgumentError(Logger.message.no_tokenId_or_not_valid, {
                 location: Logger.location.COMBOCOLLCORE_ROYALTYINFO,
             });
         }
 
-        if (!isValidNonnegativeInteger(params.sellPrice)) {
+        if (!isValidNonNegInteger(params.sellPrice)) {
             log.throwMissingArgumentError(Logger.message.no_sell_price_supplied_or_not_valid, {
                 location: Logger.location.COMBOCOLLCORE_ROYALTYINFO,
             });

@@ -73,33 +73,14 @@ export enum ErrorLocation {
   COLLECTIONPROXY_SETRECEIVERS = '[CollectionProxy.setReceivers]',
   COLLECTIONPROXY_MINT = '[CollectionProxy.mint]',
 
-  // ERC721UserMintable
-  ERC721USERMINTABLE_DEPLOY = '[ERC721UserMintable.deploy]',
-  ERC721USERMINTABLE_ADDGASPRICETOOPTIONS = '[ERC721UserMintable.addGasPriceToOptions]',
-  ERC721USERMINTABLE_MINT = '[ERC721UserMintable.mint]',
-  ERC721USERMINTABLE_LOADCONTRACT = '[ERC721UserMintable.loadContract]',
-  ERC721USERMINTABLE_SETCONTRACTURI = '[ERC721UserMintable.setContractURI]',
-  ERC721USERMINTABLE_PRICE = '[ERC721UserMintable.price]',
-  ERC721USERMINTABLE_SET_PRICE = '[ERC721UserMintable.setPrice]',
-  ERC721USERMINTABLE_RESERVE = '[ERC721UserMintable.reserve]',
-  ERC721USERMINTABLE_TOGGLE_SALE = '[ERC721UserMintable.toggleSale]',
-  ERC721USERMINTABLE_WITHDRAW = '[ERC721UserMintable.withdraw]',
-  ERC721USERMINTABLE_SET_BASE_URI = '[ERC721UserMintable.setBaseURI]',
-  ERC721USERMINTABLE_REVEAL = '[ERC721UserMintable.reveal]',
-  ERC721USERMINTABLE_TRANSFER = '[ERC721UserMintable.transfer]',
-
-  // ER1155Mintable
-  ERC1155MINTABLE_DEPLOY = '[ERC1155Mintable.deploy]',
-  ERC1155MINTABLE_ADDGASPRICETOOPTIONS = '[ERC1155Mintable.addGasPriceToOptions]',
-  ERC1155MINTABLE_MINT = '[ERC1155Mintable.mint]',
-  ERC1155MINTABLE_MINT_BATCH = '[ERC1155Mintable.mintBatch]',
-  ERC1155_ADD_IDS = '[ERC1155Mintable.addIds]',
-  ERC1155MINTABLE_LOADCONTRACT = '[ERC1155Mintable.loadContract]',
-  ERC1155MINTABLE_SET_CONTRACT_URI = '[ERC1155Mintable.setContractURI]',
-  ERC1155MINTABLE_SET_BASE_URI = '[ERC1155Mintable.setBaseURI]',
-  ERC1155_TRANSFER = '[ERC1155Mintable.transfer]',
-  ERC1155_TRANSFER_BATCH = '[ERC1155Mintable.transferBatch]',
-  ERC1155_SETAPPROVALFORALL = '[ERC1155Mintable.setApprovalForAll]',
+  // Indexer
+  INDEXER_ADDGASPRICETOOPTIONS = '[Indexer.addGasPriceToOptions]',
+  INDEXER_LOADCONTRACT = '[Indexer.loadContract]',
+  INDEXER_REGISTERCOLLECTIONS = '[Indexer.registerCollections]',
+  INDEXER_GETUUID = '[Indexer.getUUID]',
+  INDEXER_ROOTCOMBOOFTOKENS = '[Indexer.rootComboOfTokens]',
+  INDEXER_ROOTCOMBOOFUUIDS = '[Indexer.rootComboOfUUIDs]',
+  INDEXER_TOKENSOF = '[Indexer.tokensOf]',
 
   // BaseERC721
   BASEERC721_ADDGASPRICETOOPTIONS = '[BaseERC721.addGasPriceToOptions]',

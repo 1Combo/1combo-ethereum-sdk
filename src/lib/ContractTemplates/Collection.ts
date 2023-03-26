@@ -2,7 +2,7 @@ import { ethers, utils, BigNumber as BN } from 'ethers';
 import BaseERC1155 from '../ContractComponents/baseERC1155';
 import { Logger, log, ErrorLocation } from '../Logger';
 import artifact from './artifacts/Collection';
-import { isValidNonnegativeInteger, addGasPriceToOptions } from '../utils';
+import { isValidNonNegInteger, addGasPriceToOptions, isAllValidAddress, isAllValidNonNegInteger } from '../utils';
 import preparePolygonTransaction from '../ContractTemplates/utils';
 import { Chains } from '../Auth/availableChains';
 
@@ -90,7 +90,7 @@ export default class Collection {
             );
         }
 
-        if (!params.contractAddress || !ethers.utils.isAddress(params.contractAddress)) {
+        if (!isAllValidAddress(params.contractAddress)) {
             log.throwMissingArgumentError(Logger.message.invalid_contract_address, {
                 location: Logger.location.COLLECTION_LOADCONTRACT,
             });
@@ -121,7 +121,7 @@ export default class Collection {
     async totalSupply(params: TotalSupplyOptions): Promise<BN> {
         this.assertContractLoaded(Logger.location.COLLECTION_TOTALSUPPLY);
 
-        if (!isValidNonnegativeInteger(params.tokenId)) {
+        if (!isValidNonNegInteger(params.tokenId)) {
             log.throwMissingArgumentError(Logger.message.no_tokenId_or_not_valid, {
                 location: Logger.location.COLLECTION_TOTALSUPPLY,
             });
@@ -163,13 +163,11 @@ export default class Collection {
     async metadatasOf(params: MetadatasOfOptions): Promise<Array<Metadata>> {
         this.assertContractLoaded(Logger.location.COLLECTION_METADATASOF);
 
-        params.tokenIds.forEach(tokenId => {
-            if (!isValidNonnegativeInteger(tokenId)) {
-                log.throwMissingArgumentError(Logger.message.no_tokenId_or_not_valid, {
-                    location: Logger.location.COLLECTION_METADATASOF,
-                });
-            }
-        });
+        if (!isAllValidNonNegInteger(params.tokenIds)) {
+            log.throwMissingArgumentError(Logger.message.no_tokenId_or_not_valid, {
+                location: Logger.location.COLLECTION_METADATASOF,
+            });
+        }
 
         try {
             return this.contractDeployed.metadatasOf(params.tokenIds);
@@ -193,13 +191,13 @@ export default class Collection {
     async royaltyInfo(params: RoyaltyInfoOptions): Promise<RoyaltyInfo> {
         this.assertContractLoaded(Logger.location.COLLECTION_ROYALTYINFO);
 
-        if (!isValidNonnegativeInteger(params.tokenId)) {
+        if (!isValidNonNegInteger(params.tokenId)) {
             log.throwMissingArgumentError(Logger.message.no_tokenId_or_not_valid, {
                 location: Logger.location.COLLECTION_ROYALTYINFO,
             });
         }
 
-        if (!isValidNonnegativeInteger(params.sellPrice)) {
+        if (!isValidNonNegInteger(params.sellPrice)) {
             log.throwMissingArgumentError(Logger.message.no_sell_price_supplied_or_not_valid, {
                 location: Logger.location.COLLECTION_ROYALTYINFO,
             });
@@ -225,13 +223,11 @@ export default class Collection {
     async setPrices(params: SetPricesOptions): Promise<ethers.providers.TransactionResponse> {
         this.assertContractLoaded(Logger.location.COLLECTION_SETPRICES);
 
-        params.tokenIds.forEach(tokenId => {
-            if (!isValidNonnegativeInteger(tokenId)) {
-                log.throwMissingArgumentError(Logger.message.no_tokenId_or_not_valid, {
-                    location: Logger.location.COLLECTION_SETPRICES,
-                });
-            }
-        });
+        if (!isAllValidNonNegInteger(params.tokenIds)) {
+            log.throwMissingArgumentError(Logger.message.no_tokenId_or_not_valid, {
+                location: Logger.location.COLLECTION_SETPRICES,
+            });
+        }
 
         try {
             const priceInWeis = params.sellPrices.map(price => utils.parseEther(price));
@@ -265,13 +261,11 @@ export default class Collection {
     async addItems(params: AddItemsOptions): Promise<ethers.providers.TransactionResponse> {
         this.assertContractLoaded(Logger.location.COLLECTION_ADDITEMS);
 
-        params.maxSupplies.forEach(maxSupply => {
-            if (!isValidNonnegativeInteger(maxSupply)) {
-                log.throwMissingArgumentError(Logger.message.no_maxSupply_or_not_valid, {
-                    location: Logger.location.COLLECTION_ADDITEMS,
-                });
-            }
-        });
+        if (!isAllValidNonNegInteger(params.maxSupplies)) {
+            log.throwMissingArgumentError(Logger.message.no_maxSupply_or_not_valid, {
+                location: Logger.location.COLLECTION_ADDITEMS,
+            });
+        }
 
         try {
             const priceInWeis = params.sellPrices.map(price => utils.parseEther(price));

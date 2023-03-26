@@ -1,7 +1,7 @@
 import { ethers, utils, BigNumber as BN } from 'ethers';
 import { Logger, log, ErrorLocation } from '../Logger';
 import artifact from './artifacts/CollectionProxy';
-import { isValidNonnegativeInteger, addGasPriceToOptions, isValidPositiveNumber } from '../utils';
+import { isValidNonNegInteger, addGasPriceToOptions, isValidPositiveNumber, isAllValidAddress, isAllValidNonNegInteger } from '../utils';
 import preparePolygonTransaction from './utils';
 import { Chains } from '../Auth/availableChains';
 
@@ -193,23 +193,17 @@ export default class CollectionProxy {
         this.assertContractLoaded(Logger.location.COLLECTIONPROXY_PRICESOF);
         this.assertArrayLengthEqual(params.collections, params.tokenIds, Logger.location.COLLECTIONPROXY_PRICESOF);
 
-        params.collections.forEach(collection => {
-            if (!collection || !ethers.utils.isAddress(collection)) {
-                log.throwMissingArgumentError(Logger.message.invalid_contract_address, {
-                    location: Logger.location.COLLECTIONPROXY_PRICESOF,
-                });
-            }
-        });
-
-        params.tokenIds.forEach(list => {
-            list.forEach(tokenId => {
-                if (!isValidNonnegativeInteger(tokenId)) {
-                    log.throwMissingArgumentError(Logger.message.no_tokenId_or_not_valid, {
-                        location: Logger.location.COLLECTIONPROXY_PRICESOF,
-                    });
-                }
+        if (!isAllValidAddress(params.collections)) {
+            log.throwMissingArgumentError(Logger.message.invalid_contract_address, {
+                location: Logger.location.COLLECTIONPROXY_PRICESOF,
             });
-        });
+        }
+
+        if (!isAllValidNonNegInteger(params.tokenIds)) {
+            log.throwMissingArgumentError(Logger.message.no_tokenId_or_not_valid, {
+                location: Logger.location.COLLECTIONPROXY_PRICESOF,
+            });
+        }
 
         try {
             return this.contractDeployed.pricesOf(params.collections, params.tokenIds);
@@ -234,18 +228,16 @@ export default class CollectionProxy {
         this.assertArrayLengthEqual(params.collections, params.tokenIds, Logger.location.COLLECTIONPROXY_SETPRICES);
         this.assertArrayLengthEqual(params.collections, params.sellPrices, Logger.location.COLLECTIONPROXY_SETPRICES);
 
-        params.collections.forEach(collection => {
-            if (!collection || !ethers.utils.isAddress(collection)) {
-                log.throwMissingArgumentError(Logger.message.invalid_contract_address, {
-                    location: Logger.location.COLLECTIONPROXY_SETPRICES,
-                });
-            }
-        });
+        if (!isAllValidAddress(params.collections)) {
+            log.throwMissingArgumentError(Logger.message.invalid_contract_address, {
+                location: Logger.location.COLLECTIONPROXY_SETPRICES,
+            });
+        }
 
         params.tokenIds.forEach((list, index) => {
             this.assertArrayLengthEqual(list, params.sellPrices[index], Logger.location.COLLECTIONPROXY_SETPRICES);
             list.forEach(tokenId => {
-                if (!isValidNonnegativeInteger(tokenId)) {
+                if (!isValidNonNegInteger(tokenId)) {
                     log.throwMissingArgumentError(Logger.message.no_tokenId_or_not_valid, {
                         location: Logger.location.COLLECTIONPROXY_SETPRICES,
                     });
@@ -296,7 +288,7 @@ export default class CollectionProxy {
     //     });
 
     //     params.maxSupplies.forEach(list => list.forEach(maxSupply => {
-    //         if (!isValidNonnegativeInteger(maxSupply)) {
+    //         if (!isValidNonNegInteger(maxSupply)) {
     //             log.throwMissingArgumentError(Logger.message.no_maxSupply_or_not_valid, {
     //                 location: Logger.location.COLLECTIONPROXY_ADDITEMS,
     //             });
@@ -337,21 +329,17 @@ export default class CollectionProxy {
         this.assertContractLoaded(Logger.location.COLLECTIONPROXY_SETRECEIVERS);
         this.assertArrayLengthEqual(params.collections, params.newReceivers, Logger.location.COLLECTIONPROXY_SETRECEIVERS);
 
-        params.collections.forEach(collection => {
-            if (!collection || !ethers.utils.isAddress(collection)) {
-                log.throwMissingArgumentError(Logger.message.invalid_contract_address, {
-                    location: Logger.location.COLLECTIONPROXY_SETRECEIVERS,
-                });
-            }
-        });
+        if (!isAllValidAddress(params.collections)) {
+            log.throwMissingArgumentError(Logger.message.invalid_contract_address, {
+                location: Logger.location.COLLECTIONPROXY_SETRECEIVERS,
+            });
+        }
 
-        params.newReceivers.forEach(receiver => {
-            if (!receiver || !ethers.utils.isAddress(receiver)) {
-                log.throwMissingArgumentError(Logger.message.invalid_receiver_address, {
-                    location: Logger.location.COLLECTIONPROXY_SETRECEIVERS,
-                });
-            }
-        });
+        if (!isAllValidAddress(params.newReceivers)) {
+            log.throwMissingArgumentError(Logger.message.invalid_receiver_address, {
+                location: Logger.location.COLLECTIONPROXY_SETRECEIVERS,
+            });
+        }
 
         try {
             const chainId = await this.contractDeployed.signer.getChainId();
@@ -393,18 +381,16 @@ export default class CollectionProxy {
             });
         }
 
-        params.collections.forEach(collection => {
-            if (!collection || !ethers.utils.isAddress(collection)) {
-                log.throwMissingArgumentError(Logger.message.invalid_contract_address, {
-                    location: Logger.location.COLLECTIONPROXY_MINT,
-                });
-            }
-        });
+        if (!isAllValidAddress(params.collections)) {
+            log.throwMissingArgumentError(Logger.message.invalid_contract_address, {
+                location: Logger.location.COLLECTIONPROXY_MINT,
+            });
+        }
 
         params.tokenIds.forEach((list, i) => {
             this.assertArrayLengthEqual(list, params.amounts[i], Logger.location.COLLECTIONPROXY_MINT);
             list.forEach((tokenId, j) => {
-                if (!isValidNonnegativeInteger(tokenId)) {
+                if (!isValidNonNegInteger(tokenId)) {
                     log.throwMissingArgumentError(Logger.message.no_tokenId_or_not_valid, {
                         location: Logger.location.COLLECTIONPROXY_MINT,
                     });

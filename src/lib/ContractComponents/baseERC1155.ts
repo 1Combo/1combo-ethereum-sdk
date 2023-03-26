@@ -1,7 +1,7 @@
 import { BigNumber, ethers } from 'ethers';
 import { Logger, log, ErrorLocation } from '../Logger';
 import { GAS_LIMIT } from '../constants';
-import { addGasPriceToOptions, isBoolean, isValidNonnegativeInteger, isValidString } from '../utils';
+import { addGasPriceToOptions, isBoolean, isValidNonNegInteger, isValidString } from '../utils';
 import preparePolygonTransaction from '../ContractTemplates/utils';
 import { Chains } from '../Auth/availableChains';
 
@@ -102,13 +102,13 @@ export default class BaseERC1155 {
       });
     }
 
-    if (!isValidNonnegativeInteger(params.tokenId)) {
+    if (!isValidNonNegInteger(params.tokenId)) {
       log.throwArgumentError(Logger.message.tokenId_must_be_integer, 'tokenId', params.tokenId, {
         location: Logger.location.BASEERC1155_SAFETRANSFERFROM,
       });
     }
 
-    if (!isValidNonnegativeInteger(params.amount)) {
+    if (!isValidNonNegInteger(params.amount)) {
       log.throwArgumentError(Logger.message.amount_must_be_integer, 'amount', params.amount, {
         location: Logger.location.BASEERC1155_SAFETRANSFERFROM,
       });
@@ -169,7 +169,7 @@ export default class BaseERC1155 {
     }
 
     params.tokenIds.forEach(tokenId => {
-      if (!isValidNonnegativeInteger(tokenId)) {
+      if (!isValidNonNegInteger(tokenId)) {
         log.throwArgumentError(Logger.message.tokenId_must_be_integer, 'tokenId', tokenId, {
           location: Logger.location.BASEERC1155_SAFEBATCHTRANSFERFROM,
         });
@@ -177,7 +177,7 @@ export default class BaseERC1155 {
     });
 
     params.amounts.forEach(amount => {
-      if (!isValidNonnegativeInteger(amount)) {
+      if (!isValidNonNegInteger(amount)) {
         log.throwArgumentError(Logger.message.amount_must_be_integer, 'amount', amount, {
           location: Logger.location.BASEERC1155_SAFEBATCHTRANSFERFROM,
         });
@@ -283,7 +283,7 @@ export default class BaseERC1155 {
   async uri(params: URIOptions): Promise<string> {
     this.assertContractLoaded(Logger.location.BASEERC1155_URI);
 
-    if (!isValidNonnegativeInteger(params.tokenId)) {
+    if (!isValidNonNegInteger(params.tokenId)) {
       log.throwArgumentError(Logger.message.tokenId_must_be_integer, 'tokenId', params.tokenId, {
         location: Logger.location.BASEERC1155_URI,
       });
@@ -308,7 +308,7 @@ export default class BaseERC1155 {
       });
     }
 
-    if (!isValidNonnegativeInteger(params.tokenId)) {
+    if (!isValidNonNegInteger(params.tokenId)) {
       log.throwArgumentError(Logger.message.tokenId_must_be_integer, 'tokenId', params.tokenId, {
         location: Logger.location.BASEERC1155_BALANCEOF,
       });
@@ -336,7 +336,7 @@ export default class BaseERC1155 {
     });
 
     params.tokenIds.forEach(tokenId => {
-      if (!isValidNonnegativeInteger(tokenId)) {
+      if (!isValidNonNegInteger(tokenId)) {
         log.throwArgumentError(Logger.message.tokenId_must_be_integer, 'tokenId', tokenId, {
           location: Logger.location.BASEERC1155_BALANCEOFBATCH,
         });
