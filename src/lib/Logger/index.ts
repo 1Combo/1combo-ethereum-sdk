@@ -83,6 +83,16 @@ export enum ErrorLocation {
   BASEERC721_RENOUNCEOWNERSHIP = '[BaseERC721.renounceOwnership]',
   BASEERC721_TOKEN_URI = '[BaseERC721.tokenURI]',
 
+  // BaseERC1155
+  BASEERC1155_ADDGASPRICETOOPTIONS = '[BaseERC1155.addGasPriceToOptions]',
+  BASEERC1155_SAFETRANSFERFROM = '[BaseERC1155.safeTransferFrom]',
+  BASEERC1155_SAFEBATCHTRANSFERFROM = '[BaseERC1155.safeBatchTransferFrom]',
+  BASEERC1155_SETAPPROVALFORALL = '[BaseERC1155.setApprovalForAll]',
+  BASEERC1155_ISAPPROVEDFORALL = '[BaseERC1155.isApprovedForAll]',
+  BASEERC1155_URI = '[BaseERC1155.uri]',
+  BASEERC1155_BALANCEOF = '[BaseERC1155.balanceOf]',
+  BASEERC1155_BALANCEOFBATCH = '[BaseERC1155.balanceOfBatch]',
+
   // HasAccessControl
   HASACCESSCONTROL_ADDADMIN = '[HasAccessControl.addAdmin]',
   HASACCESSCONTROL_RENOUNCEADMIN = '[HasAccessControl.renounceAdmin]',
@@ -196,6 +206,7 @@ export enum ErrorMessage {
   fee_must_be_between_0_and_10000 = 'Fee must be between 0 and 10000.',
 
   tokenId_must_be_integer = 'TokenId must be integer.',
+  amount_must_be_integer = 'Amount must be integer.',
   approvalStatus_must_be_boolean = 'approvalStatus must be boolean.',
   only_privateKey_or_provider_required = 'Only privateKey or provider required',
   chain_not_supported = 'Chain not supported.',
