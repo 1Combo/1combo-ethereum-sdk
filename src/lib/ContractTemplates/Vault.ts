@@ -10,13 +10,13 @@ type ContractAddressOptions = {
 };
 
 type ClaimOptions = {
-    gas?: string;
+    gas?: string | undefined;
 };
 
 type ClaimTargetOptions = {
     erc20: string;
     collections: Array<string>;
-    gas?: string;
+    gas?: string | undefined;
 };
 
 type ClaimablesOfCollectionsOptions = {

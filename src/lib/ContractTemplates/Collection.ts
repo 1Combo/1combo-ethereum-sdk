@@ -28,13 +28,13 @@ type AddItemsOptions = {
     maxSupplies: Array<number>;
     sellPrices: Array<string>;
     metaHashes: Array<string>;
-    gas?: string;
+    gas?: string | undefined;
 };
 
 type SetPricesOptions = {
     tokenIds: Array<number>;
     sellPrices: Array<string>;
-    gas?: string;
+    gas?: string | undefined;
 };
 
 type MetadatasOfOptions = {

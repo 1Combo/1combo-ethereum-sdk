@@ -23,20 +23,20 @@ type MintOptions = {
     collections: Array<string>;
     tokenIds: Array<Array<number>>;
     amounts: Array<Array<number>>;
-    gas?: string;
+    gas?: string | undefined;
 };
 
 type SetPricesOptions = {
     collections: Array<string>;
     tokenIds: Array<Array<number>>;
     sellPrices: Array<Array<string>>;
-    gas?: string;
+    gas?: string | undefined;
 };
 
 type SetReceiversOptions = {
     collections: Array<string>;
     newReceivers: Array<string>;
-    gas?: string;
+    gas?: string | undefined;
 };
 
 type PricesOfOptions = {

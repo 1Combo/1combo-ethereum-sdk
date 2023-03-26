@@ -88,6 +88,15 @@ export enum ErrorLocation {
   COMBOCOLLFACTORY_GETREGISTRY = '[ComboCollFactory.getRegistries]',
   COMBOCOLLFACTORY_GETREGISTRYOF = '[ComboCollFactory.getRegistriesOf]',
 
+  // ComboCollProxy
+  COMBOCOLLPROXY_LOADCONTRACT = '[ComboCollProxy.loadContract]',
+  COMBOCOLLPROXY_ADDGASPRICETOOPTIONS = '[ComboCollProxy.addGasPriceToOptions]',
+  COMBOCOLLPROXY_SETMINTPRICEBATCH = '[ComboCollProxy.setMintPriceBatch]',
+  COMBOCOLLPROXY_SETRECEIVERS = '[ComboCollProxy.setReceivers]',
+  COMBOCOLLPROXY_EXIST = '[ComboCollProxy.exist]',
+  COMBOCOLLPROXY_COMBOCOLLMETASOF = '[ComboCollProxy.comboCollMetasOf]',
+  COMBOCOLLPROXY_APPROVE = '[ComboCollProxy.approve]',
+
   // Indexer
   INDEXER_ADDGASPRICETOOPTIONS = '[Indexer.addGasPriceToOptions]',
   INDEXER_LOADCONTRACT = '[Indexer.loadContract]',
