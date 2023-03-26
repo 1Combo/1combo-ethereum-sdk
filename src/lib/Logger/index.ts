@@ -47,6 +47,17 @@ export enum ErrorLocation {
   COMBOCOLLCORE_GET_LIMITED_TOKEN_USAGES = '[ComboCollCore.getLimitedTokenUsages]',
   COMBOCOLLCORE_ROYALTYINFO = '[ComboCollCore.royaltyInfo]',
 
+  // Collection
+  COLLECTION_DEPLOY = '[Collection.deploy]',
+  COLLECTION_ADDGASPRICETOOPTIONS = '[Collection.addGasPriceToOptions]',
+  COLLECTION_LOADCONTRACT = '[Collection.loadContract]',
+  COLLECTION_ROYALTYINFO = '[Collection.royaltyInfo]',
+  COLLECTION_TOTALSUPPLY = '[Collection.totalSupply]',
+  COLLECTION_TOTALITEM = '[Collection.totalItem]',
+  COLLECTION_SETPRICES = '[Collection.sellPrices]',
+  COLLECTION_ADDITEMS = '[Collection.addItems]',
+  COLLECTION_METADATASOF = '[Collection.metadatasOf]',
+
   // ERC721UserMintable
   ERC721USERMINTABLE_DEPLOY = '[ERC721UserMintable.deploy]',
   ERC721USERMINTABLE_ADDGASPRICETOOPTIONS = '[ERC721UserMintable.addGasPriceToOptions]',
@@ -148,6 +159,7 @@ export enum ErrorMessage {
   no_parameters_supplied = 'No parameters supplied.',
   no_template_type_supplied = 'No template type supplied.',
   no_tokenId_or_not_valid = 'No tokenId supplied or not valid.',
+  no_maxSupply_or_not_valid = 'No maxSupply supplied or not valid.',
   no_uuid_or_not_valid = 'No uuid supplied or not valid.',
   no_setId_or_not_valid = 'No setId supplied or not valid.',
   no_tokenURI_supplied = 'No tokenURI supplied.',
