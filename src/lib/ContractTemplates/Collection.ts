@@ -1,5 +1,4 @@
 import { ethers, utils, BigNumber as BN } from 'ethers';
-import { MAX_UINT128 } from '../constants';
 import BaseERC1155 from '../ContractComponents/baseERC1155';
 import { Logger, log, ErrorLocation } from '../Logger';
 import artifact from './artifacts/Collection';

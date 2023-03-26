@@ -58,6 +58,16 @@ export enum ErrorLocation {
   COLLECTION_ADDITEMS = '[Collection.addItems]',
   COLLECTION_METADATASOF = '[Collection.metadatasOf]',
 
+  // CollectionProxy
+  COLLECTIONPROXY_ADDGASPRICETOOPTIONS = '[CollectionProxy.addGasPriceToOptions]',
+  COLLECTIONPROXY_LOADCONTRACT = '[CollectionProxy.loadContract]',
+  COLLECTIONPROXY_SETPRICES = '[CollectionProxy.sellPrices]',
+  COLLECTIONPROXY_ADDITEMS = '[CollectionProxy.addItems]',
+  COLLECTIONPROXY_PRICESOF = '[CollectionProxy.pricesOf]',
+  COLLECTIONPROXY_COLLECTIONMETASOF = '[CollectionProxy.collectionMetasOf]',
+  COLLECTIONPROXY_EXIST = '[CollectionProxy.exist]',
+  COLLECTIONPROXY_SETRECEIVERS = '[CollectionProxy.setReceivers]',
+
   // ERC721UserMintable
   ERC721USERMINTABLE_DEPLOY = '[ERC721UserMintable.deploy]',
   ERC721USERMINTABLE_ADDGASPRICETOOPTIONS = '[ERC721UserMintable.addGasPriceToOptions]',
@@ -181,6 +191,7 @@ export enum ErrorMessage {
   no_api_key = 'No API Key supplied',
 
   invalid_contract_address = 'Invalid contract address.',
+  invalid_receiver_address = 'Invalid receiver address.',
   invalid_account_address = 'Invalid account address.',
   invalid_public_address = 'Invalid public address.',
   invalid_from_address = 'Invalid "from" address.',
