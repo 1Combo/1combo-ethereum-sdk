@@ -100,6 +100,24 @@ export enum ErrorLocation {
   VAULT_CLAIMABLESOFRECEIVERS= '[Vault.claimablesOfReceivers]',
   VAULT_CLAIMABLESOFRECEIVERSTARGET= '[Vault.claimablesOfReceiversTarget]',
 
+  // SetManager
+  SETMANAGER_ADDGASPRICETOOPTIONS = '[SetManager.addGasPriceToOptions]',
+  SETMANAGER_LOADCONTRACT = '[SetManager.loadContract]',
+  SETMANAGER_TOTALSET = '[SetManager.totalSet]',
+  SETMANAGER_INITCOLLECTIONTYPE = '[SetManager.initCollectionTypes]',
+  SETMANAGER_CREATESET = '[SetManager.createSet]',
+  SETMANAGER_ADDCOLLECTIONS = '[SetManager.addCollections]',
+  SETMANAGER_CHANGECATEGORY = '[SetManager.changeCategoriesForCollections]',
+  SETMANAGER_ADDCATEGORIES = '[SetManager.addCategories]',
+  SETMANAGER_RENAMESET = '[SetManager.renameSet]',
+  SETMANAGER_RENAMECATEGORY = '[SetManager.renameCategroy]',
+  SETMANAGER_COLLECTIONTYPESOF = '[SetManager.collectionTypesOf]',
+  SETMANAGER_GETSETS = '[SetManager.getSets]',
+  SETMANAGER_SETIDSOFCREATOR = '[SetManager.setIdsOfCreator]',
+  SETMANAGER_COLLECTIONSOF = '[SetManager.collectionsOf]',
+  SETMANAGER_VERIFYCOLLECTIONINSET = '[SetManager.verifyCollectionInSet]',
+  SETMANAGER_ISSETCONTAINSALLCOLLECTIONS = '[SetManager.isSetContainsAllCollections]',
+
   // BaseERC721
   BASEERC721_ADDGASPRICETOOPTIONS = '[BaseERC721.addGasPriceToOptions]',
   BASEERC721_TRANSFER = '[BaseERC721.transfer]',
@@ -257,6 +275,9 @@ export enum ErrorMessage {
 
   array_length_mismatched = 'Array length mismatched',
   invalid_page_param = 'Invalid page number or page size',
+  empty_name = 'Empty name',
+  invalid_category_id = 'Invalid category id',
+  invalid_set_id = 'Invalid set id',
 }
 
 export class Logger {
