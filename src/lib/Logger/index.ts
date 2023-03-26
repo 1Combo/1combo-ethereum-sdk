@@ -67,6 +67,7 @@ export enum ErrorLocation {
   COLLECTIONPROXY_COLLECTIONMETASOF = '[CollectionProxy.collectionMetasOf]',
   COLLECTIONPROXY_EXIST = '[CollectionProxy.exist]',
   COLLECTIONPROXY_SETRECEIVERS = '[CollectionProxy.setReceivers]',
+  COLLECTIONPROXY_MINT = '[CollectionProxy.mint]',
 
   // ERC721UserMintable
   ERC721USERMINTABLE_DEPLOY = '[ERC721UserMintable.deploy]',
@@ -250,6 +251,8 @@ export enum ErrorMessage {
   unsupported_provider = 'unsupported provider',
   invalid_block_number = 'Invalid block number.',
   invalid_block_hash = 'Invalid block hash.',
+
+  array_length_mismatched = 'Array length mismatched',
 }
 
 export class Logger {
