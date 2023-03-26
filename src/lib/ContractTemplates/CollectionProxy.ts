@@ -1,6 +1,6 @@
 import { ethers, utils, BigNumber as BN } from 'ethers';
 import { Logger, log, ErrorLocation } from '../Logger';
-import artifact from './artifacts/Collection';
+import artifact from './artifacts/CollectionProxy';
 import { isValidNonnegativeInteger, addGasPriceToOptions, isValidPositiveNumber } from '../utils';
 import preparePolygonTransaction from './utils';
 import { Chains } from '../Auth/availableChains';

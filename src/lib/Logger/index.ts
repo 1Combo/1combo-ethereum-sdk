@@ -37,6 +37,10 @@ export enum ErrorLocation {
   IPFSSERVICE_UPLOADDIRECTORY = '[IPFS.uploadDirectory]',
   IPFSSERVICE_UNPINFILE = '[IPFS.unPinFile]',
 
+  // Authority
+  AUTHORITY_LOADCONTRACT = '[Authority.loadContract]',
+  AUTHORITY_AUTHORITIESOF = '[Authority.authoritiesOf]',
+
   // ComboCollCore
   COMBOCOLLCORE_DEPLOY = '[ComboCollCore.deploy]',
   COMBOCOLLCORE_ADDGASPRICETOOPTIONS = '[ComboCollCore.addGasPriceToOptions]',
@@ -253,6 +257,7 @@ export enum ErrorMessage {
   invalid_block_hash = 'Invalid block hash.',
 
   array_length_mismatched = 'Array length mismatched',
+  invalid_page_param = 'Invalid page number or page size',
 }
 
 export class Logger {
