@@ -61,10 +61,10 @@ export default class CollectionFactory {
     }
 
     /**
-     * Load an Collection contract from an existing contract address. Used by the SDK class
+     * Load an CollectionFactory contract from an existing contract address. Used by the SDK class
      * @param {object} params object containing all parameters
-     * @param {string} params.contractAddress Address of the Collection contract to load
-     * @returns {Collection} Contract
+     * @param {string} params.contractAddress Address of the CollectionFactory contract to load
+     * @returns {CollectionFactory} Contract
      */
     loadContract(params: ContractAddressOptions): CollectionFactory {
         if (this.contractAddress || this.contractDeployed) {

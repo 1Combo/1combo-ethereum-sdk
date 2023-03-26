@@ -139,7 +139,7 @@ export default class Indexer {
                 options = await preparePolygonTransaction(
                     await this.contractDeployed.signer.getTransactionCount(),
                 );
-            else options = addGasPriceToOptions({ gasLimit: params.gas }, params.gas, Logger.location.INDEXER_ADDGASPRICETOOPTIONS);
+            else options = addGasPriceToOptions({ }, params.gas, Logger.location.INDEXER_REGISTERCOLLECTIONS);
 
             return this.contractDeployed.registerCollections(params.collections, options);
         } catch (error) {

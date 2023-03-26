@@ -90,6 +90,16 @@ export enum ErrorLocation {
   INDEXER_ROOTCOMBOOFUUIDS = '[Indexer.rootComboOfUUIDs]',
   INDEXER_TOKENSOF = '[Indexer.tokensOf]',
 
+  // Vault
+  VAULT_ADDGASPRICETOOPTIONS = '[Vault.addGasPriceToOptions]',
+  VAULT_LOADCONTRACT = '[Vault.loadContract]',
+  VAULT_CLAIM = '[Vault.claim]',
+  VAULT_CLAIMTARGET = '[Vault.claimTarget]',
+  VAULT_CLAIMABLESOFCOLLECTIONS = '[Vault.claimablesOfCollections]',
+  VAULT_CLAIMABLESOFCOLLECTIONSTARGET = '[Vault.claimablesOfCollectionsTarget]',
+  VAULT_CLAIMABLESOFRECEIVERS= '[Vault.claimablesOfReceivers]',
+  VAULT_CLAIMABLESOFRECEIVERSTARGET= '[Vault.claimablesOfReceiversTarget]',
+
   // BaseERC721
   BASEERC721_ADDGASPRICETOOPTIONS = '[BaseERC721.addGasPriceToOptions]',
   BASEERC721_TRANSFER = '[BaseERC721.transfer]',

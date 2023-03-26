@@ -239,7 +239,7 @@ export default class Collection {
                 options = await preparePolygonTransaction(
                     await this.contractDeployed.signer.getTransactionCount(),
                 );
-            else options = addGasPriceToOptions({ gasLimit: params.gas }, params.gas, Logger.location.COLLECTION_ADDGASPRICETOOPTIONS);
+            else options = addGasPriceToOptions({}, params.gas, Logger.location.COLLECTION_SETPRICES);
 
             return this.contractDeployed.setPrices(params.tokenIds, priceInWeis, options);
         } catch (error) {
@@ -277,7 +277,7 @@ export default class Collection {
                 options = await preparePolygonTransaction(
                     await this.contractDeployed.signer.getTransactionCount(),
                 );
-            else options = addGasPriceToOptions({ gasLimit: params.gas }, params.gas, Logger.location.COLLECTION_ADDGASPRICETOOPTIONS);
+            else options = addGasPriceToOptions({}, params.gas, Logger.location.COLLECTION_ADDITEMS);
 
             return this.contractDeployed.addItems(params.maxSupplies, priceInWeis, params.metaHashes, options);
         } catch (error) {

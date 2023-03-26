@@ -146,7 +146,7 @@ export default class BaseERC721 {
     }
 
     try {
-      const options = addGasPriceToOptions({}, params.gas, Logger.location.BASEERC721_ADDGASPRICETOOPTIONS);
+      const options = addGasPriceToOptions({}, params.gas, Logger.location.BASEERC721_SETAPPROVALFORALL);
       return this.contractDeployed.setApprovalForAll(params.to, params.approvalStatus, options);
     } catch (error) {
       return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
@@ -210,7 +210,7 @@ export default class BaseERC721 {
     }
 
     try {
-      const options = addGasPriceToOptions({}, params.gas, Logger.location.BASEERC721_ADDGASPRICETOOPTIONS);
+      const options = addGasPriceToOptions({}, params.gas, Logger.location.BASEERC721_RENOUNCEOWNERSHIP);
       return this.contractDeployed.renounceOwnership(options);
     } catch (error) {
       return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {

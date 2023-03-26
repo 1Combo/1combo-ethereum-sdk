@@ -255,7 +255,7 @@ export default class CollectionProxy {
                 options = await preparePolygonTransaction(
                     await this.contractDeployed.signer.getTransactionCount(),
                 );
-            else options = addGasPriceToOptions({ gasLimit: params.gas }, params.gas, Logger.location.COLLECTIONPROXY_ADDGASPRICETOOPTIONS);
+            else options = addGasPriceToOptions({}, params.gas, Logger.location.COLLECTIONPROXY_SETPRICES);
 
             return this.contractDeployed.setPrices(params.collections, params.tokenIds, priceInWeis, options);
         } catch (error) {
@@ -349,7 +349,7 @@ export default class CollectionProxy {
                 options = await preparePolygonTransaction(
                     await this.contractDeployed.signer.getTransactionCount(),
                 );
-            else options = addGasPriceToOptions({ gasLimit: params.gas }, params.gas, Logger.location.COLLECTIONPROXY_ADDGASPRICETOOPTIONS);
+            else options = addGasPriceToOptions({ }, params.gas, Logger.location.COLLECTIONPROXY_SETRECEIVERS);
 
             return this.contractDeployed.setPrices(params.collections, params.newReceivers, options);
         } catch (error) {
@@ -411,7 +411,7 @@ export default class CollectionProxy {
                 options = await preparePolygonTransaction(
                     await this.contractDeployed.signer.getTransactionCount(),
                 );
-            else options = addGasPriceToOptions({ gasLimit: params.gas }, params.gas, Logger.location.COLLECTIONPROXY_ADDGASPRICETOOPTIONS);
+            else options = addGasPriceToOptions({ }, params.gas, Logger.location.COLLECTIONPROXY_MINT);
 
             if (params.payInEther) {
                 const prices = (await this.contractDeployed.pricesOf(params.collections, params.tokenIds)) as Array<Array<BN>>;

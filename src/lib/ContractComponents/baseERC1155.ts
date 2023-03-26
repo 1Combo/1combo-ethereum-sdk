@@ -122,7 +122,7 @@ export default class BaseERC1155 {
         options = await preparePolygonTransaction(
           await this.contractDeployed.signer.getTransactionCount(),
         );
-      else options = addGasPriceToOptions({ gasLimit: GAS_LIMIT }, params.gas, Logger.location.BASEERC1155_ADDGASPRICETOOPTIONS);
+      else options = addGasPriceToOptions({ gasLimit: GAS_LIMIT }, params.gas, Logger.location.BASEERC1155_SAFETRANSFERFROM);
 
       let data = isValidString(params.data) ? params.data : '';
 
@@ -192,7 +192,7 @@ export default class BaseERC1155 {
         options = await preparePolygonTransaction(
           await this.contractDeployed.signer.getTransactionCount(),
         );
-      else options = addGasPriceToOptions({ gasLimit: GAS_LIMIT }, params.gas, Logger.location.BASEERC1155_ADDGASPRICETOOPTIONS);
+      else options = addGasPriceToOptions({ gasLimit: GAS_LIMIT }, params.gas, Logger.location.BASEERC1155_SAFEBATCHTRANSFERFROM);
 
       let data = isValidString(params.data) ? params.data : '';
 
