@@ -92,6 +92,7 @@ export enum ErrorLocation {
   COMBOCOLLPROXY_LOADCONTRACT = '[ComboCollProxy.loadContract]',
   COMBOCOLLPROXY_ADDGASPRICETOOPTIONS = '[ComboCollProxy.addGasPriceToOptions]',
   COMBOCOLLPROXY_SETMINTPRICEBATCH = '[ComboCollProxy.setMintPriceBatch]',
+  COMBOCOLLPROXY_DISMANTLE = '[ComboCollProxy.dismantle]',
   COMBOCOLLPROXY_SETRECEIVERS = '[ComboCollProxy.setReceivers]',
   COMBOCOLLPROXY_EXIST = '[ComboCollProxy.exist]',
   COMBOCOLLPROXY_COMBOCOLLMETASOF = '[ComboCollProxy.comboCollMetasOf]',

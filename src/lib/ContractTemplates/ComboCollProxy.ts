@@ -8,8 +8,22 @@ import preparePolygonTransaction from '../ContractTemplates/utils';
 import { Chains } from '../Auth/availableChains';
 
 type ContractAddressOptions = {
-    proxyAddress: string;
-    indexerAddress: string;
+    contractAddress: string;
+};
+
+type MintOptions = {
+    combo: string;
+    to: string;
+    payInEther: boolean;
+    metaHash: string;
+    // ingredients: ;
+    // itemsToBuy: ;
+};
+
+type DismantleOptions = {
+    combo: string;
+    comboId: number;
+    gas?: string | undefined;
 };
 
 type SetMintPriceBatchOptions = {
@@ -45,6 +59,7 @@ type ApproveOptions = {
 };
 
 type AuthoritiesOfOptions = {
+    indexerDeployed: Indexer;
     combo: string;
     to: string;
     pageNum: number;
@@ -59,13 +74,12 @@ type PagingAuthorities = {
 };
 
 export default class ComboCollProxy {
-    proxyAddress: string;
+    contractAddress: string;
 
     private contractDeployed: ethers.Contract;
     private readonly signer;
 
     private authorityDeployed: Authority;
-    private indexerDeployed: Indexer;
 
     constructor(signer: ethers.Wallet | ethers.providers.JsonRpcSigner) {
         this.signer = signer;
@@ -76,7 +90,7 @@ export default class ComboCollProxy {
             log.throwArgumentError(
                 Logger.message.contract_not_deployed_or_loaded,
                 'contractAddress',
-                this.proxyAddress,
+                this.contractAddress,
                 {
                     location: location,
                 },
@@ -89,7 +103,7 @@ export default class ComboCollProxy {
             log.throwArgumentError(
                 Logger.message.array_length_mismatched,
                 'contractAddress',
-                this.proxyAddress,
+                this.contractAddress,
                 {
                     location: location,
                 },
@@ -104,41 +118,80 @@ export default class ComboCollProxy {
      * @returns {ComboCollProxy} Contract
      */
     loadContract(params: ContractAddressOptions): ComboCollProxy {
-        if (this.proxyAddress || this.contractDeployed) {
+        if (this.contractAddress || this.contractDeployed) {
             log.throwArgumentError(
                 Logger.message.contract_already_loaded,
                 'contractAddress',
-                this.proxyAddress,
+                this.contractAddress,
                 {
                     location: Logger.location.COMBOCOLLPROXY_LOADCONTRACT,
                 },
             );
         }
 
-        if (!isAllValidAddress(params.proxyAddress)) {
-            log.throwMissingArgumentError(Logger.message.invalid_contract_address, {
-                location: Logger.location.COMBOCOLLPROXY_LOADCONTRACT,
-            });
-        }
-
-        if (!isAllValidAddress(params.indexerAddress)) {
+        if (!isAllValidAddress(params.contractAddress)) {
             log.throwMissingArgumentError(Logger.message.invalid_contract_address, {
                 location: Logger.location.COMBOCOLLPROXY_LOADCONTRACT,
             });
         }
 
         try {
-            this.proxyAddress = <string>params.proxyAddress;
+            this.contractAddress = <string>params.contractAddress;
             this.contractDeployed = new ethers.Contract(
-                this.proxyAddress,
+                this.contractAddress,
                 artifact.abi,
                 this.signer,
             );
-            this.indexerDeployed = new Indexer(this.signer).loadContract({contractAddress: params.indexerAddress});
             return this;
         } catch (error) {
             return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
                 location: Logger.location.COMBOCOLLPROXY_LOADCONTRACT,
+                error,
+            });
+        }
+    }
+
+    // TODO: mint/edit metaHash is unknown
+    async mint(params: MintOptions): Promise<ethers.providers.TransactionResponse> {
+        return null as unknown as Promise<ethers.providers.TransactionResponse>;
+    }
+
+    /**
+     * Dismantles a combo
+     * @param {object} params object containing all parameters
+     * @param {string} params.combo address of combo collection
+     * @param {number} params.comboId combo
+     * @returns {Promise<ethers.providers.TransactionResponse>} Transaction
+     */
+    async dismantle(params: DismantleOptions): Promise<ethers.providers.TransactionResponse> {
+        this.assertContractLoaded(Logger.location.COMBOCOLLPROXY_DISMANTLE);
+
+        if (!isAllValidAddress(params.combo)) {
+            log.throwMissingArgumentError(Logger.message.invalid_contract_address, {
+                location: Logger.location.COMBOCOLLPROXY_DISMANTLE,
+            });
+        }
+
+        if (!isAllValidNonNegInteger(params.comboId)) {
+            log.throwMissingArgumentError(Logger.message.invalid_token_address, {
+                location: Logger.location.COMBOCOLLPROXY_DISMANTLE,
+            });
+        }
+
+        try {
+            const chainId = await this.contractDeployed.signer.getChainId();
+            let options;
+            // If Polygon mainnet, set up options propperly to avoid underpriced transaction error
+            if (chainId === Chains.polygon)
+                options = await preparePolygonTransaction(
+                    await this.contractDeployed.signer.getTransactionCount(),
+                );
+            else options = addGasPriceToOptions({}, params.gas, Logger.location.COMBOCOLLPROXY_ADDGASPRICETOOPTIONS);
+
+            return this.contractDeployed.dismantle(params.combo, params.comboId, options);
+        } catch (error) {
+            return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
+                location: Logger.location.COMBOCOLLPROXY_SETMINTPRICEBATCH,
                 error,
             });
         }
@@ -403,7 +456,7 @@ export default class ComboCollProxy {
                 tokenIds: new Array<BN>(),
             };
             
-            const tokens = await this.indexerDeployed.tokensOf({uuids: authorities.uuids.map(uuid => uuid.toString())});
+            const tokens = await params.indexerDeployed.tokensOf({uuids: authorities.uuids.map(uuid => uuid.toString())});
             tokens.forEach(token => {
                 ret.tokenAddresses.push(token.tokenAddress);
                 ret.tokenIds.push(token.tokenId);

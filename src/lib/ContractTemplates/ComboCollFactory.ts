@@ -7,6 +7,23 @@ type ContractAddressOptions = {
     contractAddress: string;
 };
 
+type Rule = {
+    max: number;
+    min: number;
+    limit: number;
+    setId: number;
+    lock: boolean;
+    collection: string;
+}
+
+type CreateComboOptions = {
+    name: string;
+    symbol: string;
+    contractURI: string;
+    mintFee: string;
+    rules: Array<Rule>;
+};
+
 type GetRegistriesOptions = {
     pageNum: number;
     pageSize: number;
@@ -92,9 +109,10 @@ export default class ComboCollFactory {
         }
     }
 
-    // TODO:
-    // async createCombo(params: CreateComboOptions): Promise<ethers.providers.TransactionResponse> {
-    // }
+    // TODO: contractURI is unknown
+    async createCombo(params: CreateComboOptions): Promise<ethers.providers.TransactionResponse> {
+        return null as unknown as Promise<ethers.providers.TransactionResponse>;
+    }
 
     /**
      * Returns total number of combo collections

@@ -26,7 +26,7 @@ export enum TEMPLATES {
 }
 
 export const classes = {
-  Authority,
+  // Authority,
   Collection,
   CollectionFactory,
   CollectionProxy,

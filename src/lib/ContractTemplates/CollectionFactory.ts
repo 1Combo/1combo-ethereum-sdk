@@ -7,19 +7,19 @@ type ContractAddressOptions = {
     contractAddress: string;
 };
 
-// type InitialItem = {
-//     price: string;
-//     metaHash: string;
-//     maxSupply: number;
-// };
+type InitialItem = {
+    price: string;
+    metaHash: string;
+    maxSupply: number;
+};
 
-// type DeployCollectionOptions = {
-//     name: string;
-//     symbol: string;
-//     contractURI: string;
-//     initialItems: Array<InitialItem>;
-//     gas?: string;
-// };
+type DeployCollectionOptions = {
+    name: string;
+    symbol: string;
+    contractURI: string;
+    initialItems: Array<InitialItem>;
+    gas?: string;
+};
 
 type GetCollectionsOptions = {
     pageNum: number;
@@ -100,12 +100,10 @@ export default class CollectionFactory {
         }
     }
 
-    // /**
-    //  * Deploy new collection
-    //  */
-    // async deploy(params: DeployCollectionOptions): Promise<ethers.providers.TransactionResponse> {
-    //     // TODO:
-    // }
+    // TODO: contractURI is unknown
+    async deploy(params: DeployCollectionOptions): Promise<ethers.providers.TransactionResponse> {
+        return null as unknown as Promise<ethers.providers.TransactionResponse>;
+    }
 
     /**
      * Returns total number of collections

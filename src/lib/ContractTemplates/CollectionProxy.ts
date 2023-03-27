@@ -9,13 +9,13 @@ type ContractAddressOptions = {
     contractAddress: string;
 };
 
-// type AddItemsOptions = {
-//     collections: Array<string>;
-//     maxSupplies: Array<Array<number>>;
-//     sellPrices: Array<Array<string>>;
-//     metaHashes: Array<Array<string>>;
-//     gas?: string;
-// };
+type AddItemsOptions = {
+    collections: Array<string>;
+    maxSupplies: Array<Array<number>>;
+    sellPrices: Array<Array<string>>;
+    metaHashes: Array<Array<string>>;
+    gas?: string;
+};
 
 type MintOptions = {
     to: string;
@@ -266,7 +266,7 @@ export default class CollectionProxy {
         }
     }
 
-    // TODO:
+    // TODO: metaHash is unknown
     // /**
     //  * Adds new items, only creator of the collection is allowed
     //  * @param {object} params object containing all parameters
@@ -276,7 +276,7 @@ export default class CollectionProxy {
     //  * @param {Array<Array<string>>} params.metaHashes hash of the new item's metadata
     //  * @returns {Promise<ethers.providers.TransactionResponse>} Transaction
     //  */
-    // async addItems(params: AddItemsOptions): Promise<ethers.providers.TransactionResponse> {
+    async addItems(params: AddItemsOptions): Promise<ethers.providers.TransactionResponse> {
     //     this.assertContractLoaded(Logger.location.COLLECTIONPROXY_ADDITEMS);
 
     //     params.collections.forEach(collection => {
@@ -314,7 +314,8 @@ export default class CollectionProxy {
     //             error,
     //         });
     //     }
-    // }
+        return null as unknown as Promise<ethers.providers.TransactionResponse>;
+    }
 
 
     /**
