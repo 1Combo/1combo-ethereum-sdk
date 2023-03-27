@@ -11,12 +11,12 @@ import { isValidString, formatRpcUrl } from '../utils';
 import { Logger, log } from '../Logger';
 import authSchema from './auth.schema';
 
-type AuthOptions = {
+export type AuthOptions = {
   privateKey?: string | undefined;
   projectId: string | undefined;
   secretId: string | undefined;
+  chainId: number;
   rpcUrl?: string | undefined;
-  chainId: number | undefined;
   provider?: ethers.providers.ExternalProvider | ethers.providers.JsonRpcFetchFunc;
 };
 

@@ -5,7 +5,7 @@ import Auth from '../src/lib/Auth/Auth';
 import { SDK } from '../src/lib/SDK/sdk';
 
 import { generateTestPrivateKeyOrHash } from './__mocks__/utils';
-import { TEMPLATES } from '../src/lib/constants';
+import { TEMPLATES } from '../src/lib/SDK/constants';
 
 import ComboCollCore from '../src/lib/ContractTemplates/ComboCollCore';
 
@@ -28,7 +28,7 @@ describe('ComboCollCore', () => {
         });
         sdk = new SDK(auth);
         core = await sdk.loadContract({
-            template: TEMPLATES.ComboCollCore,
+            templateName: TEMPLATES.ComboCollCore,
             contractAddress: GOERLI_COMBOCOLLCORE_ADDRESS_1,
         });
     });

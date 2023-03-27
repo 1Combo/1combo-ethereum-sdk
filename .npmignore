@@ -3,3 +3,7 @@ test
 .gitignore
 package-lock.json
 node_modules
+docs
+.env
+.env.*
+.DS_Store

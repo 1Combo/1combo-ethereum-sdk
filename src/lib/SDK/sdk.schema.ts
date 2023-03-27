@@ -16,6 +16,6 @@ export const deployOptions = Joi.object({
 }).required();
 
 export const loadContractOptions = Joi.object({
-  template: Joi.string().valid(...Object.values(TEMPLATES)),
+  templateName: Joi.string().valid(...Object.values(TEMPLATES)),
   contractAddress: Joi.string().required(),
 }).required();

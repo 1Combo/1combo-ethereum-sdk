@@ -1,4 +1,4 @@
-import Authority from '../ContractTemplates/Authority';
+// import Authority from '../ContractTemplates/Authority';
 import Collection from '../ContractTemplates/Collection';
 import CollectionFactory from '../ContractTemplates/CollectionFactory';
 import CollectionProxy from '../ContractTemplates/CollectionProxy';
@@ -13,7 +13,7 @@ const NFT_API_URL = process.env.NFT_API_URL ? process.env.NFT_API_URL : 'https:/
 export { NFT_API_URL };
 
 export enum TEMPLATES {
-  Authority = 'Authority',
+  // Authority = 'Authority',
   Collection = 'Collection',
   CollectionFactory = 'CollectionFactory',
   CollectionProxy = 'CollectionProxy',

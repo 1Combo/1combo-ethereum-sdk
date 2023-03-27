@@ -6,7 +6,7 @@ import { loadContractOptions } from './sdk.schema';
 import { classes } from './constants';
 
 export type LoadContractOptions = {
-  template: string;
+  templateName: string;
   contractAddress: string;
 };
 
@@ -107,7 +107,7 @@ export class SDK {
     }
 
     const signer = this.auth.getSigner();
-    const contract = new classes[opts.template as keyof typeof classes](signer);
+    const contract = new classes[opts.templateName as keyof typeof classes](signer);
     contract.loadContract({ contractAddress: opts.contractAddress });
     return contract;
   }
