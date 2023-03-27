@@ -1,12 +1,15 @@
 import { ethers, BigNumber as BN, utils } from 'ethers';
 import { Logger, log, ErrorLocation } from '../Logger';
 import artifact from './artifacts/ComboCollProxy';
-import { isAllValidAddress, addGasPriceToOptions, isAllValidNonNegInteger } from '../utils';
+import Authority from './Authority';
+import Indexer from './Indexer';
+import { isAllValidAddress, addGasPriceToOptions, isAllValidNonNegInteger, isValidPositiveNumber } from '../utils';
 import preparePolygonTransaction from '../ContractTemplates/utils';
 import { Chains } from '../Auth/availableChains';
 
 type ContractAddressOptions = {
-    contractAddress: string;
+    proxyAddress: string;
+    indexerAddress: string;
 };
 
 type SetMintPriceBatchOptions = {
@@ -41,11 +44,28 @@ type ApproveOptions = {
     gas?: string | undefined;
 };
 
+type AuthoritiesOfOptions = {
+    combo: string;
+    to: string;
+    pageNum: number;
+    pageSize: number;
+};
+
+type PagingAuthorities = {
+    total: BN;
+    tokenAddresses: Array<string>;
+    tokenIds: Array<BN>;
+    allowances: Array<BN>;
+};
+
 export default class ComboCollProxy {
-    contractAddress: string;
+    proxyAddress: string;
 
     private contractDeployed: ethers.Contract;
     private readonly signer;
+
+    private authorityDeployed: Authority;
+    private indexerDeployed: Indexer;
 
     constructor(signer: ethers.Wallet | ethers.providers.JsonRpcSigner) {
         this.signer = signer;
@@ -56,7 +76,7 @@ export default class ComboCollProxy {
             log.throwArgumentError(
                 Logger.message.contract_not_deployed_or_loaded,
                 'contractAddress',
-                this.contractAddress,
+                this.proxyAddress,
                 {
                     location: location,
                 },
@@ -69,7 +89,7 @@ export default class ComboCollProxy {
             log.throwArgumentError(
                 Logger.message.array_length_mismatched,
                 'contractAddress',
-                this.contractAddress,
+                this.proxyAddress,
                 {
                     location: location,
                 },
@@ -84,30 +104,37 @@ export default class ComboCollProxy {
      * @returns {ComboCollProxy} Contract
      */
     loadContract(params: ContractAddressOptions): ComboCollProxy {
-        if (this.contractAddress || this.contractDeployed) {
+        if (this.proxyAddress || this.contractDeployed) {
             log.throwArgumentError(
                 Logger.message.contract_already_loaded,
                 'contractAddress',
-                this.contractAddress,
+                this.proxyAddress,
                 {
                     location: Logger.location.COMBOCOLLPROXY_LOADCONTRACT,
                 },
             );
         }
 
-        if (!isAllValidAddress(params.contractAddress)) {
+        if (!isAllValidAddress(params.proxyAddress)) {
+            log.throwMissingArgumentError(Logger.message.invalid_contract_address, {
+                location: Logger.location.COMBOCOLLPROXY_LOADCONTRACT,
+            });
+        }
+
+        if (!isAllValidAddress(params.indexerAddress)) {
             log.throwMissingArgumentError(Logger.message.invalid_contract_address, {
                 location: Logger.location.COMBOCOLLPROXY_LOADCONTRACT,
             });
         }
 
         try {
-            this.contractAddress = <string>params.contractAddress;
+            this.proxyAddress = <string>params.proxyAddress;
             this.contractDeployed = new ethers.Contract(
-                this.contractAddress,
+                this.proxyAddress,
                 artifact.abi,
                 this.signer,
             );
+            this.indexerDeployed = new Indexer(this.signer).loadContract({contractAddress: params.indexerAddress});
             return this;
         } catch (error) {
             return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
@@ -318,6 +345,76 @@ export default class ComboCollProxy {
         } catch (error) {
             return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
                 location: Logger.location.COMBOCOLLPROXY_COMBOCOLLMETASOF,
+                error,
+            });
+        }
+    }
+
+    /**
+     * Returns approvals from NFT holders on specified combo collection by page
+     * @param {object} params object containing all parameters
+     * @param {string} params.combo - combo collection
+     * @param {string} params.to - address of the spender who gets approved
+     * @param {number} params.pageNum - page number to query, start from 1
+     * @param {number} params.pageSize - page size
+     * @returns {Promise<PagingAuthorities>}
+     */
+    async authoritiesOf(params: AuthoritiesOfOptions): Promise<PagingAuthorities> {
+        this.assertContractLoaded(Logger.location.COMBOCOLLPROXY_AUTHORITIESOF);
+
+        if (!isAllValidAddress(params.combo)) {
+            log.throwMissingArgumentError(Logger.message.invalid_contract_address, {
+                location: Logger.location.COMBOCOLLPROXY_AUTHORITIESOF,
+            });
+        }
+
+        if (!isAllValidAddress(params.to)) {
+            log.throwMissingArgumentError(Logger.message.invalid_to_address, {
+                location: Logger.location.COMBOCOLLPROXY_AUTHORITIESOF,
+            });
+        }
+
+        if (!isValidPositiveNumber(params.pageNum) || !isValidPositiveNumber(params.pageSize)) {
+            log.throwMissingArgumentError(Logger.message.invalid_page_param, {
+                location: Logger.location.COMBOCOLLPROXY_AUTHORITIESOF,
+            });
+        }
+
+        try {
+            if (!this.authorityDeployed || this.authorityDeployed.combo != params.combo) {
+                const meta = (await this.comboCollMetasOf({combos: [params.combo]}))[0];
+                this.authorityDeployed = new Authority({
+                    combo: params.combo,
+                    contractAddress: meta.authority,
+                    signer: this.signer
+                });
+            }
+
+            const authorities = await this.authorityDeployed.authoritiesOf({
+                to: params.to,
+                pageNum: params.pageNum,
+                pageSize: params.pageSize,
+            });
+
+            const ret = {
+                total: authorities.total,
+                allowances: authorities.allowances,
+                tokenAddresses: new Array<string>(),
+                tokenIds: new Array<BN>(),
+            };
+            
+            const tokens = await this.indexerDeployed.tokensOf({uuids: authorities.uuids.map(uuid => uuid.toString())});
+            tokens.forEach(token => {
+                ret.tokenAddresses.push(token.tokenAddress);
+                ret.tokenIds.push(token.tokenId);
+            });
+            
+            return (async () => {
+                return ret as PagingAuthorities;
+            })();
+        } catch (error) {
+            return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
+                location: Logger.location.COMBOCOLLPROXY_AUTHORITIESOF,
                 error,
             });
         }

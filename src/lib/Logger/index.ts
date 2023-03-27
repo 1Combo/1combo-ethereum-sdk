@@ -96,6 +96,7 @@ export enum ErrorLocation {
   COMBOCOLLPROXY_EXIST = '[ComboCollProxy.exist]',
   COMBOCOLLPROXY_COMBOCOLLMETASOF = '[ComboCollProxy.comboCollMetasOf]',
   COMBOCOLLPROXY_APPROVE = '[ComboCollProxy.approve]',
+  COMBOCOLLPROXY_AUTHORITIESOF = '[ComboCollProxy.authoritiesOf]',
 
   // Indexer
   INDEXER_ADDGASPRICETOOPTIONS = '[Indexer.addGasPriceToOptions]',
