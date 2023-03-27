@@ -26,3 +26,4 @@ export {
     SetManager,
     Vault,
 };
+export { ComboRuleBuilder, ComboMintOrEditBuilder } from './lib/param-builders';
