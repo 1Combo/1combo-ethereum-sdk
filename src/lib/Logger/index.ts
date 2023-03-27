@@ -200,6 +200,15 @@ export enum ErrorLocation {
 
   // Utils
   UTILS_PREPARE_POLYGON_TX = '[Utils.preparePolygonTransaction]',
+
+  // MintComboBuilder
+  COMBOMINTOREDITBUILDER_BUILD = '[ComboMintOrEditBuilder.build]',
+  COMBOMINTOREDITBUILDER_ADDNFT = '[ComboMintOrEditBuilder.addNFT]',
+
+  // ComboRuleBuilder
+  COMBORULEBUILDER_BUILD = '[ComboRuleBuilder.build]',
+  COMBORULEBUILDER_ADDCOLLECTIONRULE = '[ComboRuleBuilder.addCollectionRule]',
+  COMBORULEBUILDER_ADDSETRULE = '[ComboRuleBuilder.addSetRule]',
 }
 
 export enum ErrorMessage {
@@ -296,6 +305,11 @@ export enum ErrorMessage {
   empty_name = 'Empty name',
   invalid_category_id = 'Invalid category id',
   invalid_set_id = 'Invalid set id',
+  invalid_amount = 'Invalid amount',
+  already_finalized = 'Already_finalized',
+  invalid_rule_param = 'Invalid rule param',
+  duplicate_collection_rules = 'Duplicate collection rules',
+  duplicate_set_rules = 'Duplicate set rules',
 }
 
 export class Logger {
