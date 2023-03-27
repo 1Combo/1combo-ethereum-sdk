@@ -151,8 +151,19 @@ export default class ComboCollProxy {
         }
     }
 
-    // TODO: mint/edit metaHash is unknown
+    /**
+     * 
+     * @todo TODO: metaHash is unknown
+     */
     async mint(params: MintOptions): Promise<ethers.providers.TransactionResponse> {
+        return null as unknown as Promise<ethers.providers.TransactionResponse>;
+    }
+
+    /**
+     * 
+     * @todo TODO: metaHash is unknown
+     */
+    async edit(params: MintOptions): Promise<ethers.providers.TransactionResponse> {
         return null as unknown as Promise<ethers.providers.TransactionResponse>;
     }
 

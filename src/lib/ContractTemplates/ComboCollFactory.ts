@@ -109,7 +109,10 @@ export default class ComboCollFactory {
         }
     }
 
-    // TODO: contractURI is unknown
+    /**
+     * 
+     * @todo TODO: contractURI is unknown
+     */
     async createCombo(params: CreateComboOptions): Promise<ethers.providers.TransactionResponse> {
         return null as unknown as Promise<ethers.providers.TransactionResponse>;
     }

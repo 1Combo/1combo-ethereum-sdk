@@ -266,16 +266,17 @@ export default class CollectionProxy {
         }
     }
 
-    // TODO: metaHash is unknown
-    // /**
-    //  * Adds new items, only creator of the collection is allowed
-    //  * @param {object} params object containing all parameters
-    //  * @param {Array<string>} params.collections collection addresses
-    //  * @param {Array<Array<number>>} params.maxSupplies maximum supply of the new item
-    //  * @param {Array<Array<string>>} params.sellPrices the mint price (in Ether) of the new item
-    //  * @param {Array<Array<string>>} params.metaHashes hash of the new item's metadata
-    //  * @returns {Promise<ethers.providers.TransactionResponse>} Transaction
-    //  */
+    /**
+     * Adds new items, only creator of the collection is allowed
+     * @param {object} params object containing all parameters
+     * @param {Array<string>} params.collections collection addresses
+     * @param {Array<Array<number>>} params.maxSupplies maximum supply of the new item
+     * @param {Array<Array<string>>} params.sellPrices the mint price (in Ether) of the new item
+     * @param {Array<Array<string>>} params.metaHashes hash of the new item's metadata
+     * @returns {Promise<ethers.providers.TransactionResponse>} Transaction
+     * 
+     * @todo TODO: metaHash is unknown
+     */
     async addItems(params: AddItemsOptions): Promise<ethers.providers.TransactionResponse> {
     //     this.assertContractLoaded(Logger.location.COLLECTIONPROXY_ADDITEMS);
 
