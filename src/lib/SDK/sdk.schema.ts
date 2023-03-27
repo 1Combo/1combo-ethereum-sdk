@@ -1,4 +1,4 @@
-import Joi from 'joi';
+import * as Joi from 'joi';
 import { TEMPLATES } from './constants';
 
 export const deployOptions = Joi.object({
