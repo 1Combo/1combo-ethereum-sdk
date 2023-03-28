@@ -11,7 +11,7 @@ type ContractAddressOptions = {
 
 type TotalSetReturn = {
     total: BN;
-    startId: BN;
+    startId: number;
 };
 
 type CollectionListOptions = {
@@ -86,7 +86,7 @@ type SetIdsOfCreatorOptions = {
 
 type SetIdsOfCreatorReturn = {
     total: BN;
-    setIds: Array<BN>;
+    setIds: Array<number>;
 };
 
 type CollectionsOfOptions = {
@@ -257,7 +257,6 @@ export default class SetManager {
      */
     async createSet(params: CreateSetOptions): Promise<ethers.providers.TransactionResponse> {
         this.assertContractLoaded(Logger.location.SETMANAGER_CREATESET);
-        this.assertArrayLengthEqual(params.initialCategoryNames, params.initialCategoryCollections, Logger.location.SETMANAGER_CREATESET);
 
         if (params.name.length == 0) {
             log.throwMissingArgumentError(Logger.message.empty_name, {
@@ -416,7 +415,6 @@ export default class SetManager {
      */
     async addCategories(params: AddCategoriesOptions): Promise<ethers.providers.TransactionResponse> {
         this.assertContractLoaded(Logger.location.SETMANAGER_ADDCATEGORIES);
-        this.assertArrayLengthEqual(params.newCategoryNames, params.initialCategoryCollections, Logger.location.SETMANAGER_ADDCATEGORIES);
 
         if (!isValidNonNegInteger(params.setId)) {
             log.throwMissingArgumentError(Logger.message.invalid_set_id, {
