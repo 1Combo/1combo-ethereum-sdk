@@ -1,6 +1,7 @@
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { ChainUrls } from './Auth/availableChains';
 import { Logger, log, ErrorLocation } from './Logger';
+import { MAX_UINT128, MAX_UINT32 } from './constants';
 
 type FormatRpcUrlOptions = {
   chainId: number;
@@ -16,6 +17,9 @@ export const isValidString = (variable: string | undefined): boolean =>
 
 export const isDefined = (variable: string | number | undefined): boolean =>
   variable !== undefined && variable !== null && variable !== '';
+
+export const isDefinedAny = (variable: any): boolean =>
+  variable !== undefined && variable !== null;
 
 export const isURI = (URI: string): boolean => !!URI.match(/^(ipfs|http|https):\/\//gi);
 
@@ -66,12 +70,24 @@ export const isValidPositiveNumber = (n: number) => {
   return !Number.isNaN(n);
 };
 
+export const isValidUUID = (v: string | number) => {
+  if (!isDefined(v)) return false;
+  const uuid = BigNumber.from(v);
+  return !(uuid.isNegative() || uuid.gt(MAX_UINT128));
+};
+
+export const isValidSetId = (v: string | number) => {
+  if (!isDefined(v)) return false;
+  const setId = BigNumber.from(v);
+  return !(setId.isNegative() || setId.gt(MAX_UINT32));
+};
+
 export const isValidNonNegInteger = (n: number) => {
   return Number.isInteger(n) && n >= 0;
 };
 
 export const isAllValidAddress = (value: string | Array<string>) => {
-  if (!value) {
+  if (!isDefinedAny(value)) {
     return false;
   }
   if (typeof value === 'string') {
@@ -81,7 +97,7 @@ export const isAllValidAddress = (value: string | Array<string>) => {
       return false;
     }
     for (let v of value) {
-      if (!v || !ethers.utils.isAddress(v)) {
+      if (!isDefinedAny(v) || !ethers.utils.isAddress(v)) {
         return false;
       }
     }
@@ -90,7 +106,7 @@ export const isAllValidAddress = (value: string | Array<string>) => {
 };
 
 export const isAllValidNonNegInteger = (value: number | Array<number> | Array<Array<number>>) => {
-  if (!value) {
+  if (!isDefinedAny(value)) {
     return false;
   }
   if (typeof value === 'number') {
@@ -100,7 +116,7 @@ export const isAllValidNonNegInteger = (value: number | Array<number> | Array<Ar
     return false;
   }
   for (let v of value) {
-    if (!v) {
+    if (!isDefinedAny(v)) {
       return false;
     }
     if (typeof v === 'number') {
@@ -109,7 +125,7 @@ export const isAllValidNonNegInteger = (value: number | Array<number> | Array<Ar
       }
     } else {
       for (let vv of v) {
-        if (!vv || !isValidNonNegInteger(vv)) {
+        if (!isDefinedAny(vv) || !isValidNonNegInteger(vv)) {
           return false;
         }
       }

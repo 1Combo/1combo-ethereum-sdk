@@ -1,21 +1,26 @@
 import { BigNumber as BN } from 'ethers';
-import { isAllValidAddress, isAllValidNonNegInteger, isValidPositiveNumber } from './utils';
+import { isAllValidAddress, isValidSetId } from './utils';
 import { Logger, log } from './Logger';
-import { MAX_UINT128, MAX_UINT32, MAX_UINT64, ZERO_ADDRESS } from './constants';
+import { MAX_UINT64, ZERO_ADDRESS } from './constants';
+
+const isValidUint64 = (v: BN) => {
+    if (v === undefined || v === null) return false;
+    return !(v.isNegative() || v.gt(MAX_UINT64));
+};
 
 type AddNFTOptions = {
     // true - purchase a new add-on, false - use owned NFT
     purchase: boolean;
     collection: string;
-    tokenId: number | string;    // may be a big number
+    tokenId: BN;
     setId: number;
-    amount: number;
+    amount: BN;
 };
 
 type Ingredients = {
     collections: Array<string>;
     itemsForCollections: Array<Array<BN>>;
-    amountsForItems: Array<Array<number>>;
+    amountsForItems: Array<Array<BN>>;
     setsForItems: Array<Array<number>>;
 };
 
@@ -23,19 +28,19 @@ type Ingredient = {
     collection: string;
     tokenId: BN;
     setId: number;
-    amount: number;
+    amount: BN;
 };
 
 type Purchase = {
     collection: string;
     tokenId: BN;
-    amount: number;
+    amount: BN;
 };
 
 type Purchases = {
     collections: Array<string>;
     tokenIds: Array<Array<BN>>;
-    amounts: Array<Array<number>>;
+    amounts: Array<Array<BN>>;
 };
 
 export class ComboMintOrEditBuilder {
@@ -72,20 +77,19 @@ export class ComboMintOrEditBuilder {
             });
         }
 
-        if (!isAllValidNonNegInteger(params.setId) || params.setId > MAX_UINT32) {
+        if (!isValidSetId(params.setId)) {
             log.throwMissingArgumentError(Logger.message.invalid_set_id, {
                 location: Logger.location.COMBOMINTOREDITBUILDER_ADDNFT,
             });
         }
 
-        if (!isAllValidNonNegInteger(params.amount) || params.amount > MAX_UINT64) {
+        if (!isValidUint64(params.amount)) {
             log.throwMissingArgumentError(Logger.message.invalid_amount, {
                 location: Logger.location.COMBOMINTOREDITBUILDER_ADDNFT,
             });
         }
 
-        const tokenId = BN.from(params.tokenId);
-        if (tokenId.isNegative() || tokenId.gt(MAX_UINT128)) {
+        if (params.tokenId.isNegative()) {
             log.throwMissingArgumentError(Logger.message.no_tokenId_or_not_valid, {
                 location: Logger.location.COMBOMINTOREDITBUILDER_ADDNFT,
             });
@@ -93,14 +97,14 @@ export class ComboMintOrEditBuilder {
 
         this._ingredients.push({
             collection: params.collection.toLowerCase(),
-            tokenId: tokenId,
+            tokenId: params.tokenId,
             amount: params.amount,
             setId: params.setId
         });
 
         this._purchases.push({
             collection: params.collection.toLowerCase(),
-            tokenId: tokenId,
+            tokenId: params.tokenId,
             amount: params.amount,
         });
 
@@ -185,27 +189,27 @@ export class ComboMintOrEditBuilder {
 }
 
 type Factor = {
-    max: number;
-    min: number;
+    max: BN;
+    min: BN;
+    limit: BN;
     collection: string;
     setId: number;
     lock: boolean;
-    limit: number;
 };
 
 type AddCollectionRuleOptions = {
     collection: string;
-    max: number;
-    min: number;
-    limit: number;
+    max: BN;
+    min: BN;
+    limit: BN;
     lock: boolean;
 };
 
 type AddSetRuleOptions = {
     setId: number;
-    max: number;
-    min: number;
-    limit: number;
+    max: BN;
+    min: BN;
+    limit: BN;
     lock: boolean;
 };
 
@@ -251,20 +255,13 @@ export class ComboRuleBuilder {
             }
         });
 
-        if (
-            !isAllValidNonNegInteger(params.limit) || params.limit > MAX_UINT64 ||
-            (params.limit > 0 && params.lock)
-        ) {
+        if (!isValidUint64(params.limit) || (!params.limit.isZero() && params.lock)) {
             log.throwMissingArgumentError(Logger.message.invalid_rule_param, {
                 location: Logger.location.COMBORULEBUILDER_ADDCOLLECTIONRULE,
             });
         }
 
-        if (
-            !isAllValidNonNegInteger(params.min) || params.min > MAX_UINT64 ||
-            !isValidPositiveNumber(params.max) || params.max > MAX_UINT64 ||
-            params.min > params.max
-        ) {
+        if (!isValidUint64(params.min) || !isValidUint64(params.max) || params.min.gt(params.max)) {
             log.throwMissingArgumentError(Logger.message.invalid_rule_param, {
                 location: Logger.location.COMBORULEBUILDER_ADDCOLLECTIONRULE,
             });
@@ -299,7 +296,7 @@ export class ComboRuleBuilder {
             });
         }
 
-        if (!isAllValidNonNegInteger(params.setId) || params.setId > MAX_UINT32) {
+        if (!isValidSetId(params.setId)) {
             log.throwMissingArgumentError(Logger.message.invalid_set_id, {
                 location: Logger.location.COMBORULEBUILDER_ADDSETRULE,
             });
@@ -313,20 +310,13 @@ export class ComboRuleBuilder {
             }
         });
 
-        if (
-            !isAllValidNonNegInteger(params.limit) || params.limit > MAX_UINT64 ||
-            (params.limit > 0 && params.lock)
-        ) {
+        if (!isValidUint64(params.limit) || (!params.limit.isZero() && params.lock)) {
             log.throwMissingArgumentError(Logger.message.invalid_rule_param, {
                 location: Logger.location.COMBORULEBUILDER_ADDSETRULE,
             });
         }
 
-        if (
-            !isAllValidNonNegInteger(params.min) || params.min > MAX_UINT64 ||
-            !isValidPositiveNumber(params.max) || params.max > MAX_UINT64 ||
-            params.min > params.max
-        ) {
+        if (!isValidUint64(params.min) || !isValidUint64(params.max) || params.min.gt(params.max)) {
             log.throwMissingArgumentError(Logger.message.invalid_rule_param, {
                 location: Logger.location.COMBORULEBUILDER_ADDSETRULE,
             });

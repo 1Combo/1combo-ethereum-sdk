@@ -1,9 +1,8 @@
 import { ethers, BigNumber as BN } from 'ethers';
-import { MAX_UINT128, MAX_UINT32 } from '../constants';
 import BaseERC721 from '../ContractComponents/baseERC721';
 import { Logger, log, ErrorLocation } from '../Logger';
 import artifact from './artifacts/ComboCollCore';
-import { isAllValidAddress, isAllValidNonNegInteger, isDefined, isValidNonNegInteger } from '../utils';
+import { isAllValidAddress, isAllValidNonNegInteger, isValidNonNegInteger, isValidSetId, isValidUUID } from '../utils';
 
 type ContractAddressOptions = {
     contractAddress: string;
@@ -26,6 +25,28 @@ type RoyaltyInfoOptions = {
 type RoyaltyInfo = {
     receiver: string;
     royaltyAmount: BN;
+};
+
+type Factor = {
+    max: BN;
+    min: BN;
+    limit: BN;
+    setId: number;
+    lock: boolean;
+    collection: string;
+}
+
+type GetComboRulesReturn = {
+    factors: Array<Factor>;
+};
+
+type Item = {
+    uuid: BN;
+    amount: BN;
+    setId: number;
+    typ: number;
+    lock: boolean;
+    limit: boolean;
 };
 
 export default class ComboCollCore {
@@ -54,11 +75,11 @@ export default class ComboCollCore {
     }
 
     /**
-   * Load an ComboCollCore contract from an existing contract address. Used by the SDK class
-   * @param {object} params object containing all parameters
-   * @param {string} params.contractAddress Address of the ComboCollCore contract to load
-   * @returns {ComboCollCore} Contract
-   */
+     * Load an ComboCollCore contract from an existing contract address. Used by the SDK class
+     * @param {object} params object containing all parameters
+     * @param {string} params.contractAddress Address of the ComboCollCore contract to load
+     * @returns {ComboCollCore} Contract
+     */
     loadContract(params: ContractAddressOptions): ComboCollCore {
         if (this.contractAddress || this.contractDeployed) {
             log.throwArgumentError(
@@ -95,7 +116,11 @@ export default class ComboCollCore {
         }
     }
 
-    async getComboRules(): Promise<object> {
+    /**
+     * Returns combination rules of this combo collection
+     * @returns {Promise<GetComboRulesReturn>}
+     */
+    async getComboRules(): Promise<GetComboRulesReturn> {
         this.assertContractLoaded(Logger.location.COMBOCOLLCORE_GET_COMBO_RULES);
 
         try {
@@ -108,11 +133,15 @@ export default class ComboCollCore {
         }
     }
 
-    async getLimitedTokenUsages(params: GetLimitedTokenUsagesOptions): Promise<object> {
+    /**
+     * Returns usage count of token that is limited
+     * @returns {Promise<Array<BigNumber>>}
+     */
+    async getLimitedTokenUsages(params: GetLimitedTokenUsagesOptions): Promise<Array<BN>> {
         this.assertContractLoaded(Logger.location.COMBOCOLLCORE_GET_LIMITED_TOKEN_USAGES);
 
         params.uuids.forEach(uuid => {
-            if (!isDefined(uuid) || (() => { const v = BN.from(uuid); return v.isNegative() || v.gt(MAX_UINT128) })) {
+            if (!isValidUUID(uuid)) {
                 log.throwMissingArgumentError(Logger.message.no_uuid_or_not_valid, {
                     location: Logger.location.COMBOCOLLCORE_GET_LIMITED_TOKEN_USAGES,
                 });
@@ -120,7 +149,7 @@ export default class ComboCollCore {
         });
 
         params.setIds.forEach(setId => {
-            if (!isValidNonNegInteger(setId) || setId > MAX_UINT32) {
+            if (!isValidSetId(setId)) {
                 log.throwMissingArgumentError(Logger.message.no_setId_or_not_valid, {
                     location: Logger.location.COMBOCOLLCORE_GET_LIMITED_TOKEN_USAGES,
                 });
@@ -137,7 +166,11 @@ export default class ComboCollCore {
         }
     }
 
-    async getIngredients(params: GetIngredientsOptions): Promise<object> {
+    /**
+     * Returns ingredients of specified combos
+     * @returns {Promise<Array<Array<Item>>>}
+     */
+    async getIngredients(params: GetIngredientsOptions): Promise<Array<Array<Item>>> {
         this.assertContractLoaded(Logger.location.COMBOCOLLCORE_GET_INGREDIENTS);
 
         if (!isAllValidNonNegInteger(params.comboIds)) {
