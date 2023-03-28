@@ -28,13 +28,13 @@ type AddItemsOptions = {
     maxSupplies: Array<number>;
     sellPrices: Array<string>;
     metaHashes: Array<string>;
-    gas?: string | undefined;
+    gasPrice?/** Gwei */: string | undefined;
 };
 
 type SetPricesOptions = {
     tokenIds: Array<number>;
     sellPrices: Array<string>;
-    gas?: string | undefined;
+    gasPrice?/** Gwei */: string | undefined;
 };
 
 type MetadatasOfOptions = {
@@ -239,7 +239,7 @@ export default class Collection {
                 options = await preparePolygonTransaction(
                     await this.contractDeployed.signer.getTransactionCount(),
                 );
-            else options = addGasPriceToOptions({}, params.gas, Logger.location.COLLECTION_SETPRICES);
+            else options = addGasPriceToOptions({}, params.gasPrice, Logger.location.COLLECTION_SETPRICES);
 
             return this.contractDeployed.setPrices(params.tokenIds, priceInWeis, options);
         } catch (error) {
@@ -277,7 +277,7 @@ export default class Collection {
                 options = await preparePolygonTransaction(
                     await this.contractDeployed.signer.getTransactionCount(),
                 );
-            else options = addGasPriceToOptions({}, params.gas, Logger.location.COLLECTION_ADDITEMS);
+            else options = addGasPriceToOptions({}, params.gasPrice, Logger.location.COLLECTION_ADDITEMS);
 
             return this.contractDeployed.addItems(params.maxSupplies, priceInWeis, params.metaHashes, options);
         } catch (error) {

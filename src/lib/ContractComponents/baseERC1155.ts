@@ -1,6 +1,6 @@
 import { BigNumber, ethers } from 'ethers';
 import { Logger, log, ErrorLocation } from '../Logger';
-import { GAS_LIMIT } from '../constants';
+// import { GAS_LIMIT } from '../constants';
 import { addGasPriceToOptions, isBoolean, isValidNonNegInteger, isValidString } from '../utils';
 import preparePolygonTransaction from '../ContractTemplates/utils';
 import { Chains } from '../Auth/availableChains';
@@ -8,7 +8,7 @@ import { Chains } from '../Auth/availableChains';
 type SetApprovalForAllOptions = {
   to: string;
   approvalStatus: boolean;
-  gas?: string;
+  gasPrice?/** Gwei */: string;
 };
 
 type IsApprovedForAllOptions = {
@@ -22,7 +22,7 @@ type SafeTransferFromOptions = {
   tokenId: number;
   amount: number;
   data?: string;
-  gas?: string;
+  gasPrice?/** Gwei */: string;
 };
 
 type SafeBatchTransferFromOptions = {
@@ -31,7 +31,7 @@ type SafeBatchTransferFromOptions = {
   tokenIds: Array<number>;
   amounts: Array<number>;
   data?: string;
-  gas?: string;
+  gasPrice?/** Gwei */: string;
 };
 
 type URIOptions = {
@@ -122,7 +122,7 @@ export default class BaseERC1155 {
         options = await preparePolygonTransaction(
           await this.contractDeployed.signer.getTransactionCount(),
         );
-      else options = addGasPriceToOptions({ gasLimit: GAS_LIMIT }, params.gas, Logger.location.BASEERC1155_SAFETRANSFERFROM);
+      else options = addGasPriceToOptions({}, params.gasPrice, Logger.location.BASEERC1155_SAFETRANSFERFROM);
 
       let data = isValidString(params.data) ? params.data : '';
 
@@ -192,7 +192,7 @@ export default class BaseERC1155 {
         options = await preparePolygonTransaction(
           await this.contractDeployed.signer.getTransactionCount(),
         );
-      else options = addGasPriceToOptions({ gasLimit: GAS_LIMIT }, params.gas, Logger.location.BASEERC1155_SAFEBATCHTRANSFERFROM);
+      else options = addGasPriceToOptions({}, params.gasPrice, Logger.location.BASEERC1155_SAFEBATCHTRANSFERFROM);
 
       let data = isValidString(params.data) ? params.data : '';
 
@@ -244,7 +244,7 @@ export default class BaseERC1155 {
     }
 
     try {
-      const options = addGasPriceToOptions({}, params.gas, Logger.location.BASEERC1155_SETAPPROVALFORALL);
+      const options = addGasPriceToOptions({}, params.gasPrice, Logger.location.BASEERC1155_SETAPPROVALFORALL);
       return this.contractDeployed.setApprovalForAll(params.to, params.approvalStatus, options);
     } catch (error) {
       return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {

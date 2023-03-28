@@ -10,13 +10,13 @@ type ContractAddressOptions = {
 };
 
 type ClaimOptions = {
-    gas?: string | undefined;
+    gasPrice?/** Gwei */: string | undefined;
 };
 
 type ClaimTargetOptions = {
     erc20: string;
     collections: Array<string>;
-    gas?: string | undefined;
+    gasPrice?/** Gwei */: string | undefined;
 };
 
 type ClaimablesOfCollectionsOptions = {
@@ -122,7 +122,7 @@ export default class Vault {
                 options = await preparePolygonTransaction(
                     await this.contractDeployed.signer.getTransactionCount(),
                 );
-            else options = addGasPriceToOptions({}, params.gas, Logger.location.VAULT_CLAIM);
+            else options = addGasPriceToOptions({}, params.gasPrice, Logger.location.VAULT_CLAIM);
 
             return this.contractDeployed['claim()'](options);
         } catch (error) {
@@ -163,7 +163,7 @@ export default class Vault {
                 options = await preparePolygonTransaction(
                     await this.contractDeployed.signer.getTransactionCount(),
                 );
-            else options = addGasPriceToOptions({}, params.gas, Logger.location.VAULT_CLAIMTARGET);
+            else options = addGasPriceToOptions({}, params.gasPrice, Logger.location.VAULT_CLAIMTARGET);
 
             return this.contractDeployed['claim(address,address[])'](params.erc20, params.collections, options);
         } catch (error) {

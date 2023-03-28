@@ -12,18 +12,18 @@ type ContractAddressOptions = {
 
 type CollectionListOptions = {
     collections: Array<string>;
-    gas?: string;
+    gasPrice?/** Gwei */: string;
 };
 
-type GetUUIDOpttions = {
+type GetUUIDOptions = {
     mustExist: boolean;
-    collections: Array<string>;
-    tokenIds: Array<Array<number>>;
+    tokenAddresses: Array<string>;
+    tokenIds: Array<Array<number | string>>;
 };
 
 type RootComboOfTokensOptions = {
     tokenAddresses: Array<string>;
-    tokenIds: Array<Array<number>>;
+    tokenIds: Array<Array<number | string>>;
 };
 
 type RootComboOfUUIDsOptions = {
@@ -139,7 +139,7 @@ export default class Indexer {
                 options = await preparePolygonTransaction(
                     await this.contractDeployed.signer.getTransactionCount(),
                 );
-            else options = addGasPriceToOptions({ }, params.gas, Logger.location.INDEXER_REGISTERCOLLECTIONS);
+            else options = addGasPriceToOptions({ }, params.gasPrice, Logger.location.INDEXER_REGISTERCOLLECTIONS);
 
             return this.contractDeployed.registerCollections(params.collections, options);
         } catch (error) {
@@ -158,11 +158,11 @@ export default class Indexer {
      * @param {Array<Array<number>>} params.tokenIds tokens of the corresponding collection
      * @returns {Promise<Array<Array<BN>>>} List of uuid of the specified tokens
      */
-    async getUUID(params: GetUUIDOpttions): Promise<Array<Array<BN>>> {
+    async getUUID(params: GetUUIDOptions): Promise<Array<Array<BN>>> {
         this.assertContractLoaded(Logger.location.INDEXER_GETUUID);
-        this.assertArrayLengthEqual(params.collections, params.tokenIds, Logger.location.INDEXER_GETUUID);
+        this.assertArrayLengthEqual(params.tokenAddresses, params.tokenIds, Logger.location.INDEXER_GETUUID);
 
-        if (!isAllValidAddress(params.collections)) {
+        if (!isAllValidAddress(params.tokenAddresses)) {
             log.throwMissingArgumentError(Logger.message.invalid_contract_address, {
                 location: Logger.location.INDEXER_GETUUID,
             });
@@ -175,7 +175,7 @@ export default class Indexer {
         }
 
         try {
-            return this.contractDeployed.getUUID(params.collections, params.tokenIds, params.mustExist);
+            return this.contractDeployed.getUUID(params.tokenAddresses, params.tokenIds, params.mustExist);
         } catch (error) {
             return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
                 location: Logger.location.INDEXER_GETUUID,

@@ -82,8 +82,9 @@ export const isValidSetId = (v: string | number) => {
   return !(setId.isNegative() || setId.gt(MAX_UINT32));
 };
 
-export const isValidNonNegInteger = (n: number) => {
-  return Number.isInteger(n) && n >= 0;
+export const isValidNonNegInteger = (n: number | string) => {
+  const v = BigNumber.from(n);
+  return !v.isNegative();
 };
 
 export const isAllValidAddress = (value: string | Array<string>) => {
@@ -105,11 +106,11 @@ export const isAllValidAddress = (value: string | Array<string>) => {
   }
 };
 
-export const isAllValidNonNegInteger = (value: number | Array<number> | Array<Array<number>>) => {
+export const isAllValidNonNegInteger = (value: number | string | Array<number | string> | Array<Array<number | string>>) => {
   if (!isDefinedAny(value)) {
     return false;
   }
-  if (typeof value === 'number') {
+  if (typeof value === 'number' || typeof value === 'string') {
     return isValidNonNegInteger(value);
   }
   if (value.length == 0) {
@@ -119,7 +120,7 @@ export const isAllValidNonNegInteger = (value: number | Array<number> | Array<Ar
     if (!isDefinedAny(v)) {
       return false;
     }
-    if (typeof v === 'number') {
+    if (typeof v === 'number' || typeof v === 'string') {
       if (!isValidNonNegInteger(v)) {
         return false;
       }

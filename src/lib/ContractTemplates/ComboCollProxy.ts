@@ -23,19 +23,19 @@ type MintOptions = {
 type DismantleOptions = {
     combo: string;
     comboId: number;
-    gas?: string | undefined;
+    gasPrice?/** Gwei */: string | undefined;
 };
 
 type SetMintPriceBatchOptions = {
     combos: Array<string>;
     prices: Array<string>;
-    gas?: string | undefined;
+    gasPrice?/** Gwei */: string | undefined;
 };
 
 type SetReceiversOptions = {
     combos: Array<string>;
     newReceivers: Array<string>;
-    gas?: string | undefined;
+    gasPrice?/** Gwei */: string | undefined;
 };
 
 type CollectionListOptions = {
@@ -55,7 +55,7 @@ type ApproveOptions = {
     tokenAddresses: Array<string>;
     tokenIds: Array<Array<number>>;
     allowances: Array<Array<number>>;
-    gas?: string | undefined;
+    gasPrice?/** Gwei */: string | undefined;
 };
 
 type AuthoritiesOfOptions = {
@@ -197,7 +197,7 @@ export default class ComboCollProxy {
                 options = await preparePolygonTransaction(
                     await this.contractDeployed.signer.getTransactionCount(),
                 );
-            else options = addGasPriceToOptions({}, params.gas, Logger.location.COMBOCOLLPROXY_ADDGASPRICETOOPTIONS);
+            else options = addGasPriceToOptions({}, params.gasPrice, Logger.location.COMBOCOLLPROXY_ADDGASPRICETOOPTIONS);
 
             return this.contractDeployed.dismantle(params.combo, params.comboId, options);
         } catch (error) {
@@ -235,7 +235,7 @@ export default class ComboCollProxy {
                 options = await preparePolygonTransaction(
                     await this.contractDeployed.signer.getTransactionCount(),
                 );
-            else options = addGasPriceToOptions({}, params.gas, Logger.location.COMBOCOLLPROXY_ADDGASPRICETOOPTIONS);
+            else options = addGasPriceToOptions({}, params.gasPrice, Logger.location.COMBOCOLLPROXY_ADDGASPRICETOOPTIONS);
 
             return this.contractDeployed.setMintPriceBatch(params.combos, priceInWeis, options);
         } catch (error) {
@@ -278,7 +278,7 @@ export default class ComboCollProxy {
                 options = await preparePolygonTransaction(
                     await this.contractDeployed.signer.getTransactionCount(),
                 );
-            else options = addGasPriceToOptions({}, params.gas, Logger.location.COMBOCOLLPROXY_ADDGASPRICETOOPTIONS);
+            else options = addGasPriceToOptions({}, params.gasPrice, Logger.location.COMBOCOLLPROXY_ADDGASPRICETOOPTIONS);
 
             return this.contractDeployed.setReceivers(params.combos, params.newReceivers, options);
         } catch (error) {
@@ -342,7 +342,7 @@ export default class ComboCollProxy {
                 options = await preparePolygonTransaction(
                     await this.contractDeployed.signer.getTransactionCount(),
                 );
-            else options = addGasPriceToOptions({}, params.gas, Logger.location.COMBOCOLLPROXY_ADDGASPRICETOOPTIONS);
+            else options = addGasPriceToOptions({}, params.gasPrice, Logger.location.COMBOCOLLPROXY_ADDGASPRICETOOPTIONS);
 
             return this.contractDeployed.approve(
                 params.combo,

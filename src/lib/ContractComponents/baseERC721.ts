@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 import { Logger, log, ErrorLocation } from '../Logger';
-import { GAS_LIMIT } from '../constants';
+// import { GAS_LIMIT } from '../constants';
 import { addGasPriceToOptions, isBoolean } from '../utils';
 import preparePolygonTransaction from '../ContractTemplates/utils';
 import { Chains } from '../Auth/availableChains';
@@ -9,23 +9,23 @@ type TransferOptions = {
   from: string;
   to: string;
   tokenId: number;
-  gas?: string;
+  gasPrice?/** Gwei */: string;
 };
 
 type SetApprovalForAllOptions = {
   to: string;
   approvalStatus: boolean;
-  gas?: string;
+  gasPrice?/** Gwei */: string;
 };
 
 type ApproveTransferOptions = {
   to: string;
   tokenId: number;
-  gas?: string;
+  gasPrice?/** Gwei */: string;
 };
 
 type RenounceOptions = {
-  gas?: string;
+  gasPrice?/** Gwei */: string;
 };
 
 type TokenURIOptions = {
@@ -98,7 +98,7 @@ export default class BaseERC721 {
         options = await preparePolygonTransaction(
           await this.contractDeployed.signer.getTransactionCount(),
         );
-      else options = addGasPriceToOptions({ gasLimit: GAS_LIMIT }, params.gas, Logger.location.BASEERC721_ADDGASPRICETOOPTIONS);
+      else options = addGasPriceToOptions({}, params.gasPrice, Logger.location.BASEERC721_ADDGASPRICETOOPTIONS);
 
       return this.contractDeployed['safeTransferFrom(address,address,uint256)'](
         params.from,
@@ -146,7 +146,7 @@ export default class BaseERC721 {
     }
 
     try {
-      const options = addGasPriceToOptions({}, params.gas, Logger.location.BASEERC721_SETAPPROVALFORALL);
+      const options = addGasPriceToOptions({}, params.gasPrice, Logger.location.BASEERC721_SETAPPROVALFORALL);
       return this.contractDeployed.setApprovalForAll(params.to, params.approvalStatus, options);
     } catch (error) {
       return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
@@ -182,7 +182,7 @@ export default class BaseERC721 {
     }
 
     try {
-      const options = addGasPriceToOptions({}, params.gas, Logger.location.BASEERC721_ADDGASPRICETOOPTIONS);
+      const options = addGasPriceToOptions({}, params.gasPrice, Logger.location.BASEERC721_ADDGASPRICETOOPTIONS);
       return this.contractDeployed.approve(params.to, params.tokenId, options);
     } catch (error) {
       return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
@@ -210,7 +210,7 @@ export default class BaseERC721 {
     }
 
     try {
-      const options = addGasPriceToOptions({}, params.gas, Logger.location.BASEERC721_RENOUNCEOWNERSHIP);
+      const options = addGasPriceToOptions({}, params.gasPrice, Logger.location.BASEERC721_RENOUNCEOWNERSHIP);
       return this.contractDeployed.renounceOwnership(options);
     } catch (error) {
       return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
@@ -246,7 +246,7 @@ export default class BaseERC721 {
   //  * @notice Warning: This method will consume gas (35000 gas estimated)
   //  * @returns {Promise<ethers.providers.TransactionResponse>} Transaction
   //  */
-  // async setContractURI({ contractURI, gas }: { contractURI: string; gas?: string }) {
+  // async setContractURI({ contractURI, gas }: { contractURI: string; gasPrice?/** Gwei */: string }) {
   //   this.assertContractLoaded(Logger.location.BASEERC721_SETCONTRACTURI);
 
   //   if (!contractURI) {

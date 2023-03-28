@@ -18,7 +18,7 @@ type DeployCollectionOptions = {
     symbol: string;
     contractURI: string;
     initialItems: Array<InitialItem>;
-    gas?: string;
+    gasPrice?/** Gwei */: string;
 };
 
 type GetCollectionsOptions = {

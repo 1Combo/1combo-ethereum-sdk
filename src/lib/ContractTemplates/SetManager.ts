@@ -20,7 +20,7 @@ type CollectionListOptions = {
 
 type InitCollectionTypesOptions = {
     collections: Array<string>;
-    gas?: string | undefined;
+    gasPrice?/** Gwei */: string | undefined;
 };
 
 type CreateSetOptions = {
@@ -28,34 +28,34 @@ type CreateSetOptions = {
     metadataURI: string;
     initialCategoryNames: Array<string>;
     initialCategoryCollections: Array<Array<string>>;
-    gas?: string | undefined;
+    gasPrice?/** Gwei */: string | undefined;
 };
 
 type AddCollectionsOptions = {
     setId: number;
     categoryIds: Array<number>;
     categoryCollections: Array<Array<string>>;
-    gas?: string | undefined;
+    gasPrice?/** Gwei */: string | undefined;
 };
 
 type AddCategoriesOptions = {
     setId: number;
     newCategoryNames: Array<string>;
     initialCategoryCollections: Array<Array<string>>;
-    gas?: string | undefined;
+    gasPrice?/** Gwei */: string | undefined;
 };
 
 type RenameSetOptions = {
     setId: number;
     newName: string;
-    gas?: string | undefined;
+    gasPrice?/** Gwei */: string | undefined;
 };
 
 type RenameCategoryOptions = {
     setId: number;
     categoryId: number;
     newName: string;
-    gas?: string | undefined;
+    gasPrice?/** Gwei */: string | undefined;
 };
 
 enum CollectionType {
@@ -235,7 +235,7 @@ export default class SetManager {
                 options = await preparePolygonTransaction(
                     await this.contractDeployed.signer.getTransactionCount(),
                 );
-            else options = addGasPriceToOptions({}, params.gas, Logger.location.SETMANAGER_ADDGASPRICETOOPTIONS);
+            else options = addGasPriceToOptions({}, params.gasPrice, Logger.location.SETMANAGER_ADDGASPRICETOOPTIONS);
 
             return this.contractDeployed.initCollectionTypes(params.collections, options);
         } catch (error) {
@@ -289,7 +289,7 @@ export default class SetManager {
                 options = await preparePolygonTransaction(
                     await this.contractDeployed.signer.getTransactionCount(),
                 );
-            else options = addGasPriceToOptions({}, params.gas, Logger.location.SETMANAGER_ADDGASPRICETOOPTIONS);
+            else options = addGasPriceToOptions({}, params.gasPrice, Logger.location.SETMANAGER_ADDGASPRICETOOPTIONS);
 
             return this.contractDeployed.createSet(params.name, params.metadataURI, params.initialCategoryNames, params.initialCategoryCollections, options);
         } catch (error) {
@@ -342,7 +342,7 @@ export default class SetManager {
                 options = await preparePolygonTransaction(
                     await this.contractDeployed.signer.getTransactionCount(),
                 );
-            else options = addGasPriceToOptions({}, params.gas, Logger.location.SETMANAGER_ADDGASPRICETOOPTIONS);
+            else options = addGasPriceToOptions({}, params.gasPrice, Logger.location.SETMANAGER_ADDGASPRICETOOPTIONS);
 
             return this.contractDeployed.addCollections(params.setId, params.categoryIds, params.categoryCollections, options);
         } catch (error) {
@@ -395,7 +395,7 @@ export default class SetManager {
                 options = await preparePolygonTransaction(
                     await this.contractDeployed.signer.getTransactionCount(),
                 );
-            else options = addGasPriceToOptions({}, params.gas, Logger.location.SETMANAGER_ADDGASPRICETOOPTIONS);
+            else options = addGasPriceToOptions({}, params.gasPrice, Logger.location.SETMANAGER_ADDGASPRICETOOPTIONS);
 
             return this.contractDeployed.changeCategoriesForCollections(params.setId, params.categoryIds, params.categoryCollections, options);
         } catch (error) {
@@ -448,7 +448,7 @@ export default class SetManager {
                 options = await preparePolygonTransaction(
                     await this.contractDeployed.signer.getTransactionCount(),
                 );
-            else options = addGasPriceToOptions({}, params.gas, Logger.location.SETMANAGER_ADDGASPRICETOOPTIONS);
+            else options = addGasPriceToOptions({}, params.gasPrice, Logger.location.SETMANAGER_ADDGASPRICETOOPTIONS);
 
             return this.contractDeployed.addCategories(params.setId, params.newCategoryNames, params.initialCategoryCollections, options);
         } catch (error) {
@@ -489,7 +489,7 @@ export default class SetManager {
                 options = await preparePolygonTransaction(
                     await this.contractDeployed.signer.getTransactionCount(),
                 );
-            else options = addGasPriceToOptions({}, params.gas, Logger.location.SETMANAGER_ADDGASPRICETOOPTIONS);
+            else options = addGasPriceToOptions({}, params.gasPrice, Logger.location.SETMANAGER_ADDGASPRICETOOPTIONS);
 
             return this.contractDeployed.renameSet(params.setId, params.newName, options);
         } catch (error) {
@@ -537,7 +537,7 @@ export default class SetManager {
                 options = await preparePolygonTransaction(
                     await this.contractDeployed.signer.getTransactionCount(),
                 );
-            else options = addGasPriceToOptions({}, params.gas, Logger.location.SETMANAGER_ADDGASPRICETOOPTIONS);
+            else options = addGasPriceToOptions({}, params.gasPrice, Logger.location.SETMANAGER_ADDGASPRICETOOPTIONS);
 
             return this.contractDeployed.renameCategroy(params.setId, params.categoryId, params.newName, options);
         } catch (error) {

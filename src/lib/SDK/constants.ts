@@ -53,7 +53,7 @@ export const CONTRACT_ADDRESSES = {
     CollectionProxy: '',
     ComboCollProxy: '',
     ComboCollFactory: '',
-    Indexer: '',
+    Indexer: '0x6B2FbbC209f2ccB4542202ed6f66e46405c8D48A',
     Vault: '',
     SetManager: '',
   },
