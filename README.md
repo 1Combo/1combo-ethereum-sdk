@@ -8,6 +8,32 @@ npm install @1combo/1combo-ethereum-sdk
 
 # Example
 
+## Base usages
+
+```ts
+    import { config as loadEnv } from 'dotenv';
+    import { randomBytes } from 'crypto';
+    import { SDK, Auth, TEMPLATES, Chains } from '@1combo/1combo-ethereum-sdk';
+
+    loadEnv();
+
+    const pk = `0x${randomBytes(32).toString('hex')}`;
+    const auth = new Auth({
+        privateKey: pk, // wallet
+        projectId: process.env.INFURA_PROJECT_ID,
+        secretId: process.env.INFURA_PROJECT_SECRET,
+        chainId: Chains.goerli, // choose network
+    });
+    const sdk = new SDK(auth);
+
+    // Query gas price in Gwei
+    const gas = await sdk.getGasPrice();
+
+    // Query tx status
+    const receipt = await sdk.getStatus({ txHash: '' });
+    ...
+```
+
 ## Query royalty info
 
 ```ts

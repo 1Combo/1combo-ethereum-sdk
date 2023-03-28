@@ -41,45 +41,6 @@ export class SDK {
     );
   }
 
-  // /**
-  //  * Deploy Contract on the blockchain
-  //  * @param {object} opts object containing all parameters
-  //  * @param {string} opts.template name of the template to use (ERC721Mintable, ...)
-  //  * @param {object} opts.params template parameters (name, symbol, contractURI, ...)
-  //  * @returns {Promise<ERC721Mintable>} Contract instance
-  //  */
-  // async deploy(opts: DeployOptionsMintable): Promise<ERC721Mintable>;
-  // async deploy(opts: DeployOptionsUserMintable): Promise<ERC721UserMintable>;
-  // async deploy(opts: DeployOptionsERC1155UserMintable): Promise<ERC1155Mintable>;
-  // async deploy(opts: any): Promise<any> {
-  //   if (!this.infuraSupported()) {
-  //     log.throwArgumentError(
-  //       Logger.message.chain_not_supported_write_operations,
-  //       'chainId',
-  //       this.auth.getChainId(),
-  //       {
-  //         location: Logger.location.SDK_DEPLOY,
-  //       },
-  //     );
-  //   }
-  //   if (!opts.template) {
-  //     log.throwMissingArgumentError(Logger.message.no_template_type_supplied, {
-  //       location: Logger.location.SDK_DEPLOY,
-  //     });
-  //   }
-  //   if (Object.keys(opts.params).length === 0) {
-  //     log.throwMissingArgumentError(Logger.message.no_parameters_supplied, {
-  //       location: Logger.location.SDK_DEPLOY,
-  //     });
-  //   }
-
-  //   const signer = this.auth.getSigner();
-  //   const contract = new classes[opts.template as keyof typeof classes](signer);
-
-  //   await contract.deploy(opts.params);
-  //   return contract;
-  // }
-
   /**
    * Load a contract from an existing contract address and a template
    * @param {object} opts object containing all parameters
