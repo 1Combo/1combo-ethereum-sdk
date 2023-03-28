@@ -41,6 +41,12 @@ export enum ErrorLocation {
   AUTHORITY_LOADCONTRACT = '[Authority.loadContract]',
   AUTHORITY_AUTHORITIESOF = '[Authority.authoritiesOf]',
 
+  // Accounting
+  ACCOUNTING_LOADCONTRACT = '[Accounting.loadContract]',
+  ACCOUNTING_ADDGASPRICETOOPTIONS = '[Accounting.addGasPriceToOptions]',
+  ACCOUNTING_RECEIVERSOF = '[Accounting.receiversOf]',
+  ACCOUNTING_COLLECTIONSOF = '[Accounting.collectionsOf]',
+
   // ComboCollCore
   COMBOCOLLCORE_DEPLOY = '[ComboCollCore.deploy]',
   COMBOCOLLCORE_ADDGASPRICETOOPTIONS = '[ComboCollCore.addGasPriceToOptions]',

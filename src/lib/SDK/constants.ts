@@ -8,12 +8,14 @@ import ComboCollProxy from '../ContractTemplates/ComboCollProxy';
 import Indexer from '../ContractTemplates/Indexer';
 import SetManager from '../ContractTemplates/SetManager';
 import Vault from '../ContractTemplates/Vault';
+import Accounting from '../ContractTemplates/Accounting';
 
 const NFT_API_URL = process.env.NFT_API_URL ? process.env.NFT_API_URL : 'https://nft.api.infura.io';
 export { NFT_API_URL };
 
 export enum TEMPLATES {
   // Authority = 'Authority',
+  Accounting = 'Accounting',
   Collection = 'Collection',
   CollectionFactory = 'CollectionFactory',
   CollectionProxy = 'CollectionProxy',
@@ -27,6 +29,7 @@ export enum TEMPLATES {
 
 export const classes = {
   // Authority,
+  Accounting,
   Collection,
   CollectionFactory,
   CollectionProxy,
@@ -47,14 +50,16 @@ export const CONTRACT_ADDRESSES = {
     Indexer: '',
     Vault: '',
     SetManager: '',
+    Accounting: '',
   },
   GOERLI: {
-    CollectionFactory: '',
-    CollectionProxy: '',
-    ComboCollProxy: '',
-    ComboCollFactory: '',
+    CollectionFactory: '0xc2e663385B88622c405E62109b33F9B579B5F3c1',
+    CollectionProxy: '0xC45CBc72b275Ee6Ff54d25bf422B36103CFAd0B4',
+    ComboCollProxy: '0x4B07E79dF97915B9011EB9DC9533B4198977c01e',
+    ComboCollFactory: '0x0Cef41C2040313530c796075e46037Ea16fbDEE5',
     Indexer: '0x6B2FbbC209f2ccB4542202ed6f66e46405c8D48A',
-    Vault: '',
-    SetManager: '',
+    Vault: '0x403fA0E300CB9a79443Fa1B26b01B575534f0CaC',
+    SetManager: '0x27610F7713455dA132339338f5d722D9D325A199',
+    Accounting: '0xdCb4fD99Eee6040A5a55453c7e8f8Ea73729a1e5',
   },
 };
