@@ -8,7 +8,7 @@ npm install @1combo/1combo-ethereum-sdk
 
 # Example
 
-## Base usages
+## Basic usages
 
 ```ts
     import { config as loadEnv } from 'dotenv';
@@ -51,11 +51,40 @@ npm install @1combo/1combo-ethereum-sdk
         chainId: Chains.goerli,
     });
     const sdk = new SDK(auth);
-    const core = await sdk.loadContract({
+    const combo = await sdk.loadContract({
         templateName: TEMPLATES.ComboCollCore,
         contractAddress: '0x0f1Da267B55d47d5aBced9be7542A6b3aE9b52B8',
     });
 
-    const info = await core.royaltyInfo({tokenId: 1, sellPrice: 10000});
+    const info = await combo.royaltyInfo({tokenId: 1, sellPrice: 10000});
     console.log(info);
+```
+
+## Create set
+
+```ts
+    import { config as loadEnv } from 'dotenv';
+    import { SDK, Auth, TEMPLATES, Chains, CONTRACT_ADDRESSES } from '@1combo/1combo-ethereum-sdk';
+
+    loadEnv();
+
+    const auth = new Auth({
+        privateKey: process.env.KEY,
+        projectId: process.env.INFURA_PROJECT_ID,
+        secretId: process.env.INFURA_PROJECT_SECRET,
+        chainId: Chains.goerli,
+    });
+    const sdk = new SDK(auth);
+    const manager = await sdk.loadContract({
+        templateName: TEMPLATES.SetManager,
+        contractAddress: CONTRACT_ADDRESSES.GOERLI.SetManager,
+    });
+
+    await manager.createSet({
+        name: 'Books',
+        metadataURI: '',    // URI to metadata about this set, optional
+        initialCategoryNames: ['P-Books', 'E-Books'],
+        initialCategoryCollections: [],
+        gasPrice: (parseFloat(await sdk.getGasPrice()) + 5).toString(),
+    });
 ```
