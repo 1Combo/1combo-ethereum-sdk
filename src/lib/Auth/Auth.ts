@@ -4,7 +4,7 @@
  * MIT Licensed
  */
 import { ethers } from 'ethers';
-import { availableChains } from './availableChains';
+import { AvailableChains } from './availableChains';
 import Signer from '../Signer/Signer';
 import Provider from '../Provider/Provider';
 import { isValidString, formatRpcUrl } from '../utils';
@@ -44,7 +44,7 @@ export default class Auth {
         location: Logger.location.AUTH_CONSTRUCTOR,
       });
     }
-    if (!availableChains.includes(<number>opts.chainId)) {
+    if (!AvailableChains.includes(<number>opts.chainId)) {
       log.throwArgumentError(Logger.message.chain_not_supported, 'chainId', opts.chainId, {
         location: Logger.location.AUTH_CONSTRUCTOR,
       });

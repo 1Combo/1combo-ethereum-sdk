@@ -13,7 +13,7 @@ npm install @1combo/1combo-ethereum-sdk
 ```ts
     import { config as loadEnv } from 'dotenv';
     import { randomBytes } from 'crypto';
-    import { SDK, Auth, TEMPLATES } from '@1combo/1combo-ethereum-sdk';
+    import { SDK, Auth, TEMPLATES, Chains } from '@1combo/1combo-ethereum-sdk';
 
     loadEnv();
 
@@ -22,7 +22,7 @@ npm install @1combo/1combo-ethereum-sdk
         privateKey: pk,
         projectId: process.env.INFURA_PROJECT_ID,
         secretId: process.env.INFURA_PROJECT_SECRET,
-        chainId: 5,
+        chainId: Chains.goerli,
     });
     const sdk = new SDK(auth);
     const core = await sdk.loadContract({

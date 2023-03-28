@@ -21,7 +21,7 @@ const Chains = {
   palm: 11297108109,
 };
 
-const chainsName: ChainInfo = {
+const ChainNames: ChainInfo = {
   1: 'mainnet',
   3: 'ropsten',
   4: 'rinkeby',
@@ -40,7 +40,7 @@ const chainsName: ChainInfo = {
   42161: 'arbitrum',
 };
 
-const chainUrls = {
+const ChainUrls = {
   [Chains.mainnet]: 'https://mainnet.infura.io',
   [Chains.ropsten]: 'https://ropsten.infura.io',
   [Chains.rinkeby]: 'https://rinkeby.infura.io',
@@ -54,7 +54,7 @@ const chainUrls = {
   [Chains.arbitrum]: 'https://arbitrum-mainnet.infura.io',
 };
 
-const availableChains = [
+const AvailableChains = [
   Chains.mainnet,
   Chains.goerli,
   Chains.ropsten,
@@ -73,6 +73,6 @@ const availableChains = [
   Chains.palm,
 ];
 
-const getChainName = (chainId: number) => chainsName[chainId];
+const getChainName = (chainId: number) => ChainNames[chainId];
 
-export { availableChains, Chains, getChainName, chainUrls };
+export { AvailableChains, Chains, getChainName, ChainUrls };

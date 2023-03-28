@@ -6,6 +6,7 @@ import { SDK } from '../src/lib/SDK/sdk';
 
 import { generateTestPrivateKeyOrHash } from './__mocks__/utils';
 import { TEMPLATES } from '../src/lib/SDK/constants';
+import { Chains } from '../src/lib/Auth/availableChains';
 
 import ComboCollCore from '../src/lib/ContractTemplates/ComboCollCore';
 
@@ -24,7 +25,7 @@ describe('ComboCollCore', () => {
             // rpcUrl: process.env.EVM_RPC_URL,
             projectId: process.env.INFURA_PROJECT_ID,
             secretId: process.env.INFURA_PROJECT_SECRET,
-            chainId: 5,
+            chainId: Chains.goerli,
         });
         sdk = new SDK(auth);
         core = await sdk.loadContract({

@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import { chainUrls } from './Auth/availableChains';
+import { ChainUrls } from './Auth/availableChains';
 import { Logger, log, ErrorLocation } from './Logger';
 
 type FormatRpcUrlOptions = {
@@ -20,7 +20,7 @@ export const isDefined = (variable: string | number | undefined): boolean =>
 export const isURI = (URI: string): boolean => !!URI.match(/^(ipfs|http|https):\/\//gi);
 
 export const formatRpcUrl = ({ chainId, projectId }: FormatRpcUrlOptions) =>
-  `${chainUrls[chainId]}/v3/${projectId}`;
+  `${ChainUrls[chainId]}/v3/${projectId}`;
 
 export const isJson = (param: string) => {
   if (typeof param !== 'string') return false;

@@ -12,6 +12,7 @@ import SetManager from './lib/ContractTemplates/SetManager';
 import Vault from './lib/ContractTemplates/Vault';
 
 export * from './lib/SDK/sdk';
+export { Chains } from './lib/Auth/availableChains';
 export { TEMPLATES, CONTRACT_ADDRESSES } from './lib/SDK/constants';
 export {
     Auth,
