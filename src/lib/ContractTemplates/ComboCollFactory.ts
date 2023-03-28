@@ -191,7 +191,7 @@ export default class ComboCollFactory {
 
         try {
             return (async () => {
-                const result = (await this.contractDeployed.getRegistriesOf(params.creator, params.creator, params.pageNum, params.pageSize)) as Array<any>;
+                const result = (await this.contractDeployed.getRegistriesOf(params.creator, params.pageNum, params.pageSize)) as Array<any>;
                 return {
                     total: result[0],
                     registries: result[1]
