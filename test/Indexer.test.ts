@@ -30,7 +30,8 @@ describe('Indexer', () => {
     });
 
     it('all', async() => {
-        const tokens = await indexer.tokensOf({uuids: ['1342177451']});
+        const tokens = await indexer.tokensOf({uuids: ['1342177451', '5637144578']});
+        console.log(tokens);
 
         const uuids = await indexer.getUUID({
             mustExist: true,
