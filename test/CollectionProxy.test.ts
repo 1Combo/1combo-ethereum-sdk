@@ -8,12 +8,9 @@ import { CONTRACT_ADDRESSES, TEMPLATES } from '../src/lib/SDK/constants';
 import { Chains } from '../src/lib/Auth/availableChains';
 
 import CollectionProxy from '../src/lib/ContractTemplates/CollectionProxy';
+import { getGas } from './__mocks__/utils';
 
 loadEnv();
-
-async function getGas(sdk: SDK) {
-    return (parseFloat(await sdk.getGasPrice()) + 5).toString();
-}
 
 describe('CollectionProxy', () => {
     let sdk: SDK;

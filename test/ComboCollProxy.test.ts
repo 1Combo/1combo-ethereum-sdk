@@ -9,12 +9,9 @@ import { Chains } from '../src/lib/Auth/availableChains';
 
 import Indexer from '../src/lib/ContractTemplates/Indexer';
 import ComboCollProxy from '../src/lib/ContractTemplates/ComboCollProxy';
+import { getGas } from './__mocks__/utils';
 
 loadEnv();
-
-async function getGas(sdk: SDK) {
-    return (parseFloat(await sdk.getGasPrice()) + 5).toString();
-}
 
 describe('ComboCollProxy', () => {
     let sdk: SDK;
