@@ -74,10 +74,10 @@ describe('SetManager', () => {
     }, 60000);
 
     it('write', async() => {
-        await setManager.initCollectionTypes({
+        await expect(setManager.initCollectionTypes({
             collections: ['0x0f1Da267B55d47d5aBced9be7542A6b3aE9b52B8'],
             gasPrice: await getGas(sdk),
-        })
+        })).rejects.toMatchObject({'reason': 'cannot estimate gas; transaction may fail or may require manual gas limit'});
 
         await setManager.createSet({
             name: 'sdk',

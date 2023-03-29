@@ -18,6 +18,7 @@ async function getGas(sdk: SDK) {
 describe('CollectionProxy', () => {
     let sdk: SDK;
     let proxy: CollectionProxy;
+    // @ts-ignore
     let creator: string;
 
     beforeAll(async () => {
@@ -35,7 +36,7 @@ describe('CollectionProxy', () => {
         });
     });
 
-    it('all', async() => {
+    it('read', async() => {
         await proxy.exist({collections: ['0xf5ee72eD90f2015939CF6Fc956F201a04278A011']});
         await proxy.collectionMetasOf({collections: ['0xf5ee72eD90f2015939CF6Fc956F201a04278A011']});
         await proxy.pricesOf({
@@ -51,6 +52,21 @@ describe('CollectionProxy', () => {
             amounts: [[1]],
             gasPrice: await getGas(sdk),
         });
+    }, 60000);
 
+    it('write', async() => {
+        await expect(proxy.setPrices({
+            collections: ['0x0f1Da267B55d47d5aBced9be7542A6b3aE9b52B8'],
+            tokenIds: [[1]],
+            sellPricesInEther: [['0.2']],
+            gasPrice: await getGas(sdk)
+        })).rejects.toMatchObject({'reason': 'cannot estimate gas; transaction may fail or may require manual gas limit'});
+        
+        await expect(proxy.setReceivers({
+            collections: ['0x0f1Da267B55d47d5aBced9be7542A6b3aE9b52B8'],
+            newReceivers: ['0x0f1Da267B55d47d5aBced9be7542A6b3aE9b52B8'],
+            gasPrice: await getGas(sdk)
+        })).rejects.toMatchObject({'reason': 'cannot estimate gas; transaction may fail or may require manual gas limit'});
+        
     }, 60000);
 });

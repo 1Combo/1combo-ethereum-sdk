@@ -12,10 +12,16 @@ import ComboCollProxy from '../src/lib/ContractTemplates/ComboCollProxy';
 
 loadEnv();
 
+async function getGas(sdk: SDK) {
+    return (parseFloat(await sdk.getGasPrice()) + 5).toString();
+}
+
 describe('ComboCollProxy', () => {
     let sdk: SDK;
     let proxy: ComboCollProxy;
+    // @ts-ignore
     let indexer: Indexer;
+    // @ts-ignore
     let creator: string;
 
     beforeAll(async () => {
@@ -37,7 +43,7 @@ describe('ComboCollProxy', () => {
         });
     });
 
-    it('all', async() => {
+    it('read', async() => {
         await proxy.exist({combos: ['0x0f1Da267B55d47d5aBced9be7542A6b3aE9b52B8']});
         await proxy.comboCollMetasOf({combos: ['0x0f1Da267B55d47d5aBced9be7542A6b3aE9b52B8']});
         await proxy.authoritiesOf({
@@ -47,5 +53,34 @@ describe('ComboCollProxy', () => {
             pageNum: 1,
             pageSize: 10,
         });
+    }, 60000);
+
+    it('write', async() => {
+        await expect(proxy.dismantle({
+            combo: '0x0f1Da267B55d47d5aBced9be7542A6b3aE9b52B8',
+            comboId: 1,
+            gasPrice: await getGas(sdk)
+        })).rejects.toMatchObject({'reason': 'cannot estimate gas; transaction may fail or may require manual gas limit'});
+
+        await expect(proxy.setMintPriceBatch({
+            combos: ['0x0f1Da267B55d47d5aBced9be7542A6b3aE9b52B8'],
+            pricesInEther: ['0.2'],
+            gasPrice: await getGas(sdk)
+        })).rejects.toMatchObject({'reason': 'cannot estimate gas; transaction may fail or may require manual gas limit'});
+        
+        await expect(proxy.setReceivers({
+            combos: ['0x0f1Da267B55d47d5aBced9be7542A6b3aE9b52B8'],
+            newReceivers: ['0x0f1Da267B55d47d5aBced9be7542A6b3aE9b52B8'],
+            gasPrice: await getGas(sdk)
+        })).rejects.toMatchObject({'reason': 'cannot estimate gas; transaction may fail or may require manual gas limit'});
+        
+        await expect(proxy.approve({
+            combo: '0x0f1Da267B55d47d5aBced9be7542A6b3aE9b52B8',
+            spender: '0x0f1Da267B55d47d5aBced9be7542A6b3aE9b52B8',
+            tokenAddresses: ['0x0f1Da267B55d47d5aBced9be7542A6b3aE9b52B8'],
+            tokenIds: [[1]],
+            allowances: [[1]],
+            gasPrice: await getGas(sdk)
+        })).rejects.toMatchObject({'reason': 'cannot estimate gas; transaction may fail or may require manual gas limit'});
     }, 60000);
 });

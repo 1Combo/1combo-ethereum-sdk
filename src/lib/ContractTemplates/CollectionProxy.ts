@@ -12,7 +12,7 @@ type ContractAddressOptions = {
 type AddItemsOptions = {
     collections: Array<string>;
     maxSupplies: Array<Array<number>>;
-    sellPrices: Array<Array<string>>;
+    sellPricesInEther: Array<Array<string>>;
     metaHashes: Array<Array<string>>;
     gasPrice?/** Gwei */: string;
 };
@@ -29,7 +29,7 @@ type MintOptions = {
 type SetPricesOptions = {
     collections: Array<string>;
     tokenIds: Array<Array<number>>;
-    sellPrices: Array<Array<string>>;
+    sellPricesInEther: Array<Array<string>>;
     gasPrice?/** Gwei */: string | undefined;
 };
 
@@ -226,7 +226,7 @@ export default class CollectionProxy {
     async setPrices(params: SetPricesOptions): Promise<ethers.providers.TransactionResponse> {
         this.assertContractLoaded(Logger.location.COLLECTIONPROXY_SETPRICES);
         this.assertArrayLengthEqual(params.collections, params.tokenIds, Logger.location.COLLECTIONPROXY_SETPRICES);
-        this.assertArrayLengthEqual(params.collections, params.sellPrices, Logger.location.COLLECTIONPROXY_SETPRICES);
+        this.assertArrayLengthEqual(params.collections, params.sellPricesInEther, Logger.location.COLLECTIONPROXY_SETPRICES);
 
         if (!isAllValidAddress(params.collections)) {
             log.throwMissingArgumentError(Logger.message.invalid_contract_address, {
@@ -235,7 +235,7 @@ export default class CollectionProxy {
         }
 
         params.tokenIds.forEach((list, index) => {
-            this.assertArrayLengthEqual(list, params.sellPrices[index], Logger.location.COLLECTIONPROXY_SETPRICES);
+            this.assertArrayLengthEqual(list, params.sellPricesInEther[index], Logger.location.COLLECTIONPROXY_SETPRICES);
             list.forEach(tokenId => {
                 if (!isValidNonNegInteger(tokenId)) {
                     log.throwMissingArgumentError(Logger.message.no_tokenId_or_not_valid, {
@@ -246,7 +246,7 @@ export default class CollectionProxy {
         });
 
         try {
-            const priceInWeis = params.sellPrices.map(list => list.map(price => utils.parseEther(price)));
+            const priceInWeis = params.sellPricesInEther.map(list => list.map(price => utils.parseEther(price)));
 
             const chainId = await this.contractDeployed.signer.getChainId();
             let options;
@@ -353,7 +353,7 @@ export default class CollectionProxy {
                 );
             else options = addGasPriceToOptions({ }, params.gasPrice, Logger.location.COLLECTIONPROXY_SETRECEIVERS);
 
-            return this.contractDeployed.setPrices(params.collections, params.newReceivers, options);
+            return this.contractDeployed.setReceivers(params.collections, params.newReceivers, options);
         } catch (error) {
             return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
                 location: Logger.location.COLLECTIONPROXY_SETRECEIVERS,

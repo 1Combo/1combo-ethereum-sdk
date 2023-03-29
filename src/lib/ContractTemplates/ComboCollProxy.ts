@@ -28,7 +28,7 @@ type DismantleOptions = {
 
 type SetMintPriceBatchOptions = {
     combos: Array<string>;
-    prices: Array<string>;
+    pricesInEther: Array<string>;
     gasPrice?/** Gwei */: string | undefined;
 };
 
@@ -217,7 +217,7 @@ export default class ComboCollProxy {
      */
     async setMintPriceBatch(params: SetMintPriceBatchOptions): Promise<ethers.providers.TransactionResponse> {
         this.assertContractLoaded(Logger.location.COMBOCOLLPROXY_SETMINTPRICEBATCH);
-        this.assertArrayLengthEqual(params.combos, params.prices, Logger.location.COMBOCOLLPROXY_SETMINTPRICEBATCH);
+        this.assertArrayLengthEqual(params.combos, params.pricesInEther, Logger.location.COMBOCOLLPROXY_SETMINTPRICEBATCH);
 
         if (!isAllValidAddress(params.combos)) {
             log.throwMissingArgumentError(Logger.message.invalid_contract_address, {
@@ -226,7 +226,7 @@ export default class ComboCollProxy {
         }
 
         try {
-            const priceInWeis = params.prices.map(price => utils.parseEther(price));
+            const priceInWeis = params.pricesInEther.map(price => utils.parseEther(price));
 
             const chainId = await this.contractDeployed.signer.getChainId();
             let options;
