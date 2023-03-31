@@ -3,7 +3,7 @@ import { Logger, log, ErrorLocation } from '../Logger';
 import artifact from './artifacts/ComboCollProxy';
 import Authority from './Authority';
 import Indexer from './Indexer';
-import { isAllValidAddress, addGasPriceToOptions, isAllValidNonNegInteger, isValidPositiveNumber } from '../utils';
+import { isAllValidAddress, addGasPriceToOptions, isAllValidNonNegInteger, isValidPositiveNumber, isValidUUID } from '../utils';
 import preparePolygonTransaction from '../ContractTemplates/utils';
 import { Chains } from '../Auth/availableChains';
 
@@ -58,7 +58,7 @@ type ApproveOptions = {
     gasPrice?/** Gwei */: string | undefined;
 };
 
-type AuthoritiesOfOptions = {
+type PageAuthorityAllowancesOptions = {
     indexerDeployed: Indexer;
     combo: string;
     to: string;
@@ -66,11 +66,24 @@ type AuthoritiesOfOptions = {
     pageSize: number;
 };
 
-type PagingAuthorities = {
+type PageAuthorityAllowancesResponse = {
     total: BN;
     tokenAddresses: Array<string>;
     tokenIds: Array<BN>;
     allowances: Array<BN>;
+};
+
+type AuthorityAllowancesOptions = {
+    indexerDeployed: Indexer;
+    combo: string;
+    to: string;
+    uuids: Array<string | number>;
+};
+
+type AuthorityAllowance= {
+    tokenAddress: string;
+    tokenId: BN;
+    allowance: BN;
 };
 
 export default class ComboCollProxy {
@@ -421,26 +434,26 @@ export default class ComboCollProxy {
      * @param {string} params.to - address of the spender who gets approved
      * @param {number} params.pageNum - page number to query, start from 1
      * @param {number} params.pageSize - page size
-     * @returns {Promise<PagingAuthorities>}
+     * @returns {Promise<PageAuthorityAllowancesResponse>}
      */
-    async authoritiesOf(params: AuthoritiesOfOptions): Promise<PagingAuthorities> {
-        this.assertContractLoaded(Logger.location.COMBOCOLLPROXY_AUTHORITIESOF);
+    async pageAuthorityAllowances(params: PageAuthorityAllowancesOptions): Promise<PageAuthorityAllowancesResponse> {
+        this.assertContractLoaded(Logger.location.COMBOCOLLPROXY_PAGEAUTHORITYALLOWANCES);
 
         if (!isAllValidAddress(params.combo)) {
             log.throwMissingArgumentError(Logger.message.invalid_contract_address, {
-                location: Logger.location.COMBOCOLLPROXY_AUTHORITIESOF,
+                location: Logger.location.COMBOCOLLPROXY_PAGEAUTHORITYALLOWANCES,
             });
         }
 
         if (!isAllValidAddress(params.to)) {
             log.throwMissingArgumentError(Logger.message.invalid_to_address, {
-                location: Logger.location.COMBOCOLLPROXY_AUTHORITIESOF,
+                location: Logger.location.COMBOCOLLPROXY_PAGEAUTHORITYALLOWANCES,
             });
         }
 
         if (!isValidPositiveNumber(params.pageNum) || !isValidPositiveNumber(params.pageSize)) {
             log.throwMissingArgumentError(Logger.message.invalid_page_param, {
-                location: Logger.location.COMBOCOLLPROXY_AUTHORITIESOF,
+                location: Logger.location.COMBOCOLLPROXY_PAGEAUTHORITYALLOWANCES,
             });
         }
 
@@ -454,7 +467,7 @@ export default class ComboCollProxy {
                 });
             }
 
-            const authorities = await this.authorityDeployed.authoritiesOf({
+            const authorities = await this.authorityDeployed.pageAllowances({
                 to: params.to,
                 pageNum: params.pageNum,
                 pageSize: params.pageSize,
@@ -473,12 +486,75 @@ export default class ComboCollProxy {
                 ret.tokenIds.push(token.tokenId);
             });
             
-            return (async () => {
-                return ret as PagingAuthorities;
-            })();
+            return ret;
         } catch (error) {
             return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
-                location: Logger.location.COMBOCOLLPROXY_AUTHORITIESOF,
+                location: Logger.location.COMBOCOLLPROXY_PAGEAUTHORITYALLOWANCES,
+                error,
+            });
+        }
+    }
+
+    /**
+     * Returns approvals from NFT holders on specified combo collection by page
+     * @param {object} params object containing all parameters
+     * @param {string} params.combo - combo collection
+     * @param {string} params.to - address of the spender who gets approved
+     * @param {Array<string|number>} params.uuids - uuid of token to query
+     * @returns {Promise<Array<AuthorityAllowance>>}
+     */
+    async authorityAllowances(params: AuthorityAllowancesOptions): Promise<Array<AuthorityAllowance>> {
+        this.assertContractLoaded(Logger.location.COMBOCOLLPROXY_AUTHORITYALLOWANCES);
+
+        if (!isAllValidAddress(params.combo)) {
+            log.throwMissingArgumentError(Logger.message.invalid_contract_address, {
+                location: Logger.location.COMBOCOLLPROXY_AUTHORITYALLOWANCES,
+            });
+        }
+
+        if (!isAllValidAddress(params.to)) {
+            log.throwMissingArgumentError(Logger.message.invalid_to_address, {
+                location: Logger.location.COMBOCOLLPROXY_AUTHORITYALLOWANCES,
+            });
+        }
+
+        params.uuids.forEach(uuid => {
+            if (!isValidUUID(uuid)) {
+                log.throwMissingArgumentError(Logger.message.no_uuid_or_not_valid, {
+                    location: Logger.location.COMBOCOLLPROXY_AUTHORITYALLOWANCES,
+                });
+            }
+        });
+
+        try {
+            if (!this.authorityDeployed || this.authorityDeployed.combo != params.combo) {
+                const meta = (await this.comboCollMetasOf({combos: [params.combo]}))[0];
+                this.authorityDeployed = new Authority({
+                    combo: params.combo,
+                    contractAddress: meta.authority,
+                    signer: this.signer
+                });
+            }
+
+            const allowances = await this.authorityDeployed.allowances({
+                to: params.to,
+                uuids: params.uuids,
+            });
+
+            const ret: Array<AuthorityAllowance> = new Array();
+            const tokens = await params.indexerDeployed.tokensOf({uuids: params.uuids});
+            tokens.forEach((token, index) => {
+                ret.push({
+                    tokenAddress: token.tokenAddress,
+                    tokenId: token.tokenId,
+                    allowance: allowances[index],
+                });
+            });
+            
+            return ret;
+        } catch (error) {
+            return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
+                location: Logger.location.COMBOCOLLPROXY_AUTHORITYALLOWANCES,
                 error,
             });
         }

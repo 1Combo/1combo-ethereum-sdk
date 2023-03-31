@@ -41,6 +41,8 @@ type ClaimableDetail = {
     token: string;
     ethAmount: BN;
     erc20Amount: BN;
+    ethTotalClaimed: BN;
+    erc20TotalClaimed: BN;
 };
 
 export default class Vault {

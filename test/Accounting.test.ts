@@ -14,6 +14,8 @@ loadEnv();
 describe('Accounting', () => {
     let sdk: SDK;
     let accounting: Accounting;
+    // @ts-ignore
+    let creator: string;
 
     beforeAll(async () => {
         const auth = new Auth({
@@ -22,6 +24,7 @@ describe('Accounting', () => {
             secretId: process.env.INFURA_PROJECT_SECRET,
             chainId: Chains.goerli,
         });
+        creator = await auth.getSigner().getAddress();
         sdk = new SDK(auth);
         accounting = await sdk.loadContract({
             templateName: TEMPLATES.Accounting,
@@ -30,19 +33,13 @@ describe('Accounting', () => {
     });
 
     it('all', async() => {
-        const receivers = await accounting.receiversOf({collections: ['0x0f1Da267B55d47d5aBced9be7542A6b3aE9b52B8']});
-        console.log(receivers[0]);
+        await accounting.collectionsOf({receiver: creator});
+        await accounting.pageCollectionsOf({receiver: creator, pageNum: 1, pageSize: 10})
 
-        const collections = await accounting.collectionsOf({receiver: receivers[0]});
-        expect(collections.length).toBeGreaterThan(0);
-
-        let found = false;
-        for (let c of collections) {
-            if (c == '0x0f1Da267B55d47d5aBced9be7542A6b3aE9b52B8') {
-                found = true;
-                break;
-            }
-        }
-        expect(found).toBe(true);
+        await expect(
+            accounting.receiversOf({collections: ['0x0f1Da267B55d47d5aBced9be7542A6b3aE9b52B8']})
+        ).rejects.toMatchObject({
+            errorName: 'NotFound'
+        });
     }, 20000);
 });

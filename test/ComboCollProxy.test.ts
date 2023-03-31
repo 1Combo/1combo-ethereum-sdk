@@ -43,13 +43,20 @@ describe('ComboCollProxy', () => {
     it('read', async() => {
         await proxy.exist({combos: ['0x0f1Da267B55d47d5aBced9be7542A6b3aE9b52B8']});
         await proxy.comboCollMetasOf({combos: ['0x0f1Da267B55d47d5aBced9be7542A6b3aE9b52B8']});
-        await proxy.authoritiesOf({
+        await proxy.pageAuthorityAllowances({
             indexerDeployed: indexer,
             combo: '0x0f1Da267B55d47d5aBced9be7542A6b3aE9b52B8',
             to: creator,
             pageNum: 1,
             pageSize: 10,
         });
+
+        await proxy.authorityAllowances({
+            indexerDeployed: indexer,
+            combo: '',
+            to: creator,
+            uuids: []
+        })
     }, 60000);
 
     it('write', async() => {

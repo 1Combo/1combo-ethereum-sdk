@@ -1,7 +1,7 @@
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { Logger, log, ErrorLocation } from '../Logger';
 import artifact from './artifacts/Accounting';
-import { isAllValidAddress } from '../utils';
+import { isAllValidAddress, isValidPositiveNumber } from '../utils';
 
 type ContractAddressOptions = {
     contractAddress: string;
@@ -13,6 +13,17 @@ type ReceiversOfOptions = {
 
 type CollectionsOfOptions = {
     receiver: string;
+};
+
+type PageCollectionsOfOptions = {
+    receiver: string;
+    pageNum: number;
+    pageSize: number;
+};
+
+type PageCollectionsOfResponse = {
+    total: BigNumber;
+    collections: Array<string>;
 };
 
 export default class Accounting {
@@ -123,6 +134,43 @@ export default class Accounting {
         } catch (error) {
             return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
                 location: Logger.location.ACCOUNTING_COLLECTIONSOF,
+                error,
+            });
+        }
+    }
+
+    /**
+     * Returns collections whose receiver is the specified address by page
+     * @param {object} params object containing all parameters
+     * @param {string} params.receiver - receiver address to query
+     * @param {number} params.pageNum - page number to query, start from 1
+     * @param {number} params.pageSize - page size
+     * @returns {Promise<PageCollectionsOfResponse>} List of collection address
+     */
+    async pageCollectionsOf(params: PageCollectionsOfOptions): Promise<PageCollectionsOfResponse> {
+        this.assertContractLoaded(Logger.location.ACCOUNTING_PAGECOLLECTIONSOF);
+
+        if (!isAllValidAddress(params.receiver)) {
+            log.throwMissingArgumentError(Logger.message.invalid_contract_address, {
+                location: Logger.location.ACCOUNTING_PAGECOLLECTIONSOF,
+            });
+        }
+
+        if (!isValidPositiveNumber(params.pageNum) || !isValidPositiveNumber(params.pageSize)) {
+            log.throwMissingArgumentError(Logger.message.invalid_page_param, {
+                location: Logger.location.ACCOUNTING_PAGECOLLECTIONSOF,
+            });
+        }
+
+        try {
+            const resp = (await this.contractDeployed.pageCollectionsOf(params.receiver, params.pageNum, params.pageSize)) as Array<any>;
+            return {
+                total: resp[0],
+                collections: resp[1],
+            };
+        } catch (error) {
+            return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
+                location: Logger.location.ACCOUNTING_PAGECOLLECTIONSOF,
                 error,
             });
         }

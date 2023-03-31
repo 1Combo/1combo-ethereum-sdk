@@ -9,7 +9,7 @@ type ContractAddressOptions = {
     contractAddress: string;
 };
 
-type TotalSetReturn = {
+type TotalSetResponse = {
     total: BN;
     startId: number;
 };
@@ -84,7 +84,7 @@ type SetIdsOfCreatorOptions = {
     pageSize: number;
 };
 
-type SetIdsOfCreatorReturn = {
+type SetIdsOfCreatorResponse = {
     total: BN;
     setIds: Array<number>;
 };
@@ -96,18 +96,18 @@ type CollectionsOfOptions = {
     pageSize: number;
 };
 
-type CollectionsOfReturn = {
+type CollectionsOfResponse = {
     total: BN;
     collections: Array<string>;
     collectionTypes: Array<CollectionType>;
 };
 
-type VerifyCollectionInSetOptions = {
+type VerifyCollectionInAllSetsOptions = {
     collections: Array<string>;
     collectionSets: Array<Array<number>>;
 };
 
-type IsSetContainsAllCollectionsOptions = {
+type VerifySetHasAllCollectionsOptions = {
     setIds: Array<number>;
     setCollections: Array<Array<string>>;
 };
@@ -191,19 +191,17 @@ export default class SetManager {
 
     /**
      * Returns total number of sets
-     * @returns {Promise<TotalSetReturn>} Total number and start id
+     * @returns {Promise<TotalSetResponse>} Total number and start id
      */
-    async totalSet(): Promise<TotalSetReturn> {
+    async totalSet(): Promise<TotalSetResponse> {
         this.assertContractLoaded(Logger.location.SETMANAGER_TOTALSET);
 
         try {
-            return (async () => {
-                const object = (await this.contractDeployed.totalSet()) as Array<any>;
-                return {
-                    total: object[0],
-                    startId: object[1],
-                } as TotalSetReturn;
-            })();
+            const object = (await this.contractDeployed.totalSet()) as Array<any>;
+            return {
+                total: object[0],
+                startId: object[1],
+            };
         } catch (error) {
             return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
                 location: Logger.location.SETMANAGER_TOTALSET,
@@ -603,9 +601,9 @@ export default class SetManager {
      * @param {string} params.creator - address of user
      * @param {number} params.pageNum - page number to query, start from 1
      * @param {number} params.pageSize - page size, must be greater than 0
-     * @returns {Promise<SetIdsOfCreatorReturn>} Total number and sets for current page
+     * @returns {Promise<SetIdsOfCreatorResponse>} Total number and sets for current page
      */
-    async setIdsOfCreator(params: SetIdsOfCreatorOptions): Promise<SetIdsOfCreatorReturn> {
+    async setIdsOfCreator(params: SetIdsOfCreatorOptions): Promise<SetIdsOfCreatorResponse> {
         this.assertContractLoaded(Logger.location.SETMANAGER_SETIDSOFCREATOR);
 
         if (!isValidPositiveNumber(params.pageNum) || !isValidPositiveNumber(params.pageSize)) {
@@ -615,13 +613,11 @@ export default class SetManager {
         }
 
         try {
-            return (async () => {
-                const result = (await this.contractDeployed.setIdsOfCreator(params.creator, params.pageNum, params.pageSize)) as Array<any>;
-                return {
-                    total: result[0],
-                    setIds: result[1]
-                } as SetIdsOfCreatorReturn;
-            })();
+            const result = (await this.contractDeployed.setIdsOfCreator(params.creator, params.pageNum, params.pageSize)) as Array<any>;
+            return {
+                total: result[0],
+                setIds: result[1]
+            };
         } catch (error) {
             return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
                 location: Logger.location.SETMANAGER_SETIDSOFCREATOR,
@@ -637,9 +633,9 @@ export default class SetManager {
      * @param {number} params.categoryId
      * @param {number} params.pageNum - page number to query, start from 1
      * @param {number} params.pageSize - page size, must be greater than 0
-     * @returns {Promise<CollectionsOfReturn>}
+     * @returns {Promise<CollectionsOfResponse>}
      */
-    async collectionsOf(params: CollectionsOfOptions): Promise<CollectionsOfReturn> {
+    async collectionsOf(params: CollectionsOfOptions): Promise<CollectionsOfResponse> {
         this.assertContractLoaded(Logger.location.SETMANAGER_COLLECTIONSOF);
 
         if (!isAllValidNonNegInteger(params.setId)) {
@@ -661,19 +657,17 @@ export default class SetManager {
         }
 
         try {
-            return (async () => {
-                const result = (await this.contractDeployed.collectionsOf(
-                    params.setId,
-                    params.categoryId,
-                    params.pageNum,
-                    params.pageSize
-                )) as Array<any>;
-                return {
-                    total: result[0],
-                    collections: result[1],
-                    collectionTypes: result[2]
-                } as CollectionsOfReturn;
-            })();
+            const result = (await this.contractDeployed.collectionsOf(
+                params.setId,
+                params.categoryId,
+                params.pageNum,
+                params.pageSize
+            )) as Array<any>;
+            return {
+                total: result[0],
+                collections: result[1],
+                collectionTypes: result[2]
+            };
         } catch (error) {
             return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
                 location: Logger.location.SETMANAGER_COLLECTIONSOF,
@@ -689,7 +683,7 @@ export default class SetManager {
      * @param {Array<Array<number>>} params.collectionSets sets to check corresponding to collection
      * @returns {Promise<Array<CollectionType>>} Returns empty list as long as one collection not in any set
      */
-    async verifyCollectionInSet(params: VerifyCollectionInSetOptions): Promise<Array<CollectionType>> {
+    async verifyCollectionInAllSets(params: VerifyCollectionInAllSetsOptions): Promise<Array<CollectionType>> {
         this.assertContractLoaded(Logger.location.SETMANAGER_VERIFYCOLLECTIONINSET);
         this.assertArrayLengthEqual(params.collections, params.collectionSets, Logger.location.SETMANAGER_VERIFYCOLLECTIONINSET)
 
@@ -706,7 +700,7 @@ export default class SetManager {
         }
 
         try {
-            return this.contractDeployed.verifyCollectionInSet(params.collections, params.collectionSets);
+            return this.contractDeployed.verifyCollectionInAllSets(params.collections, params.collectionSets);
         } catch (error) {
             return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
                 location: Logger.location.SETMANAGER_VERIFYCOLLECTIONINSET,
@@ -722,7 +716,7 @@ export default class SetManager {
      * @param {Array<Array<string>>} params.setCollections
      * @returns {Promise<boolean>}
      */
-    async isSetContainsAllCollections(params: IsSetContainsAllCollectionsOptions): Promise<boolean> {
+    async verifySetHasAllCollections(params: VerifySetHasAllCollectionsOptions): Promise<boolean> {
         this.assertContractLoaded(Logger.location.SETMANAGER_ISSETCONTAINSALLCOLLECTIONS);
         this.assertArrayLengthEqual(params.setIds, params.setCollections, Logger.location.SETMANAGER_ISSETCONTAINSALLCOLLECTIONS)
 
@@ -741,7 +735,7 @@ export default class SetManager {
         }
 
         try {
-            return this.contractDeployed.isSetContainsAllCollections(params.setIds, params.setCollections);
+            return this.contractDeployed.verifySetHasAllCollections(params.setIds, params.setCollections);
         } catch (error) {
             return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
                 location: Logger.location.SETMANAGER_ISSETCONTAINSALLCOLLECTIONS,

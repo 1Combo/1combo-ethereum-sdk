@@ -41,7 +41,7 @@ type Registry = {
     combo: string;
 };
 
-type GetRegistriesReturn = {
+type GetRegistriesResponse = {
     total: BN;
     registries: Array<Registry>;
 };
@@ -139,9 +139,9 @@ export default class ComboCollFactory {
      * @param {object} params object containing all parameters
      * @param {number} params.pageNum - page number to query, start from 1
      * @param {number} params.pageSize - page size, must be greater than 0
-     * @returns {Promise<GetRegistriesReturn>}
+     * @returns {Promise<GetRegistriesResponse>}
      */
-    async getRegistries(params: GetRegistriesOptions): Promise<GetRegistriesReturn> {
+    async getRegistries(params: GetRegistriesOptions): Promise<GetRegistriesResponse> {
         this.assertContractLoaded(Logger.location.COMBOCOLLFACTORY_GETREGISTRY);
 
         if (!isValidPositiveNumber(params.pageNum) || !isValidPositiveNumber(params.pageSize)) {
@@ -151,13 +151,11 @@ export default class ComboCollFactory {
         }
 
         try {
-            return (async () => {
-                const result = (await this.contractDeployed.getRegistries(params.pageNum, params.pageSize)) as Array<any>;
-                return {
-                    total: result[0],
-                    registries: result[1]
-                } as GetRegistriesReturn;
-            })();
+            const result = (await this.contractDeployed.getRegistries(params.pageNum, params.pageSize)) as Array<any>;
+            return {
+                total: result[0],
+                registries: result[1]
+            };
         } catch (error) {
             return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
                 location: Logger.location.COMBOCOLLFACTORY_GETREGISTRY,
@@ -172,9 +170,9 @@ export default class ComboCollFactory {
      * @param {string} params.creator - address of deployer to query
      * @param {number} params.pageNum - page number to query, start from 1
      * @param {number} params.pageSize - page size, must be greater than 0
-     * @returns {Promise<GetRegistriesReturn>}
+     * @returns {Promise<GetRegistriesResponse>}
      */
-    async getRegistriesOf(params: GetRegistriesOfOptions): Promise<GetRegistriesReturn> {
+    async getRegistriesOf(params: GetRegistriesOfOptions): Promise<GetRegistriesResponse> {
         this.assertContractLoaded(Logger.location.COMBOCOLLFACTORY_GETREGISTRYOF);
 
         if (!isAllValidAddress(params.creator)) {
@@ -190,13 +188,11 @@ export default class ComboCollFactory {
         }
 
         try {
-            return (async () => {
-                const result = (await this.contractDeployed.getRegistriesOf(params.creator, params.pageNum, params.pageSize)) as Array<any>;
-                return {
-                    total: result[0],
-                    registries: result[1]
-                } as GetRegistriesReturn;
-            })();
+            const result = (await this.contractDeployed.getRegistriesOf(params.creator, params.pageNum, params.pageSize)) as Array<any>;
+            return {
+                total: result[0],
+                registries: result[1]
+            };
         } catch (error) {
             return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
                 location: Logger.location.COMBOCOLLFACTORY_GETREGISTRYOF,

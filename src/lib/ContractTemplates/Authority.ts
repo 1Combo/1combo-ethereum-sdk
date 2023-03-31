@@ -1,7 +1,7 @@
 import { BigNumber, ethers} from 'ethers';
 import { Logger, log } from '../Logger';
 import artifact from './artifacts/Authority';
-import { isValidPositiveNumber } from '../utils';
+import { isValidPositiveNumber, isValidUUID } from '../utils';
 
 type ContractAddressOptions = {
     combo: string;
@@ -9,17 +9,24 @@ type ContractAddressOptions = {
     signer: ethers.Wallet | ethers.providers.JsonRpcSigner;
 };
 
-type AuthoritiesOfOptions = {
+type PageAllowancesOptions = {
     to: string;
     pageNum: number;
     pageSize: number;
 };
 
-type AuthoritiesOfReturn = {
+type PageAllowancesResponse = {
     total: BigNumber;
     uuids: Array<BigNumber>;
     allowances: Array<BigNumber>;
 };
+
+
+type AllowancesOptions = {
+    to: string;
+    uuids: Array<number | string>;
+};
+
 
 export default class Authority {
     combo: string;
@@ -61,9 +68,9 @@ export default class Authority {
      * @param {string} params.to - address of the spender who gets approved
      * @param {number} params.pageNum - page number to query, start from 1
      * @param {number} params.pageSize - page size
-     * @returns {Promise<AuthoritiesOfReturn>}
+     * @returns {Promise<PageAllowancesResponse>}
      */
-    async authoritiesOf(params: AuthoritiesOfOptions): Promise<AuthoritiesOfReturn> {
+    async pageAllowances(params: PageAllowancesOptions): Promise<PageAllowancesResponse> {
 
         if (!this.contractDeployed) {
             log.throwArgumentError(
@@ -71,35 +78,77 @@ export default class Authority {
                 'contractAddress',
                 this.contractAddress,
                 {
-                    location: Logger.location.AUTHORITY_AUTHORITIESOF,
+                    location: Logger.location.AUTHORITY_PAGEALLOWANCES,
                 },
             );
         }
 
         if (!params.to || !ethers.utils.isAddress(params.to)) {
             log.throwMissingArgumentError(Logger.message.invalid_to_address, {
-                location: Logger.location.AUTHORITY_AUTHORITIESOF,
+                location: Logger.location.AUTHORITY_PAGEALLOWANCES,
             });
         }
 
         if (!isValidPositiveNumber(params.pageNum) || !isValidPositiveNumber(params.pageSize)) {
             log.throwMissingArgumentError(Logger.message.invalid_page_param, {
-                location: Logger.location.AUTHORITY_AUTHORITIESOF,
+                location: Logger.location.AUTHORITY_PAGEALLOWANCES,
             });
         }
 
         try {
-            return (async () => {
-                const result = (await this.contractDeployed.authoritiesOf(params.to, params.pageNum, params.pageSize)) as Array<any>;
-                return {
-                    total: result[0],
-                    uuids: result[1],
-                    allowances: result[2],
-                } as AuthoritiesOfReturn;
-            })();
+            const result = (await this.contractDeployed.pageAllowances(params.to, params.pageNum, params.pageSize)) as Array<any>;
+            return {
+                total: result[0],
+                uuids: result[1],
+                allowances: result[2],
+            }
         } catch (error) {
             return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
-                location: Logger.location.AUTHORITY_AUTHORITIESOF,
+                location: Logger.location.AUTHORITY_PAGEALLOWANCES,
+                error,
+            });
+        }
+    }
+
+    /**
+     * Returns approvals to `to`
+     * @param {object} params object containing all parameters
+     * @param {string} params.to - address of the spender who gets approved
+     * @param {Array<string|number>} params.uuids - uuid of token that has been approved to `to`
+     * @returns {Promise<Array<BigNumber>>}
+     */
+    async allowances(params: AllowancesOptions): Promise<Array<BigNumber>> {
+
+        if (!this.contractDeployed) {
+            log.throwArgumentError(
+                Logger.message.contract_not_deployed_or_loaded,
+                'contractAddress',
+                this.contractAddress,
+                {
+                    location: Logger.location.AUTHORITY_ALLOWANCES,
+                },
+            );
+        }
+
+        if (!params.to || !ethers.utils.isAddress(params.to)) {
+            log.throwMissingArgumentError(Logger.message.invalid_to_address, {
+                location: Logger.location.AUTHORITY_ALLOWANCES,
+            });
+        }
+        
+        params.uuids.forEach(uuid => {
+            if (!isValidUUID(uuid)) {
+                log.throwMissingArgumentError(Logger.message.no_uuid_or_not_valid, {
+                    location: Logger.location.AUTHORITY_ALLOWANCES,
+                });
+            }
+        });
+
+        try {
+            return this.contractDeployed.allowances(params.to, params.uuids);
+        } catch (error) {
+            return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
+                location: Logger.location.AUTHORITY_ALLOWANCES,
                 error,
             });
         }

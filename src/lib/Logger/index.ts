@@ -39,13 +39,15 @@ export enum ErrorLocation {
 
   // Authority
   AUTHORITY_LOADCONTRACT = '[Authority.loadContract]',
-  AUTHORITY_AUTHORITIESOF = '[Authority.authoritiesOf]',
+  AUTHORITY_PAGEALLOWANCES = '[Authority.pageAllowances]',
+  AUTHORITY_ALLOWANCES = '[Authority.allowances]',
 
   // Accounting
   ACCOUNTING_LOADCONTRACT = '[Accounting.loadContract]',
   ACCOUNTING_ADDGASPRICETOOPTIONS = '[Accounting.addGasPriceToOptions]',
   ACCOUNTING_RECEIVERSOF = '[Accounting.receiversOf]',
   ACCOUNTING_COLLECTIONSOF = '[Accounting.collectionsOf]',
+  ACCOUNTING_PAGECOLLECTIONSOF = '[Accounting.pageCollectionsOf]',
 
   // ComboCollCore
   COMBOCOLLCORE_DEPLOY = '[ComboCollCore.deploy]',
@@ -103,7 +105,8 @@ export enum ErrorLocation {
   COMBOCOLLPROXY_EXIST = '[ComboCollProxy.exist]',
   COMBOCOLLPROXY_COMBOCOLLMETASOF = '[ComboCollProxy.comboCollMetasOf]',
   COMBOCOLLPROXY_APPROVE = '[ComboCollProxy.approve]',
-  COMBOCOLLPROXY_AUTHORITIESOF = '[ComboCollProxy.authoritiesOf]',
+  COMBOCOLLPROXY_PAGEAUTHORITYALLOWANCES = '[ComboCollProxy.pageAuthorityAllowances]',
+  COMBOCOLLPROXY_AUTHORITYALLOWANCES = '[ComboCollProxy.authorityAllowances]',
 
   // Indexer
   INDEXER_ADDGASPRICETOOPTIONS = '[Indexer.addGasPriceToOptions]',

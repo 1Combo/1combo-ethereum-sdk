@@ -34,7 +34,7 @@ describe('CollectionFactory', () => {
     it('all', async() => {
         console.log('total', (await factory.totalCollection()).toNumber());
 
-        await factory.getCollections({pageNum: 1, pageSize: 10});
-        await factory.getCollectionsByCreator({creator: creator, pageNum: 1, pageSize: 10});
+        console.log('getCollections', await factory.getCollections({pageNum: 1, pageSize: 10}));
+        console.log('getCollectionsByCreator', await factory.getCollectionsByCreator({creator: creator, pageNum: 1, pageSize: 10}));
     }, 60000);
 });

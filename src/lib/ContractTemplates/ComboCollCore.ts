@@ -36,7 +36,7 @@ type Factor = {
     collection: string;
 }
 
-type GetComboRulesReturn = {
+type GetComboRulesResponse = {
     factors: Array<Factor>;
 };
 
@@ -118,9 +118,9 @@ export default class ComboCollCore {
 
     /**
      * Returns combination rules of this combo collection
-     * @returns {Promise<GetComboRulesReturn>}
+     * @returns {Promise<GetComboRulesResponse>}
      */
-    async getComboRules(): Promise<GetComboRulesReturn> {
+    async getComboRules(): Promise<GetComboRulesResponse> {
         this.assertContractLoaded(Logger.location.COMBOCOLLCORE_GET_COMBO_RULES);
 
         try {

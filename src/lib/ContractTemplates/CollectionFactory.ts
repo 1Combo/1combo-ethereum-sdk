@@ -32,7 +32,7 @@ type GetCollectionsByCreatorOptions = {
     pageSize: number;
 };
 
-type GetCollectionsReturn = {
+type GetCollectionsResponse = {
     total: BN;
     collections: Array<string>;
 };
@@ -129,10 +129,10 @@ export default class CollectionFactory {
      * @param {object} params object containing all parameters
      * @param {number} params.pageNum - page number to query, start from 1
      * @param {number} params.pageSize - page size, must be greater than 0
-     * @returns {Promise<GetCollectionsReturn>} Total number of collections and 
+     * @returns {Promise<GetCollectionsResponse>} Total number of collections and 
      * collection addresses for current page
      */
-    async getCollections(params: GetCollectionsOptions): Promise<GetCollectionsReturn> {
+    async getCollections(params: GetCollectionsOptions): Promise<GetCollectionsResponse> {
         this.assertContractLoaded(Logger.location.COLLECTIONFACTORY_GETCOLLECTIONS);
 
         if (!isValidPositiveNumber(params.pageNum) || !isValidPositiveNumber(params.pageSize)) {
@@ -142,13 +142,11 @@ export default class CollectionFactory {
         }
 
         try {
-            return (async () => {
-                const result = (await this.contractDeployed.getCollections(params.pageNum, params.pageSize)) as Array<any>;
-                return {
-                    total: result[0],
-                    collections: result[1]
-                } as GetCollectionsReturn;
-            })();
+            const result = (await this.contractDeployed.getCollections(params.pageNum, params.pageSize)) as Array<any>;
+            return {
+                total: result[0],
+                collections: result[1]
+            };
         } catch (error) {
             return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
                 location: Logger.location.COLLECTIONFACTORY_GETCOLLECTIONS,
@@ -163,10 +161,10 @@ export default class CollectionFactory {
      * @param {string} params.creator - address of deployer to query
      * @param {number} params.pageNum - page number to query, start from 1
      * @param {number} params.pageSize - page size, must be greater than 0
-     * @returns {Promise<GetCollectionsReturn>} Total number of collections and 
+     * @returns {Promise<GetCollectionsResponse>} Total number of collections and 
      * collection addresses for current page
      */
-    async getCollectionsByCreator(params: GetCollectionsByCreatorOptions): Promise<GetCollectionsReturn> {
+    async getCollectionsByCreator(params: GetCollectionsByCreatorOptions): Promise<GetCollectionsResponse> {
         this.assertContractLoaded(Logger.location.COLLECTIONFACTORY_GETCOLLECTIONSBYCREATOR);
 
         if (!isAllValidAddress(params.creator)) {
@@ -182,13 +180,11 @@ export default class CollectionFactory {
         }
 
         try {
-            return (async () => {
-                const result = (await this.contractDeployed.getCollectionsByCreator(params.creator, params.pageNum, params.pageSize)) as Array<any>;
-                return {
-                    total: result[0],
-                    collections: result[1]
-                } as GetCollectionsReturn;
-            })();
+            const result = (await this.contractDeployed.getCollectionsByCreator(params.creator, params.pageNum, params.pageSize)) as Array<any>;
+            return {
+                total: result[0],
+                collections: result[1]
+            };
         } catch (error) {
             return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
                 location: Logger.location.COLLECTIONFACTORY_GETCOLLECTIONSBYCREATOR,

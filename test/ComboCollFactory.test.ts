@@ -32,8 +32,8 @@ describe('ComboCollFactory', () => {
     });
 
     it('all', async() => {
-        await factory.totalRegistry();
-        await factory.getRegistries({pageNum: 1, pageSize: 10});
-        await factory.getRegistriesOf({creator: creator, pageNum: 1, pageSize: 10});
+        console.log('totalRegistry', await factory.totalRegistry());
+        console.log('getRegistries', await factory.getRegistries({pageNum: 1, pageSize: 10}));
+        console.log('getRegistriesOf', await factory.getRegistriesOf({creator: creator, pageNum: 1, pageSize: 10}));
     }, 60000);
 });

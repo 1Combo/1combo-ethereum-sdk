@@ -8,6 +8,7 @@ import { CONTRACT_ADDRESSES, TEMPLATES } from '../src/lib/SDK/constants';
 import { Chains } from '../src/lib/Auth/availableChains';
 
 import SetManager from '../src/lib/ContractTemplates/SetManager';
+// @ts-ignore
 import { getGas } from './__mocks__/utils';
 
 loadEnv();
@@ -15,6 +16,7 @@ loadEnv();
 describe('SetManager', () => {
     let sdk: SDK;
     let setManager: SetManager;
+    // @ts-ignore
     let creator: string;
 
     beforeAll(async () => {
@@ -36,8 +38,11 @@ describe('SetManager', () => {
         const totalSet = await setManager.totalSet();
         console.log('totalSet', totalSet.total.toNumber(), totalSet.startId);
 
-        const types = await setManager.collectionTypesOf({collections: ['0x0f1Da267B55d47d5aBced9be7542A6b3aE9b52B8']});
-        console.log('types', types[0]);
+        await expect(
+            setManager.collectionTypesOf({collections: ['0x0f1Da267B55d47d5aBced9be7542A6b3aE9b52B8']})
+        ).rejects.toMatchObject({
+            errorName: 'CollectionNotExists'
+        });
 
         const sets = await setManager.getSets({setIds: [10000000]});
         console.log('set 1e7', JSON.stringify(sets[0]));
@@ -57,13 +62,13 @@ describe('SetManager', () => {
         });
         console.log('collectionsOf', JSON.stringify(collectionsOf));
 
-        const setHasAll = await setManager.isSetContainsAllCollections({
+        const setHasAll = await setManager.verifySetHasAllCollections({
             setIds: [10000000],
             setCollections: [['0x0f1Da267B55d47d5aBced9be7542A6b3aE9b52B8']],
         });
         console.log('setHasAll', setHasAll);
 
-        const collectionInAll = await setManager.verifyCollectionInSet({
+        const collectionInAll = await setManager.verifyCollectionInAllSets({
             collections: ['0x0f1Da267B55d47d5aBced9be7542A6b3aE9b52B8'],
             collectionSets: [[10000000]]
         });
