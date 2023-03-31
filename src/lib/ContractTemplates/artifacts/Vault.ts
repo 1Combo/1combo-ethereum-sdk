@@ -121,6 +121,51 @@ export default {
       "constant": true
     },
     {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "collectionTotalClaimedERC20",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "collectionTotalClaimedEther",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
       "inputs": [],
       "name": "owner",
       "outputs": [
@@ -338,6 +383,16 @@ export default {
               "internalType": "uint256",
               "name": "erc20Amount",
               "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "ethTotalClaimed",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "erc20TotalClaimed",
+              "type": "uint256"
             }
           ],
           "internalType": "struct IVault.ClaimableDetail[]",
@@ -380,6 +435,16 @@ export default {
               "internalType": "uint256",
               "name": "erc20Amount",
               "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "ethTotalClaimed",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "erc20TotalClaimed",
+              "type": "uint256"
             }
           ],
           "internalType": "struct IVault.ClaimableDetail[]",
@@ -416,6 +481,16 @@ export default {
             {
               "internalType": "uint256",
               "name": "erc20Amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "ethTotalClaimed",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "erc20TotalClaimed",
               "type": "uint256"
             }
           ],
@@ -458,6 +533,16 @@ export default {
             {
               "internalType": "uint256",
               "name": "erc20Amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "ethTotalClaimed",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "erc20TotalClaimed",
               "type": "uint256"
             }
           ],

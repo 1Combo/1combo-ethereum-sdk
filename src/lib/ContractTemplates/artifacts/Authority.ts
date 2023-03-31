@@ -221,6 +221,31 @@ export default {
           "type": "address"
         },
         {
+          "internalType": "uint128[]",
+          "name": "uuids_",
+          "type": "uint128[]"
+        }
+      ],
+      "name": "allowances",
+      "outputs": [
+        {
+          "internalType": "uint256[]",
+          "name": "amounts",
+          "type": "uint256[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "spender_",
+          "type": "address"
+        },
+        {
           "internalType": "uint256",
           "name": "pageNum_",
           "type": "uint256"
@@ -231,7 +256,7 @@ export default {
           "type": "uint256"
         }
       ],
-      "name": "authoritiesOf",
+      "name": "pageAllowances",
       "outputs": [
         {
           "internalType": "uint256",
@@ -245,7 +270,7 @@ export default {
         },
         {
           "internalType": "uint256[]",
-          "name": "allowances",
+          "name": "amounts",
           "type": "uint256[]"
         }
       ],

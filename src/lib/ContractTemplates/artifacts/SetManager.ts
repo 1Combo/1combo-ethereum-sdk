@@ -131,61 +131,6 @@ export default {
       "type": "event"
     },
     {
-      "inputs": [
-        {
-          "internalType": "uint32",
-          "name": "",
-          "type": "uint32"
-        }
-      ],
-      "name": "collectionsForSets",
-      "outputs": [
-        {
-          "internalType": "string",
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "uri",
-          "type": "string"
-        },
-        {
-          "internalType": "address",
-          "name": "creator",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function",
-      "constant": true
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "name": "setsForCreators",
-      "outputs": [
-        {
-          "internalType": "uint32",
-          "name": "",
-          "type": "uint32"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function",
-      "constant": true
-    },
-    {
       "inputs": [],
       "name": "totalSet",
       "outputs": [
@@ -526,17 +471,12 @@ export default {
           "type": "uint32[][]"
         }
       ],
-      "name": "verifyCollectionInSet",
+      "name": "verifyCollectionInAllSets",
       "outputs": [
         {
           "internalType": "enum ICollectionType.CollectionType[]",
           "name": "types",
           "type": "uint8[]"
-        },
-        {
-          "internalType": "bool",
-          "name": "success",
-          "type": "bool"
         }
       ],
       "stateMutability": "view",
@@ -556,11 +496,11 @@ export default {
           "type": "address[][]"
         }
       ],
-      "name": "isSetContainsAllCollections",
+      "name": "verifySetHasAllCollections",
       "outputs": [
         {
           "internalType": "bool",
-          "name": "contains",
+          "name": "",
           "type": "bool"
         }
       ],
