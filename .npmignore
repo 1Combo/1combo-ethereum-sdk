@@ -4,6 +4,6 @@ test
 package-lock.json
 node_modules
 docs
-.env
-.env.*
+src
+.env*
 .DS_Store

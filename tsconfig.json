@@ -17,11 +17,11 @@
     "outDir": "dist",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "strict": true,
+    "strict": false,
     "strictPropertyInitialization": false,
+    // "skipLibCheck": true,
     "noUnusedLocals": true
-    // "skipLibCheck": true   
   },
-  "include": ["./src", "./types.d.ts"],
+  "include": ["./src/**/*.ts"],
   "exclude": ["node_modules", "test", "dist", "./jest.config.js"]
 }
