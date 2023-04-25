@@ -10,39 +10,21 @@ type ContractAddressOptions = {
 };
 
 type ClaimOptions = {
-    gasPrice?/** Gwei */: string | undefined;
-};
-
-type ClaimTargetOptions = {
-    erc20: string;
     collections: Array<string>;
+    currencies: Array<string>;
     gasPrice?/** Gwei */: string | undefined;
 };
 
 type ClaimablesOfCollectionsOptions = {
     collections: Array<string>;
-};
-
-type ClaimablesOfCollectionsTargetOptions = {
-    erc20: string;
-    collections: Array<string>;
-};
-
-type ClaimablesOfReceiversOptions = {
-    receivers: Array<string>;
-};
-
-type ClaimablesOfReceiversTargetOptions = {
-    erc20: string;
-    receivers: Array<string>;
+    currencies: Array<string>;
 };
 
 type ClaimableDetail = {
+    collection: string;
     token: string;
-    ethAmount: BN;
-    erc20Amount: BN;
-    ethTotalClaimed: BN;
-    erc20TotalClaimed: BN;
+    pending: BN;
+    totalClaimed: BN;
 };
 
 export default class Vault {
@@ -110,11 +92,27 @@ export default class Vault {
     }
 
     /**
-     * Claims earnings(WETH & Ether) of all collections created by current wallet
+     * Claims earnings (all currencies for each collection) of add-on or combo collections.
+     * To claim `ether`, set currency to `address(0)`
+     * @param {object} params object containing all parameters
+     * @param {Array<string>} params.collections collection addresses to claim
+     * @param {Array<string>} params.currencies ERC20 tokens to claim
      * @returns {Promise<ethers.providers.TransactionResponse>} Transaction
      */
     async claim(params: ClaimOptions): Promise<ethers.providers.TransactionResponse> {
         this.assertContractLoaded(Logger.location.VAULT_CLAIM);
+
+        if (!isAllValidAddress(params.currencies)) {
+            log.throwMissingArgumentError(Logger.message.invalid_token_address, {
+                location: Logger.location.VAULT_CLAIM,
+            });
+        }
+
+        if (!isAllValidAddress(params.collections)) {
+            log.throwMissingArgumentError(Logger.message.invalid_contract_address, {
+                location: Logger.location.VAULT_CLAIM,
+            });
+        }
 
         try {
             const chainId = await this.contractDeployed.signer.getChainId();
@@ -126,7 +124,7 @@ export default class Vault {
                 );
             else options = addGasPriceToOptions({}, params.gasPrice, Logger.location.VAULT_CLAIM);
 
-            return this.contractDeployed['claim()'](options);
+            return this.contractDeployed.claim(params.currencies, params.collections, options);
         } catch (error) {
             return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
                 location: Logger.location.VAULT_CLAIM,
@@ -136,50 +134,11 @@ export default class Vault {
     }
 
     /**
-     * Claims earnings (specified ERC20 & Ether) of specified collections
-     * @param {object} params object containing all parameters
-     * @param {string} params.erc20 specified token to claim
-     * @param {Array<string>} params.collections collection addresses to claim
-     * @returns {Promise<ethers.providers.TransactionResponse>} Transaction
-     */
-    async claimTarget(params: ClaimTargetOptions): Promise<ethers.providers.TransactionResponse> {
-        this.assertContractLoaded(Logger.location.VAULT_CLAIMTARGET);
-
-        if (!isAllValidAddress(params.erc20)) {
-            log.throwMissingArgumentError(Logger.message.invalid_token_address, {
-                location: Logger.location.VAULT_CLAIMTARGET,
-            });
-        }
-
-        if (!isAllValidAddress(params.collections)) {
-            log.throwMissingArgumentError(Logger.message.invalid_contract_address, {
-                location: Logger.location.VAULT_CLAIMTARGET,
-            });
-        }
-
-        try {
-            const chainId = await this.contractDeployed.signer.getChainId();
-            let options;
-            // If Polygon mainnet, set up options propperly to avoid underpriced transaction error
-            if (chainId === Chains.polygon)
-                options = await preparePolygonTransaction(
-                    await this.contractDeployed.signer.getTransactionCount(),
-                );
-            else options = addGasPriceToOptions({}, params.gasPrice, Logger.location.VAULT_CLAIMTARGET);
-
-            return this.contractDeployed['claim(address,address[])'](params.erc20, params.collections, options);
-        } catch (error) {
-            return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
-                location: Logger.location.VAULT_CLAIMTARGET,
-                error,
-            });
-        }
-    }
-
-    /**
-     * Returns claimable earnings (WETH & Ether) by collections
+     * Returns claimable earnings (all currencies for each collection) of add-on or combo collections.
+     * To query `ether`, set currency to `address(0)`.
      * @param {object} params object containing all parameters
      * @param {Array<string>} params.collections collection addresses
+     * @param {Array<string>} params.currencies ERC20 tokens to query
      * @returns {Promise<Array<ClaimableDetail>>} List of claimbles
      */
     async claimablesOfCollections(params: ClaimablesOfCollectionsOptions): Promise<Array<ClaimableDetail>> {
@@ -191,100 +150,17 @@ export default class Vault {
             });
         }
 
+        if (!isAllValidAddress(params.currencies)) {
+            log.throwMissingArgumentError(Logger.message.invalid_token_address, {
+                location: Logger.location.VAULT_CLAIMABLESOFCOLLECTIONS,
+            });
+        }
+
         try {
-            return this.contractDeployed['claimablesOfCollections(address[])'](params.collections);
+            return this.contractDeployed.claimablesOfCollections(params.currencies, params.collections);
         } catch (error) {
             return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
                 location: Logger.location.VAULT_CLAIMABLESOFCOLLECTIONS,
-                error,
-            });
-        }
-    }
-
-    /**
-     * Returns claimable earnings (specified ERC20 & Ether) by collections
-     * @param {object} params object containing all parameters
-     * @param {Array<string>} params.erc20 token to query
-     * @param {Array<string>} params.collections collection addresses to query
-     * @returns {Promise<Array<ClaimableDetail>>} List of claimbles
-     */
-    async claimablesOfCollectionsTarget(params: ClaimablesOfCollectionsTargetOptions): Promise<Array<ClaimableDetail>> {
-        this.assertContractLoaded(Logger.location.VAULT_CLAIMABLESOFCOLLECTIONSTARGET);
-
-        if (!isAllValidAddress(params.erc20)) {
-            log.throwMissingArgumentError(Logger.message.invalid_token_address, {
-                location: Logger.location.VAULT_CLAIMABLESOFCOLLECTIONSTARGET,
-            });
-        }
-
-        if (!isAllValidAddress(params.collections)) {
-            log.throwMissingArgumentError(Logger.message.invalid_contract_address, {
-                location: Logger.location.VAULT_CLAIMABLESOFCOLLECTIONSTARGET,
-            });
-        }
-
-        try {
-            return this.contractDeployed['claimablesOfCollections(address,address[])'](params.erc20, params.collections);
-        } catch (error) {
-            return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
-                location: Logger.location.VAULT_CLAIMABLESOFCOLLECTIONSTARGET,
-                error,
-            });
-        }
-    }
-
-    /**
-     * Returns claimable earnings (WETH & Ether) by receiver
-     * @param {object} params object containing all parameters
-     * @param {Array<string>} params.receivers receiver addresses
-     * @returns {Promise<Array<ClaimableDetail>>} List of claimbles
-     */
-    async claimablesOfReceivers(params: ClaimablesOfReceiversOptions): Promise<Array<ClaimableDetail>> {
-        this.assertContractLoaded(Logger.location.VAULT_CLAIMABLESOFRECEIVERS);
-
-        if (!isAllValidAddress(params.receivers)) {
-            log.throwMissingArgumentError(Logger.message.invalid_account_address, {
-                location: Logger.location.VAULT_CLAIMABLESOFRECEIVERS,
-            });
-        }
-
-        try {
-            return this.contractDeployed['claimablesOfReceivers(address[])'](params.receivers);
-        } catch (error) {
-            return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
-                location: Logger.location.VAULT_CLAIMABLESOFRECEIVERS,
-                error,
-            });
-        }
-    }
-
-    /**
-     * Returns claimable earnings (specified ERC20 & Ether) by receiver
-     * @param {object} params object containing all parameters
-     * @param {Array<string>} params.erc20 token
-     * @param {Array<string>} params.receivers receiver addresses
-     * @returns {Promise<Array<ClaimableDetail>>} List of claimbles
-     */
-    async claimablesOfReceiversTarget(params: ClaimablesOfReceiversTargetOptions): Promise<Array<ClaimableDetail>> {
-        this.assertContractLoaded(Logger.location.VAULT_CLAIMABLESOFRECEIVERSTARGET);
-
-        if (!isAllValidAddress(params.erc20)) {
-            log.throwMissingArgumentError(Logger.message.invalid_token_address, {
-                location: Logger.location.VAULT_CLAIMABLESOFRECEIVERSTARGET,
-            });
-        }
-
-        if (!isAllValidAddress(params.receivers)) {
-            log.throwMissingArgumentError(Logger.message.invalid_account_address, {
-                location: Logger.location.VAULT_CLAIMABLESOFRECEIVERSTARGET,
-            });
-        }
-
-        try {
-            return this.contractDeployed['claimablesOfReceivers(address,address[])'](params.erc20, params.receivers);
-        } catch (error) {
-            return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
-                location: Logger.location.VAULT_CLAIMABLESOFRECEIVERSTARGET,
                 error,
             });
         }

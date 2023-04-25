@@ -19,7 +19,7 @@ type AddItemsOptions = {
 
 type MintOptions = {
     to: string;
-    payInEther: boolean;
+    currency: string;   // ERC20 address
     collections: Array<string>;
     tokenIds: Array<Array<number>>;
     amounts: Array<Array<number>>;
@@ -366,7 +366,7 @@ export default class CollectionProxy {
      * Mints tokens
      * @param {object} params object containing all parameters
      * @param {string} params.to owner address of the newly minted tokens
-     * @param {boolean} params.payInEther pay in Ether or WETH
+     * @param {string} params.currency pay in Ether or WETH
      * @param {Array<string>} params.collections collection addresses
      * @param {Array<Array<number>>} params.tokenIds tokens of the corresponding collection to buy
      * @param {Array<Array<number>>} params.amounts amount of the corresponding token to buy
@@ -415,7 +415,7 @@ export default class CollectionProxy {
                 );
             else options = addGasPriceToOptions({ }, params.gasPrice, Logger.location.COLLECTIONPROXY_MINT);
 
-            if (params.payInEther) {
+            if (params.currency == '0x0000000000000000000000000000000000000000') {
                 const prices = (await this.contractDeployed.pricesOf(params.collections, params.tokenIds)) as Array<Array<BN>>;
                 let value = BN.from(0);
                 prices.forEach((list, i) => {
@@ -426,9 +426,9 @@ export default class CollectionProxy {
                 options.value = value;
             }
 
-            return this.contractDeployed['mint(address,bool,(address[],uint256[][],uint256[][]))'](
+            return this.contractDeployed['mint(address,address,(address[],uint256[][],uint256[][]))'](
                 params.to,
-                params.payInEther,
+                params.currency,
                 {
                     collections: params.collections,
                     tokenIds: params.tokenIds,

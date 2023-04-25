@@ -7,7 +7,7 @@ import { SDK } from '../src/lib/SDK/sdk';
 import { CONTRACT_ADDRESSES, TEMPLATES } from '../src/lib/SDK/constants';
 import { Chains } from '../src/lib/Auth/availableChains';
 
-import Indexer from '../src/lib/ContractTemplates/Indexer';
+import UUID from '../src/lib/ContractTemplates/UUID';
 import ComboCollProxy from '../src/lib/ContractTemplates/ComboCollProxy';
 import { getGas } from './__mocks__/utils';
 
@@ -17,7 +17,7 @@ describe('ComboCollProxy', () => {
     let sdk: SDK;
     let proxy: ComboCollProxy;
     // @ts-ignore
-    let indexer: Indexer;
+    let uuidGenerator: UUID;
     // @ts-ignore
     let creator: string;
 
@@ -34,25 +34,25 @@ describe('ComboCollProxy', () => {
             templateName: TEMPLATES.ComboCollProxy,
             contractAddress: CONTRACT_ADDRESSES.GOERLI.ComboCollProxy,
         });
-        indexer = await sdk.loadContract({
-            templateName: TEMPLATES.Indexer,
-            contractAddress: CONTRACT_ADDRESSES.GOERLI.Indexer,
+        uuidGenerator = await sdk.loadContract({
+            templateName: TEMPLATES.UUID,
+            contractAddress: CONTRACT_ADDRESSES.GOERLI.UUID,
         });
     });
 
     it('read', async() => {
         await proxy.exist({combos: ['0x0f1Da267B55d47d5aBced9be7542A6b3aE9b52B8']});
         await proxy.comboCollMetasOf({combos: ['0x0f1Da267B55d47d5aBced9be7542A6b3aE9b52B8']});
-        await proxy.pageAuthorityAllowances({
-            indexerDeployed: indexer,
+        await proxy.pageEscrowAllowances({
+            uuidDeployed: uuidGenerator,
             combo: '0x0f1Da267B55d47d5aBced9be7542A6b3aE9b52B8',
             to: creator,
             pageNum: 1,
             pageSize: 10,
         });
 
-        await proxy.authorityAllowances({
-            indexerDeployed: indexer,
+        await proxy.escrowAllowances({
+            uuidDeployed: uuidGenerator,
             combo: '',
             to: creator,
             uuids: []

@@ -7,10 +7,11 @@ import CollectionProxy from './lib/ContractTemplates/CollectionProxy';
 import ComboCollCore from './lib/ContractTemplates/ComboCollCore';
 import ComboCollFactory from './lib/ContractTemplates/ComboCollFactory';
 import ComboCollProxy from './lib/ContractTemplates/ComboCollProxy';
-import Indexer from './lib/ContractTemplates/Indexer';
 import SetManager from './lib/ContractTemplates/SetManager';
 import Vault from './lib/ContractTemplates/Vault';
-import Accounting from './lib/ContractTemplates/Accounting';
+import Escrow from './lib/ContractTemplates/Escrow';
+import EscrowIndexer from './lib/ContractTemplates/EscrowIndexer';
+import UUID from './lib/ContractTemplates/UUID';
 
 export * from './lib/SDK/sdk';
 export { Chains } from './lib/Auth/availableChains';
@@ -18,14 +19,15 @@ export { TEMPLATES, CONTRACT_ADDRESSES } from './lib/SDK/constants';
 export {
     Auth,
     AuthOptions,
-    Accounting,
     Collection,
     CollectionFactory,
     CollectionProxy,
     ComboCollCore,
     ComboCollFactory,
     ComboCollProxy,
-    Indexer,
+    Escrow,
+    EscrowIndexer,
+    UUID,
     SetManager,
     Vault,
 };

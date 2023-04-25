@@ -10,6 +10,7 @@ import { Chains } from '../src/lib/Auth/availableChains';
 import SetManager from '../src/lib/ContractTemplates/SetManager';
 // @ts-ignore
 import { getGas } from './__mocks__/utils';
+import { ZERO_ADDRESS } from '../src/lib/constants';
 
 loadEnv();
 
@@ -34,7 +35,13 @@ describe('SetManager', () => {
         });
     });
 
-    it('read', async() => {
+    it('read - collection', async() => {
+        await setManager.pageCollectionsOf({receiver: creator, pageNum: 1, pageSize: 10});
+        const receivers = await setManager.receiversOf({collections: ['0x0f1Da267B55d47d5aBced9be7542A6b3aE9b52B8']});
+        expect(receivers[0]).toBe(ZERO_ADDRESS);
+    }, 20000);
+
+    it('read - set', async() => {
         const totalSet = await setManager.totalSet();
         console.log('totalSet', totalSet.total.toNumber(), totalSet.startId);
 
@@ -68,11 +75,14 @@ describe('SetManager', () => {
         });
         console.log('setHasAll', setHasAll);
 
-        const collectionInAll = await setManager.verifyCollectionInAllSets({
-            collections: ['0x0f1Da267B55d47d5aBced9be7542A6b3aE9b52B8'],
-            collectionSets: [[10000000]]
+        await expect(
+            setManager.verifyCollectionInAllSets({
+                collections: ['0x0f1Da267B55d47d5aBced9be7542A6b3aE9b52B8'],
+                collectionSets: [[10000000]]
+            })
+        ).rejects.toMatchObject({
+            errorName: 'CollectionNotExists'
         });
-        console.log('collectionInAll', JSON.stringify(collectionInAll));
     }, 60000);
 
     it('write', async() => {

@@ -1,44 +1,44 @@
-// import Authority from '../ContractTemplates/Authority';
 import Collection from '../ContractTemplates/Collection';
 import CollectionFactory from '../ContractTemplates/CollectionFactory';
 import CollectionProxy from '../ContractTemplates/CollectionProxy';
 import ComboCollCore from '../ContractTemplates/ComboCollCore';
 import ComboCollFactory from '../ContractTemplates/ComboCollFactory';
 import ComboCollProxy from '../ContractTemplates/ComboCollProxy';
-import Indexer from '../ContractTemplates/Indexer';
-import SetManager from '../ContractTemplates/SetManager';
+import Escrow from '../ContractTemplates/Escrow';
+import EscrowIndexer from '../ContractTemplates/EscrowIndexer';
+import UUID from '../ContractTemplates/UUID';
 import Vault from '../ContractTemplates/Vault';
-import Accounting from '../ContractTemplates/Accounting';
+import SetManager from '../ContractTemplates/SetManager';
 
 const NFT_API_URL = process.env.NFT_API_URL ? process.env.NFT_API_URL : 'https://nft.api.infura.io';
 export { NFT_API_URL };
 
 export enum TEMPLATES {
-  // Authority = 'Authority',
-  Accounting = 'Accounting',
   Collection = 'Collection',
   CollectionFactory = 'CollectionFactory',
   CollectionProxy = 'CollectionProxy',
   ComboCollCore = 'ComboCollCore',
   ComboCollFactory = 'ComboCollFactory',
   ComboCollProxy = 'ComboCollProxy',
-  Indexer = 'Indexer',
-  SetManager = 'SetManager',
+  Escrow = 'Escrow',
+  EscrowIndexer = 'EscrowIndexer',
+  UUID = 'UUID',
   Vault = 'Vault',
+  SetManager = 'SetManager',
 }
 
 export const classes = {
-  // Authority,
-  Accounting,
   Collection,
   CollectionFactory,
   CollectionProxy,
   ComboCollCore,
   ComboCollFactory,
   ComboCollProxy,
-  Indexer,
-  SetManager,
+  Escrow,
+  EscrowIndexer,
+  UUID,
   Vault,
+  SetManager,
 };
 
 export const CONTRACT_ADDRESSES = {
@@ -47,19 +47,19 @@ export const CONTRACT_ADDRESSES = {
     CollectionProxy: '',
     ComboCollProxy: '',
     ComboCollFactory: '',
-    Indexer: '',
+    EscrowIndexer: '',
+    UUID: '',
     Vault: '',
     SetManager: '',
-    Accounting: '',
   },
   GOERLI: {
-    CollectionFactory: '0x611cF1E28b6241d4147BFcD1D8F1B59A02174109',
-    CollectionProxy: '0x05E386dF2409f8E8614AEAc6e77547F3c7e8F821',
-    ComboCollProxy: '0xD5aBF1BeC0b3a4B9A6F06aA3FbF938dCCBeDbFc3',
-    ComboCollFactory: '0x2F5ef5143a2B0f4dc0eb3aE5036646CB3B762ef5',
-    Indexer: '0x3c4DB52E23705dA3106f39Aa30F02193A752c64e',
-    Vault: '0xa6A0f507e0ac22d8D3e2058D21b86580091A4f62',
-    SetManager: '0xd6032f186ABFde6B72d9cFFb9b877F6a012c8962',
-    Accounting: '0xa7baDf76ffD647c52189bcDC3c5a3f31C735d1E0',
+    CollectionFactory: '0x0051f27BfE2Ac4D1d0BfCF629Cd4745C206D7402',
+    CollectionProxy: '0xeAeD009F8197E741CE8Beb1adF8F70FBC9BC1006',
+    ComboCollProxy: '0x7F8FB4BeCD8de2532BE0b99c1d0C923dFC84cBA4',
+    ComboCollFactory: '0xFd22E9AA52a93B5bA25C3C422e2b54426d42De45',
+    EscrowIndexer: '0x1d8d1dD39c0180b04E981A18772e70FC3e06FdB0',
+    UUID: '0x1A8177317C853f9958Bc3f56fBF5bAaFd1F60a15',
+    Vault: '0x97bdef62248C650F6B4F10C56e560Bb73469C111',
+    SetManager: '0x8a789B6E574231198352AF8a866523Fc0ce0B7C6',
   },
 };

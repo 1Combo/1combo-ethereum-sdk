@@ -1,8 +1,8 @@
 import { ethers, BigNumber as BN, utils } from 'ethers';
 import { Logger, log, ErrorLocation } from '../Logger';
 import artifact from './artifacts/ComboCollProxy';
-import Authority from './Authority';
-import Indexer from './Indexer';
+import Escrow from './Escrow';
+import UUID from './UUID';
 import { isAllValidAddress, addGasPriceToOptions, isAllValidNonNegInteger, isValidPositiveNumber, isValidUUID } from '../utils';
 import preparePolygonTransaction from '../ContractTemplates/utils';
 import { Chains } from '../Auth/availableChains';
@@ -14,7 +14,7 @@ type ContractAddressOptions = {
 type MintOptions = {
     combo: string;
     to: string;
-    payInEther: boolean;
+    currency: string; // ERC20
     metaHash: string;
     // ingredients: ;
     // itemsToBuy: ;
@@ -45,8 +45,8 @@ type CollectionListOptions = {
 type ComboCollMeta = {
     price: BN;
     creator: string;
-    locker: string;
-    authority: string;
+    escrow: string;
+    escrowIndexer: string;
 };
 
 type ApproveOptions = {
@@ -58,29 +58,29 @@ type ApproveOptions = {
     gasPrice?/** Gwei */: string | undefined;
 };
 
-type PageAuthorityAllowancesOptions = {
-    indexerDeployed: Indexer;
+type PageEscrowAllowancesOptions = {
+    uuidDeployed: UUID;
     combo: string;
     to: string;
     pageNum: number;
     pageSize: number;
 };
 
-type PageAuthorityAllowancesResponse = {
+type PageEscrowAllowancesResponse = {
     total: BN;
     tokenAddresses: Array<string>;
     tokenIds: Array<BN>;
     allowances: Array<BN>;
 };
 
-type AuthorityAllowancesOptions = {
-    indexerDeployed: Indexer;
+type EscrowAllowancesOptions = {
+    uuidDeployed: UUID;
     combo: string;
     to: string;
     uuids: Array<string | number>;
 };
 
-type AuthorityAllowance= {
+type EscrowAllowance = {
     tokenAddress: string;
     tokenId: BN;
     allowance: BN;
@@ -92,7 +92,7 @@ export default class ComboCollProxy {
     private contractDeployed: ethers.Contract;
     private readonly signer;
 
-    private authorityDeployed: Authority;
+    private escrowLoaded: Escrow;
 
     constructor(signer: ethers.Wallet | ethers.providers.JsonRpcSigner) {
         this.signer = signer;
@@ -108,6 +108,14 @@ export default class ComboCollProxy {
                     location: location,
                 },
             );
+        }
+    }
+
+    private async loadEscrowIfNeeded(combo: string) {
+        if (!this.escrowLoaded || await this.escrowLoaded.getComboAddress() != combo) {
+            const meta = (await this.comboCollMetasOf({ combos: [combo] }))[0];
+            this.escrowLoaded = new Escrow(this.signer);
+            this.escrowLoaded.loadContract({ contractAddress: meta.escrow });
         }
     }
 
@@ -434,40 +442,33 @@ export default class ComboCollProxy {
      * @param {string} params.to - address of the spender who gets approved
      * @param {number} params.pageNum - page number to query, start from 1
      * @param {number} params.pageSize - page size
-     * @returns {Promise<PageAuthorityAllowancesResponse>}
+     * @returns {Promise<PageEscrowAllowancesResponse>}
      */
-    async pageAuthorityAllowances(params: PageAuthorityAllowancesOptions): Promise<PageAuthorityAllowancesResponse> {
-        this.assertContractLoaded(Logger.location.COMBOCOLLPROXY_PAGEAUTHORITYALLOWANCES);
+    async pageEscrowAllowances(params: PageEscrowAllowancesOptions): Promise<PageEscrowAllowancesResponse> {
+        this.assertContractLoaded(Logger.location.COMBOCOLLPROXY_PAGEESCROWALLOWANCES);
 
         if (!isAllValidAddress(params.combo)) {
             log.throwMissingArgumentError(Logger.message.invalid_contract_address, {
-                location: Logger.location.COMBOCOLLPROXY_PAGEAUTHORITYALLOWANCES,
+                location: Logger.location.COMBOCOLLPROXY_PAGEESCROWALLOWANCES,
             });
         }
 
         if (!isAllValidAddress(params.to)) {
             log.throwMissingArgumentError(Logger.message.invalid_to_address, {
-                location: Logger.location.COMBOCOLLPROXY_PAGEAUTHORITYALLOWANCES,
+                location: Logger.location.COMBOCOLLPROXY_PAGEESCROWALLOWANCES,
             });
         }
 
         if (!isValidPositiveNumber(params.pageNum) || !isValidPositiveNumber(params.pageSize)) {
             log.throwMissingArgumentError(Logger.message.invalid_page_param, {
-                location: Logger.location.COMBOCOLLPROXY_PAGEAUTHORITYALLOWANCES,
+                location: Logger.location.COMBOCOLLPROXY_PAGEESCROWALLOWANCES,
             });
         }
 
         try {
-            if (!this.authorityDeployed || this.authorityDeployed.combo != params.combo) {
-                const meta = (await this.comboCollMetasOf({combos: [params.combo]}))[0];
-                this.authorityDeployed = new Authority({
-                    combo: params.combo,
-                    contractAddress: meta.authority,
-                    signer: this.signer
-                });
-            }
+            await this.loadEscrowIfNeeded(params.combo);
 
-            const authorities = await this.authorityDeployed.pageAllowances({
+            const authorities = await this.escrowLoaded.pageAllowances({
                 to: params.to,
                 pageNum: params.pageNum,
                 pageSize: params.pageSize,
@@ -479,17 +480,17 @@ export default class ComboCollProxy {
                 tokenAddresses: new Array<string>(),
                 tokenIds: new Array<BN>(),
             };
-            
-            const tokens = await params.indexerDeployed.tokensOf({uuids: authorities.uuids.map(uuid => uuid.toString())});
+
+            const tokens = await params.uuidDeployed.tokensOf({ uuids: authorities.uuids.map(uuid => uuid.toString()) });
             tokens.forEach(token => {
                 ret.tokenAddresses.push(token.tokenAddress);
                 ret.tokenIds.push(token.tokenId);
             });
-            
+
             return ret;
         } catch (error) {
             return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
-                location: Logger.location.COMBOCOLLPROXY_PAGEAUTHORITYALLOWANCES,
+                location: Logger.location.COMBOCOLLPROXY_PAGEESCROWALLOWANCES,
                 error,
             });
         }
@@ -501,48 +502,41 @@ export default class ComboCollProxy {
      * @param {string} params.combo - combo collection
      * @param {string} params.to - address of the spender who gets approved
      * @param {Array<string|number>} params.uuids - uuid of token to query
-     * @returns {Promise<Array<AuthorityAllowance>>}
+     * @returns {Promise<Array<EscrowAllowance>>}
      */
-    async authorityAllowances(params: AuthorityAllowancesOptions): Promise<Array<AuthorityAllowance>> {
-        this.assertContractLoaded(Logger.location.COMBOCOLLPROXY_AUTHORITYALLOWANCES);
+    async escrowAllowances(params: EscrowAllowancesOptions): Promise<Array<EscrowAllowance>> {
+        this.assertContractLoaded(Logger.location.COMBOCOLLPROXY_ESCROWALLOWANCES);
 
         if (!isAllValidAddress(params.combo)) {
             log.throwMissingArgumentError(Logger.message.invalid_contract_address, {
-                location: Logger.location.COMBOCOLLPROXY_AUTHORITYALLOWANCES,
+                location: Logger.location.COMBOCOLLPROXY_ESCROWALLOWANCES,
             });
         }
 
         if (!isAllValidAddress(params.to)) {
             log.throwMissingArgumentError(Logger.message.invalid_to_address, {
-                location: Logger.location.COMBOCOLLPROXY_AUTHORITYALLOWANCES,
+                location: Logger.location.COMBOCOLLPROXY_ESCROWALLOWANCES,
             });
         }
 
         params.uuids.forEach(uuid => {
             if (!isValidUUID(uuid)) {
                 log.throwMissingArgumentError(Logger.message.no_uuid_or_not_valid, {
-                    location: Logger.location.COMBOCOLLPROXY_AUTHORITYALLOWANCES,
+                    location: Logger.location.COMBOCOLLPROXY_ESCROWALLOWANCES,
                 });
             }
         });
 
         try {
-            if (!this.authorityDeployed || this.authorityDeployed.combo != params.combo) {
-                const meta = (await this.comboCollMetasOf({combos: [params.combo]}))[0];
-                this.authorityDeployed = new Authority({
-                    combo: params.combo,
-                    contractAddress: meta.authority,
-                    signer: this.signer
-                });
-            }
+            await this.loadEscrowIfNeeded(params.combo);
 
-            const allowances = await this.authorityDeployed.allowances({
+            const allowances = await this.escrowLoaded.allowances({
                 to: params.to,
                 uuids: params.uuids,
             });
 
-            const ret: Array<AuthorityAllowance> = new Array();
-            const tokens = await params.indexerDeployed.tokensOf({uuids: params.uuids});
+            const ret: Array<EscrowAllowance> = new Array();
+            const tokens = await params.uuidDeployed.tokensOf({ uuids: params.uuids });
             tokens.forEach((token, index) => {
                 ret.push({
                     tokenAddress: token.tokenAddress,
@@ -550,11 +544,11 @@ export default class ComboCollProxy {
                     allowance: allowances[index],
                 });
             });
-            
+
             return ret;
         } catch (error) {
             return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
-                location: Logger.location.COMBOCOLLPROXY_AUTHORITYALLOWANCES,
+                location: Logger.location.COMBOCOLLPROXY_ESCROWALLOWANCES,
                 error,
             });
         }

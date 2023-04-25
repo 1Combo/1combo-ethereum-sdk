@@ -1,8 +1,10 @@
-import { ethers, BigNumber as BN } from 'ethers';
+import { ethers, utils, BigNumber as BN } from 'ethers';
 import BaseERC721 from '../ContractComponents/baseERC721';
 import { Logger, log, ErrorLocation } from '../Logger';
 import artifact from './artifacts/ComboCollCore';
-import { isAllValidAddress, isAllValidNonNegInteger, isValidNonNegInteger, isValidSetId, isValidUUID } from '../utils';
+import { isAllValidAddress, isAllValidNonNegInteger, isValidNonNegInteger, isValidSetId, isValidUUID, addGasPriceToOptions } from '../utils';
+import preparePolygonTransaction from '../ContractTemplates/utils';
+import { Chains } from '../Auth/availableChains';
 
 type ContractAddressOptions = {
     contractAddress: string;
@@ -25,6 +27,17 @@ type RoyaltyInfoOptions = {
 type RoyaltyInfo = {
     receiver: string;
     royaltyAmount: BN;
+};
+
+type CollectionMeta = {
+    creator: string;
+    escrow: string;
+    price: BN;
+};
+
+type SetPriceOptions = {
+    price: string;
+    gasPrice?/** Gwei */: string | undefined;
 };
 
 type Factor = {
@@ -189,6 +202,10 @@ export default class ComboCollCore {
         }
     }
 
+    /**
+     * Returns royalty info.
+     * @returns {Promise<RoyaltyInfo>}
+     */
     async royaltyInfo(params: RoyaltyInfoOptions): Promise<RoyaltyInfo> {
         this.assertContractLoaded(Logger.location.COMBOCOLLCORE_ROYALTYINFO);
 
@@ -209,6 +226,52 @@ export default class ComboCollCore {
         } catch (error) {
             return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
                 location: Logger.location.COMBOCOLLCORE_ROYALTYINFO,
+                error,
+            });
+        }
+    }
+
+    /**
+     * Returns metadata about this combo collection.
+     * @returns {Promise<CollectionMeta>}
+     */
+    async collectionMeta(): Promise<CollectionMeta> {
+        this.assertContractLoaded(Logger.location.COMBOCOLLCORE_COLLECTIONMETA);
+        try {
+            return this.contractDeployed.collectionMeta();
+        } catch (error) {
+            return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
+                location: Logger.location.COMBOCOLLCORE_COLLECTIONMETA,
+                error,
+            });
+        }
+    }
+
+    /**
+     * Sets the price (in Ether) paid for mintint/editing a combo
+     * @param {object} params object containing all parameters
+     * @param {number} params.price the price in `ether`
+     * @returns {Promise<ethers.providers.TransactionResponse>} Transaction
+     */
+    async setPrice(params: SetPriceOptions): Promise<ethers.providers.TransactionResponse> {
+        this.assertContractLoaded(Logger.location.COMBOCOLLCORE_SETPRICE);
+
+        try {
+            const priceInWeis = utils.parseEther(params.price);
+
+            const chainId = await this.contractDeployed.signer.getChainId();
+            let options;
+            // If Polygon mainnet, set up options propperly to avoid underpriced transaction error
+            if (chainId === Chains.polygon)
+                options = await preparePolygonTransaction(
+                    await this.contractDeployed.signer.getTransactionCount(),
+                );
+            else options = addGasPriceToOptions({}, params.gasPrice, Logger.location.COMBOCOLLCORE_SETPRICE);
+
+            return this.contractDeployed.setPrice(priceInWeis, options);
+        } catch (error) {
+            return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
+                location: Logger.location.COMBOCOLLCORE_SETPRICE,
                 error,
             });
         }

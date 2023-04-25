@@ -24,26 +24,15 @@ type CreateComboOptions = {
     rules: Array<Rule>;
 };
 
-type GetRegistriesOptions = {
-    pageNum: number;
-    pageSize: number;
-};
-
-type GetRegistriesOfOptions = {
+type GetCollectionsOptions = {
     creator: string;
     pageNum: number;
     pageSize: number;
 };
 
-type Registry = {
-    version: BN;
-    creator: string;
-    combo: string;
-};
-
-type GetRegistriesResponse = {
+type GetCollectionsResponse = {
     total: BN;
-    registries: Array<Registry>;
+    collections: Array<string>;
 };
 
 export default class ComboCollFactory {
@@ -121,44 +110,14 @@ export default class ComboCollFactory {
      * Returns total number of combo collections
      * @returns {Promise<BigNumber>} Total number
      */
-    async totalRegistry(): Promise<BN> {
-        this.assertContractLoaded(Logger.location.COMBOCOLLFACTORY_TOTALREGISTRY);
+    async totalCollection(): Promise<BN> {
+        this.assertContractLoaded(Logger.location.COMBOCOLLFACTORY_TOTALCOLLECTION);
 
         try {
-            return this.contractDeployed.totalRegistry();
+            return this.contractDeployed.totalCollection();
         } catch (error) {
             return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
-                location: Logger.location.COMBOCOLLFACTORY_TOTALREGISTRY,
-                error,
-            });
-        }
-    }
-
-    /**
-     * Querys combo collections by page
-     * @param {object} params object containing all parameters
-     * @param {number} params.pageNum - page number to query, start from 1
-     * @param {number} params.pageSize - page size, must be greater than 0
-     * @returns {Promise<GetRegistriesResponse>}
-     */
-    async getRegistries(params: GetRegistriesOptions): Promise<GetRegistriesResponse> {
-        this.assertContractLoaded(Logger.location.COMBOCOLLFACTORY_GETREGISTRY);
-
-        if (!isValidPositiveNumber(params.pageNum) || !isValidPositiveNumber(params.pageSize)) {
-            log.throwMissingArgumentError(Logger.message.invalid_page_param, {
-                location: Logger.location.COMBOCOLLFACTORY_GETREGISTRY,
-            });
-        }
-
-        try {
-            const result = (await this.contractDeployed.getRegistries(params.pageNum, params.pageSize)) as Array<any>;
-            return {
-                total: result[0],
-                registries: result[1]
-            };
-        } catch (error) {
-            return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
-                location: Logger.location.COMBOCOLLFACTORY_GETREGISTRY,
+                location: Logger.location.COMBOCOLLFACTORY_TOTALCOLLECTION,
                 error,
             });
         }
@@ -167,35 +126,35 @@ export default class ComboCollFactory {
     /**
      * Querys combo collections created by specified user by page
      * @param {object} params object containing all parameters
-     * @param {string} params.creator - address of deployer to query
+     * @param {string} params.creator - address of deployer to query, `address(0)` refers to all
      * @param {number} params.pageNum - page number to query, start from 1
      * @param {number} params.pageSize - page size, must be greater than 0
-     * @returns {Promise<GetRegistriesResponse>}
+     * @returns {Promise<GetCollectionsResponse>}
      */
-    async getRegistriesOf(params: GetRegistriesOfOptions): Promise<GetRegistriesResponse> {
-        this.assertContractLoaded(Logger.location.COMBOCOLLFACTORY_GETREGISTRYOF);
+    async getCollections(params: GetCollectionsOptions): Promise<GetCollectionsResponse> {
+        this.assertContractLoaded(Logger.location.COMBOCOLLFACTORY_GETCOLLECTIONS);
 
         if (!isAllValidAddress(params.creator)) {
             log.throwMissingArgumentError(Logger.message.invalid_account_address, {
-                location: Logger.location.COMBOCOLLFACTORY_GETREGISTRYOF,
+                location: Logger.location.COMBOCOLLFACTORY_GETCOLLECTIONS,
             });
         }
 
         if (!isValidPositiveNumber(params.pageNum) || !isValidPositiveNumber(params.pageSize)) {
             log.throwMissingArgumentError(Logger.message.invalid_page_param, {
-                location: Logger.location.COMBOCOLLFACTORY_GETREGISTRYOF,
+                location: Logger.location.COMBOCOLLFACTORY_GETCOLLECTIONS,
             });
         }
 
         try {
-            const result = (await this.contractDeployed.getRegistriesOf(params.creator, params.pageNum, params.pageSize)) as Array<any>;
+            const result = (await this.contractDeployed.getCollections(params.creator, params.pageNum, params.pageSize)) as Array<any>;
             return {
                 total: result[0],
-                registries: result[1]
+                collections: result[1]
             };
         } catch (error) {
             return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
-                location: Logger.location.COMBOCOLLFACTORY_GETREGISTRYOF,
+                location: Logger.location.COMBOCOLLFACTORY_GETCOLLECTIONS,
                 error,
             });
         }

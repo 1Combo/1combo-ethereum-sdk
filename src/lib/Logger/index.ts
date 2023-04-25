@@ -30,24 +30,11 @@ export enum ErrorLocation {
   HTTPSERVICE_GET = '[httpService.get]',
   HTTPSERVICE_POST = '[httpService.post]',
 
-  // IPFS SERVICE
-  IPFSSERVICE_CONSTRUCTOR = '[IPFS.constructor]',
-  IPFSSERVICE_UPLOADFILE = '[IPFS.uploadFile]',
-  IPFSSERVICE_UPLOADOBJECT = '[IPFS.uploadObject]',
-  IPFSSERVICE_UPLOADDIRECTORY = '[IPFS.uploadDirectory]',
-  IPFSSERVICE_UNPINFILE = '[IPFS.unPinFile]',
-
-  // Authority
-  AUTHORITY_LOADCONTRACT = '[Authority.loadContract]',
-  AUTHORITY_PAGEALLOWANCES = '[Authority.pageAllowances]',
-  AUTHORITY_ALLOWANCES = '[Authority.allowances]',
-
-  // Accounting
-  ACCOUNTING_LOADCONTRACT = '[Accounting.loadContract]',
-  ACCOUNTING_ADDGASPRICETOOPTIONS = '[Accounting.addGasPriceToOptions]',
-  ACCOUNTING_RECEIVERSOF = '[Accounting.receiversOf]',
-  ACCOUNTING_COLLECTIONSOF = '[Accounting.collectionsOf]',
-  ACCOUNTING_PAGECOLLECTIONSOF = '[Accounting.pageCollectionsOf]',
+  // Escrow
+  ESCROW_LOADCONTRACT = '[Escrow.loadContract]',
+  ESCROW_PAGEALLOWANCES = '[Escrow.pageAllowances]',
+  ESCROW_ALLOWANCES = '[Escrow.allowances]',
+  ESCROW_GETCOMBOADDRESS = '[Escrow.getComboAddress]',
 
   // ComboCollCore
   COMBOCOLLCORE_DEPLOY = '[ComboCollCore.deploy]',
@@ -58,6 +45,8 @@ export enum ErrorLocation {
   COMBOCOLLCORE_GET_COMBO_RULES = '[ComboCollCore.getComboRules]',
   COMBOCOLLCORE_GET_LIMITED_TOKEN_USAGES = '[ComboCollCore.getLimitedTokenUsages]',
   COMBOCOLLCORE_ROYALTYINFO = '[ComboCollCore.royaltyInfo]',
+  COMBOCOLLCORE_COLLECTIONMETA = '[ComboCollCore.collectionMeta]',
+  COMBOCOLLCORE_SETPRICE = '[ComboCollCore.sellPrice]',
 
   // Collection
   COLLECTION_DEPLOY = '[Collection.deploy]',
@@ -76,7 +65,6 @@ export enum ErrorLocation {
   COLLECTIONFACTORY_DEPLOYCOLLECTION = '[CollectionFactory.deployCollection]',
   COLLECTIONFACTORY_TOTALCOLLECTION = '[CollectionFactory.totalCollection]',
   COLLECTIONFACTORY_GETCOLLECTIONS = '[CollectionFactory.getCollections]',
-  COLLECTIONFACTORY_GETCOLLECTIONSBYCREATOR = '[CollectionFactory.getCollectionsByCreator]',
 
   // CollectionProxy
   COLLECTIONPROXY_ADDGASPRICETOOPTIONS = '[CollectionProxy.addGasPriceToOptions]',
@@ -92,9 +80,8 @@ export enum ErrorLocation {
   // ComboCollFactory
   COMBOCOLLFACTORY_LOADCONTRACT = '[ComboCollFactory.loadContract]',
   COMBOCOLLFACTORY_ADDGASPRICETOOPTIONS = '[ComboCollFactory.addGasPriceToOptions]',
-  COMBOCOLLFACTORY_TOTALREGISTRY = '[ComboCollFactory.totalRegistry]',
-  COMBOCOLLFACTORY_GETREGISTRY = '[ComboCollFactory.getRegistries]',
-  COMBOCOLLFACTORY_GETREGISTRYOF = '[ComboCollFactory.getRegistriesOf]',
+  COMBOCOLLFACTORY_TOTALCOLLECTION = '[ComboCollFactory.totalCollection]',
+  COMBOCOLLFACTORY_GETCOLLECTIONS = '[ComboCollFactory.getCollections]',
 
   // ComboCollProxy
   COMBOCOLLPROXY_LOADCONTRACT = '[ComboCollProxy.loadContract]',
@@ -105,27 +92,29 @@ export enum ErrorLocation {
   COMBOCOLLPROXY_EXIST = '[ComboCollProxy.exist]',
   COMBOCOLLPROXY_COMBOCOLLMETASOF = '[ComboCollProxy.comboCollMetasOf]',
   COMBOCOLLPROXY_APPROVE = '[ComboCollProxy.approve]',
-  COMBOCOLLPROXY_PAGEAUTHORITYALLOWANCES = '[ComboCollProxy.pageAuthorityAllowances]',
-  COMBOCOLLPROXY_AUTHORITYALLOWANCES = '[ComboCollProxy.authorityAllowances]',
+  COMBOCOLLPROXY_PAGEESCROWALLOWANCES = '[ComboCollProxy.pageEscrowAllowances]',
+  COMBOCOLLPROXY_ESCROWALLOWANCES = '[ComboCollProxy.escrowAllowances]',
 
-  // Indexer
-  INDEXER_ADDGASPRICETOOPTIONS = '[Indexer.addGasPriceToOptions]',
-  INDEXER_LOADCONTRACT = '[Indexer.loadContract]',
-  INDEXER_REGISTERCOLLECTIONS = '[Indexer.registerCollections]',
-  INDEXER_GETUUID = '[Indexer.getUUID]',
-  INDEXER_ROOTCOMBOOFTOKENS = '[Indexer.rootComboOfTokens]',
-  INDEXER_ROOTCOMBOOFUUIDS = '[Indexer.rootComboOfUUIDs]',
-  INDEXER_TOKENSOF = '[Indexer.tokensOf]',
+  // EscrowIndexer
+  ESCROWINDEXER_LOADCONTRACT = '[EscrowIndexer.loadContract]',
+  ESCROWINDEXER_ROOTCOMBOOFTOKENS = '[EscrowIndexer.rootComboOfTokens]',
+  ESCROWINDEXER_ROOTCOMBOOFUUIDS = '[EscrowIndexer.rootComboOfUUIDs]',
+
+  // UUID
+  UUID_ADDGASPRICETOOPTIONS = '[UUID.addGasPriceToOptions]',
+  UUID_LOADCONTRACT = '[UUID.loadContract]',
+  UUID_REGISTERCOLLECTIONS = '[UUID.registerCollections]',
+  UUID_GETORGENERATEUUID = '[UUID.getOrGenerateUUID]',
+  UUID_GETUUIDBATCH = '[UUID.getUUIDBatch]',
+  UUID_GETUUID = '[UUID.getUUID]',
+  UUID_TOKENOF = '[UUID.tokenOf]',
+  UUID_TOKENSOF = '[UUID.tokensOf]',
 
   // Vault
   VAULT_ADDGASPRICETOOPTIONS = '[Vault.addGasPriceToOptions]',
   VAULT_LOADCONTRACT = '[Vault.loadContract]',
   VAULT_CLAIM = '[Vault.claim]',
-  VAULT_CLAIMTARGET = '[Vault.claimTarget]',
   VAULT_CLAIMABLESOFCOLLECTIONS = '[Vault.claimablesOfCollections]',
-  VAULT_CLAIMABLESOFCOLLECTIONSTARGET = '[Vault.claimablesOfCollectionsTarget]',
-  VAULT_CLAIMABLESOFRECEIVERS= '[Vault.claimablesOfReceivers]',
-  VAULT_CLAIMABLESOFRECEIVERSTARGET= '[Vault.claimablesOfReceiversTarget]',
 
   // SetManager
   SETMANAGER_ADDGASPRICETOOPTIONS = '[SetManager.addGasPriceToOptions]',
@@ -142,8 +131,11 @@ export enum ErrorLocation {
   SETMANAGER_GETSETS = '[SetManager.getSets]',
   SETMANAGER_SETIDSOFCREATOR = '[SetManager.setIdsOfCreator]',
   SETMANAGER_COLLECTIONSOF = '[SetManager.collectionsOf]',
+  SETMANAGER_RECEIVERSOF = '[SetManager.receiversOf]',
+  SETMANAGER_PAGECOLLECTIONSOF = '[SetManager.pageCollectionsOf]',
   SETMANAGER_VERIFYCOLLECTIONINSET = '[SetManager.verifyCollectionInSet]',
   SETMANAGER_ISSETCONTAINSALLCOLLECTIONS = '[SetManager.isSetContainsAllCollections]',
+  SETMANAGER_REGISTERNONNATIVECOLLECTIONS = '[SetManager.registerNonNativeCollections]',
 
   // BaseERC721
   BASEERC721_ADDGASPRICETOOPTIONS = '[BaseERC721.addGasPriceToOptions]',
@@ -186,19 +178,6 @@ export enum ErrorLocation {
   SDK_GETNFTSFORCOLLECTION = '[SDK.getNFTsForCollection]',
   SDK_GETTOKENMETADATA = '[SDK.getTokenMetadata]',
   SDK_GETSTATUS = '[SDK.GetStatus]',
-  SDK_STOREFILE = '[SDK.storeFile]',
-  SDK_STOREMETADATA = '[SDK.storeMetadata]',
-  SDK_CREATEFOLDER = '[SDK.createFolder]',
-  SDK_GETTRANSFERSBYBLOCKNUMBER = '[SDK.getTransfersByBlockNumber]',
-  SDK_GET_TRANSFERS_BY_WALLET = '[SDK.getNftTransfersByWallet]',
-  SDK_GETTRANSFERSBYBLOCKHASH = '[SDK.getTransfersByBlockHash]',
-  SDK_GET_TRANSFERS_FROM_BLOCK_TO_BLOCK = '[SDK.getTransferFromBlockToBlock]',
-  SDK_GET_TRANSFERS_BY_TOKEN_ID = '[SDK.getTransfersByTokenId]',
-  SDK_GET_TRANSFERS_BY_CONTRACT = '[SDK.getTransfersByContractAddress]',
-  SDK_GET_OWNERS_BY_TOKEN_ADDRESS = '[SDK.getOwnersByTokenAddress]',
-  SDK_GET_OWNERS_BY_TOKEN_ADDRESS_AND_TOKEN_ID = '[SDK.getOwnersbyTokenAddressAndTokenId]',
-  SDK_GET_COLLECTION_BY_WALLET = '[SDK.getCollectionsByWallet]',
-  SDK_GET_SEARCH_NFT = '[SDK.searchNfts]',
 
   SDK_GET_LOWEST_TRADE_PRICE = '[SDK.getLowestTradePrice]',
 

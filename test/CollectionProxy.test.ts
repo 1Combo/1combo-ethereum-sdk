@@ -9,6 +9,7 @@ import { Chains } from '../src/lib/Auth/availableChains';
 
 import CollectionProxy from '../src/lib/ContractTemplates/CollectionProxy';
 import { getGas } from './__mocks__/utils';
+import { ZERO_ADDRESS } from '../src/lib/constants';
 
 loadEnv();
 
@@ -43,7 +44,7 @@ describe('CollectionProxy', () => {
 
         await proxy.mint({
             to: creator,
-            payInEther: true,
+            currency: ZERO_ADDRESS, // ZERO_ADDRESS refers to ether
             collections: ['0xf5ee72eD90f2015939CF6Fc956F201a04278A011'],
             tokenIds: [[1]],
             amounts: [[1]],

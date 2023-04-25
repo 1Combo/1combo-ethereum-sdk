@@ -8,6 +8,7 @@ import { CONTRACT_ADDRESSES, TEMPLATES } from '../src/lib/SDK/constants';
 import { Chains } from '../src/lib/Auth/availableChains';
 
 import ComboCollFactory from '../src/lib/ContractTemplates/ComboCollFactory';
+import { ZERO_ADDRESS } from '../src/lib/constants';
 
 loadEnv();
 
@@ -32,8 +33,16 @@ describe('ComboCollFactory', () => {
     });
 
     it('all', async() => {
-        console.log('totalRegistry', await factory.totalRegistry());
-        console.log('getRegistries', await factory.getRegistries({pageNum: 1, pageSize: 10}));
-        console.log('getRegistriesOf', await factory.getRegistriesOf({creator: creator, pageNum: 1, pageSize: 10}));
+        console.log('totalRegistry', await factory.totalCollection());
+        console.log('getRegistries', await factory.getCollections({
+            creator: ZERO_ADDRESS,
+            pageNum: 1,
+            pageSize: 10,
+        }));
+        console.log('getRegistriesOf', await factory.getCollections({
+            creator: creator,
+            pageNum: 1,
+            pageSize: 10,
+        }));
     }, 60000);
 });

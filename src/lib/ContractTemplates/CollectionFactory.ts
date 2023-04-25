@@ -22,11 +22,6 @@ type DeployCollectionOptions = {
 };
 
 type GetCollectionsOptions = {
-    pageNum: number;
-    pageSize: number;
-};
-
-type GetCollectionsByCreatorOptions = {
     creator: string;
     pageNum: number;
     pageSize: number;
@@ -127,6 +122,7 @@ export default class CollectionFactory {
     /**
      * Querys deployed collections by page
      * @param {object} params object containing all parameters
+     * @param {string} params.creator - address of deployer to query, `address(0)` refers to all
      * @param {number} params.pageNum - page number to query, start from 1
      * @param {number} params.pageSize - page size, must be greater than 0
      * @returns {Promise<GetCollectionsResponse>} Total number of collections and 
@@ -142,7 +138,17 @@ export default class CollectionFactory {
         }
 
         try {
-            const result = (await this.contractDeployed.getCollections(params.pageNum, params.pageSize)) as Array<any>;
+            let result: Array<any>;
+            if (params.creator == '0x0000000000000000000000000000000000000000') {
+                result = (await this.contractDeployed.getCollections(params.pageNum, params.pageSize));
+            } else {
+                if (!isAllValidAddress(params.creator)) {
+                    log.throwMissingArgumentError(Logger.message.invalid_account_address, {
+                        location: Logger.location.COLLECTIONFACTORY_GETCOLLECTIONS,
+                    });
+                }
+                result = (await this.contractDeployed.getCollectionsByCreator(params.creator, params.pageNum, params.pageSize))
+            }
             return {
                 total: result[0],
                 collections: result[1]
@@ -150,44 +156,6 @@ export default class CollectionFactory {
         } catch (error) {
             return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
                 location: Logger.location.COLLECTIONFACTORY_GETCOLLECTIONS,
-                error,
-            });
-        }
-    }
-
-    /**
-     * Querys collections deployed by specified user by page
-     * @param {object} params object containing all parameters
-     * @param {string} params.creator - address of deployer to query
-     * @param {number} params.pageNum - page number to query, start from 1
-     * @param {number} params.pageSize - page size, must be greater than 0
-     * @returns {Promise<GetCollectionsResponse>} Total number of collections and 
-     * collection addresses for current page
-     */
-    async getCollectionsByCreator(params: GetCollectionsByCreatorOptions): Promise<GetCollectionsResponse> {
-        this.assertContractLoaded(Logger.location.COLLECTIONFACTORY_GETCOLLECTIONSBYCREATOR);
-
-        if (!isAllValidAddress(params.creator)) {
-            log.throwMissingArgumentError(Logger.message.invalid_account_address, {
-                location: Logger.location.COLLECTIONFACTORY_GETCOLLECTIONSBYCREATOR,
-            });
-        }
-
-        if (!isValidPositiveNumber(params.pageNum) || !isValidPositiveNumber(params.pageSize)) {
-            log.throwMissingArgumentError(Logger.message.invalid_page_param, {
-                location: Logger.location.COLLECTIONFACTORY_GETCOLLECTIONSBYCREATOR,
-            });
-        }
-
-        try {
-            const result = (await this.contractDeployed.getCollectionsByCreator(params.creator, params.pageNum, params.pageSize)) as Array<any>;
-            return {
-                total: result[0],
-                collections: result[1]
-            };
-        } catch (error) {
-            return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
-                location: Logger.location.COLLECTIONFACTORY_GETCOLLECTIONSBYCREATOR,
                 error,
             });
         }

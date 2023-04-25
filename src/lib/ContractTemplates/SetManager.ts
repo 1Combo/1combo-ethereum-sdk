@@ -16,6 +16,7 @@ type TotalSetResponse = {
 
 type CollectionListOptions = {
     collections: Array<string>;
+    gasPrice?/** Gwei */: string | undefined;
 };
 
 type InitCollectionTypesOptions = {
@@ -100,6 +101,17 @@ type CollectionsOfResponse = {
     total: BN;
     collections: Array<string>;
     collectionTypes: Array<CollectionType>;
+};
+
+type PageCollectionsOfOptions = {
+    receiver: string;
+    pageNum: number;
+    pageSize: number;
+};
+
+type PageCollectionsOfResponse = {
+    total: BN;
+    collections: Array<string>;
 };
 
 type VerifyCollectionInAllSetsOptions = {
@@ -671,6 +683,103 @@ export default class SetManager {
         } catch (error) {
             return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
                 location: Logger.location.SETMANAGER_COLLECTIONSOF,
+                error,
+            });
+        }
+    }
+
+    /**
+     * Returns receiver address of earnings of specified collection
+     * @param {object} params object containing all parameters
+     * @param {Array<string>} params.collections - collection address
+     * @returns {Promise<Array<string>>} List of receiver address
+     */
+    async receiversOf(params: CollectionListOptions): Promise<Array<string>> {
+        this.assertContractLoaded(Logger.location.SETMANAGER_RECEIVERSOF);
+
+        if (!isAllValidAddress(params.collections)) {
+            log.throwMissingArgumentError(Logger.message.invalid_contract_address, {
+                location: Logger.location.SETMANAGER_RECEIVERSOF,
+            });
+        }
+
+        try {
+            return this.contractDeployed.receiversOf(params.collections);
+        } catch (error) {
+            return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
+                location: Logger.location.SETMANAGER_RECEIVERSOF,
+                error,
+            });
+        }
+    }
+
+    /**
+     * Returns collections whose receiver is the specified address by page
+     * @param {object} params object containing all parameters
+     * @param {string} params.receiver - receiver address to query
+     * @param {number} params.pageNum - page number to query, start from 1
+     * @param {number} params.pageSize - page size
+     * @returns {Promise<PageCollectionsOfResponse>} List of collection address
+     */
+    async pageCollectionsOf(params: PageCollectionsOfOptions): Promise<PageCollectionsOfResponse> {
+        this.assertContractLoaded(Logger.location.SETMANAGER_PAGECOLLECTIONSOF);
+
+        if (!isAllValidAddress(params.receiver)) {
+            log.throwMissingArgumentError(Logger.message.invalid_contract_address, {
+                location: Logger.location.SETMANAGER_PAGECOLLECTIONSOF,
+            });
+        }
+
+        if (!isValidPositiveNumber(params.pageNum) || !isValidPositiveNumber(params.pageSize)) {
+            log.throwMissingArgumentError(Logger.message.invalid_page_param, {
+                location: Logger.location.SETMANAGER_PAGECOLLECTIONSOF,
+            });
+        }
+
+        try {
+            const resp = (await this.contractDeployed.pageCollectionsOf(params.receiver, params.pageNum, params.pageSize)) as Array<any>;
+            return {
+                total: resp[0],
+                collections: resp[1],
+            };
+        } catch (error) {
+            return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
+                location: Logger.location.SETMANAGER_PAGECOLLECTIONSOF,
+                error,
+            });
+        }
+    }
+
+
+    /**
+     * Registers collections in advance on 1Combo
+     * @param {object} params object containing all parameters
+     * @param {Array<string>} params.collections collection addresses, it can be any ERC721/ERC1155 compatible collections.
+     * @returns {Promise<ethers.providers.TransactionResponse>} Transaction
+     */
+    async registerNonNativeCollections(params: CollectionListOptions): Promise<ethers.providers.TransactionResponse> {
+        this.assertContractLoaded(Logger.location.SETMANAGER_REGISTERNONNATIVECOLLECTIONS);
+
+        if (!isAllValidAddress(params.collections)) {
+            log.throwMissingArgumentError(Logger.message.invalid_contract_address, {
+                location: Logger.location.SETMANAGER_REGISTERNONNATIVECOLLECTIONS,
+            });
+        }
+
+        try {
+            const chainId = await this.contractDeployed.signer.getChainId();
+            let options;
+            // If Polygon mainnet, set up options propperly to avoid underpriced transaction error
+            if (chainId === Chains.polygon)
+                options = await preparePolygonTransaction(
+                    await this.contractDeployed.signer.getTransactionCount(),
+                );
+            else options = addGasPriceToOptions({}, params.gasPrice, Logger.location.SETMANAGER_REGISTERNONNATIVECOLLECTIONS);
+
+            return this.contractDeployed.registerNonNativeCollections(params.collections, options);
+        } catch (error) {
+            return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
+                location: Logger.location.SETMANAGER_REGISTERNONNATIVECOLLECTIONS,
                 error,
             });
         }

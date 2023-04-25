@@ -8,6 +8,7 @@ import { CONTRACT_ADDRESSES, TEMPLATES } from '../src/lib/SDK/constants';
 import { Chains } from '../src/lib/Auth/availableChains';
 
 import Vault from '../src/lib/ContractTemplates/Vault';
+import { ZERO_ADDRESS } from '../src/lib/constants';
 
 loadEnv();
 
@@ -30,25 +31,15 @@ describe('Vault', () => {
     });
 
     it('all', async() => {
-        let claimables1 = await vault.claimablesOfCollections({collections: ['0x0f1Da267B55d47d5aBced9be7542A6b3aE9b52B8']});
-        let claimables2 = await vault.claimablesOfCollectionsTarget({
-            erc20: '0xef274b03dC8A3e85a654fE49c1E42d44B913cfB4',
+        let claimables = (await vault.claimablesOfCollections({
+            currencies: [ZERO_ADDRESS],
             collections: ['0x0f1Da267B55d47d5aBced9be7542A6b3aE9b52B8']
-        });
-        expect(claimables1[0].erc20Amount.eq(claimables2[0].erc20Amount)).toBe(true);
-        expect(claimables1[0].ethAmount.eq(claimables2[0].ethAmount)).toBe(true);
-        expect(claimables1[0].token).toBe(claimables2[0].token);
-        console.log(claimables1);
+        }))[0];
 
-        claimables1 = await vault.claimablesOfReceivers({receivers: ['0x0f1Da267B55d47d5aBced9be7542A6b3aE9b52B8']});
-        claimables2 = await vault.claimablesOfReceiversTarget({
-            erc20: '0xef274b03dC8A3e85a654fE49c1E42d44B913cfB4',
-            receivers: ['0x0f1Da267B55d47d5aBced9be7542A6b3aE9b52B8']
-        });
-        expect(claimables1[0].erc20Amount.eq(claimables2[0].erc20Amount)).toBe(true);
-        expect(claimables1[0].ethAmount.eq(claimables2[0].ethAmount)).toBe(true);
-        expect(claimables1[0].token).toBe(claimables2[0].token);
-        console.log(claimables2);
+        expect(claimables.collection).toBe('0x0f1Da267B55d47d5aBced9be7542A6b3aE9b52B8');
+        expect(claimables.token).toBe(ZERO_ADDRESS);
+        expect(claimables.pending.toNumber()).toBe(0);
+        expect(claimables.totalClaimed.toNumber()).toBe(0);
 
         // const gas = (parseFloat(await sdk.getGasPrice()) + 5).toString();
         // await vault.claim({gasPrice: gas});

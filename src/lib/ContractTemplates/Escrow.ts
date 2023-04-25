@@ -1,12 +1,10 @@
-import { BigNumber, ethers} from 'ethers';
-import { Logger, log } from '../Logger';
-import artifact from './artifacts/Authority';
-import { isValidPositiveNumber, isValidUUID } from '../utils';
+import { BigNumber, ethers } from 'ethers';
+import { Logger, log, ErrorLocation } from '../Logger';
+import artifact from './artifacts/Escrow';
+import { isAllValidAddress, isValidPositiveNumber, isValidUUID } from '../utils';
 
 type ContractAddressOptions = {
-    combo: string;
     contractAddress: string;
-    signer: ethers.Wallet | ethers.providers.JsonRpcSigner;
 };
 
 type PageAllowancesOptions = {
@@ -21,42 +19,89 @@ type PageAllowancesResponse = {
     allowances: Array<BigNumber>;
 };
 
-
 type AllowancesOptions = {
     to: string;
     uuids: Array<number | string>;
 };
 
-
-export default class Authority {
-    combo: string;
+export default class Escrow {
+    private combo: string;
     contractAddress: string;
-    private contractDeployed: ethers.Contract;
 
+    private contractDeployed: ethers.Contract;
+    private readonly signer;
+
+    private assertContractLoaded(location: ErrorLocation) {
+        if (!this.contractDeployed) {
+            log.throwArgumentError(
+                Logger.message.contract_not_deployed_or_loaded,
+                'contractAddress',
+                this.contractAddress,
+                {
+                    location: location,
+                },
+            );
+        }
+    }
+
+    constructor(signer: ethers.Wallet | ethers.providers.JsonRpcSigner) {
+        this.signer = signer;
+    }
     /**
-     * Load an Authority contract from an existing contract address. Used by the ComboCollProxy
+     * Load an Escrow contract from an existing contract address. Used by the ComboCollProxy
      * @param {object} params object containing all parameters
-     * @param {ethers.Wallet | ethers.providers.JsonRpcSigner} params.signer signer
-     * @param {string} params.contractAddress Address of the Authority contract to load
+     * @param {string} params.contractAddress Address of the Escrow contract to load
      */
-    constructor(params: ContractAddressOptions) {
-        if (!params.contractAddress || !ethers.utils.isAddress(params.contractAddress)) {
+    loadContract(params: ContractAddressOptions) {
+        if (this.contractAddress || this.contractDeployed) {
+            log.throwArgumentError(
+                Logger.message.contract_already_loaded,
+                'contractAddress',
+                this.contractAddress,
+                {
+                    location: Logger.location.ESCROW_LOADCONTRACT,
+                },
+            );
+        }
+
+        if (!isAllValidAddress(params.contractAddress)) {
             log.throwMissingArgumentError(Logger.message.invalid_contract_address, {
-                location: Logger.location.AUTHORITY_LOADCONTRACT,
+                location: Logger.location.ESCROW_LOADCONTRACT,
             });
         }
+
         try {
-            this.combo = params.combo;
             this.contractAddress = <string>params.contractAddress;
             this.contractDeployed = new ethers.Contract(
                 this.contractAddress,
                 artifact.abi,
-                params.signer,
+                this.signer,
             );
+
             return this;
         } catch (error) {
             return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
-                location: Logger.location.AUTHORITY_LOADCONTRACT,
+                location: Logger.location.ESCROW_LOADCONTRACT,
+                error,
+            });
+        }
+    }
+
+    /**
+     * Returns address of combo collection that is associated with this escrow.
+     * @returns {Promise<string>}
+     */
+    async getComboAddress(): Promise<string> {
+        this.assertContractLoaded(Logger.location.ESCROW_GETCOMBOADDRESS);
+
+        try {
+            if (!isAllValidAddress(this.combo)) {
+                this.combo = await this.contractDeployed.combo();
+            }
+            return this.combo;
+        } catch (error) {
+            return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
+                location: Logger.location.ESCROW_GETCOMBOADDRESS,
                 error,
             });
         }
@@ -71,27 +116,17 @@ export default class Authority {
      * @returns {Promise<PageAllowancesResponse>}
      */
     async pageAllowances(params: PageAllowancesOptions): Promise<PageAllowancesResponse> {
-
-        if (!this.contractDeployed) {
-            log.throwArgumentError(
-                Logger.message.contract_not_deployed_or_loaded,
-                'contractAddress',
-                this.contractAddress,
-                {
-                    location: Logger.location.AUTHORITY_PAGEALLOWANCES,
-                },
-            );
-        }
+        this.assertContractLoaded(Logger.location.ESCROW_PAGEALLOWANCES);
 
         if (!params.to || !ethers.utils.isAddress(params.to)) {
             log.throwMissingArgumentError(Logger.message.invalid_to_address, {
-                location: Logger.location.AUTHORITY_PAGEALLOWANCES,
+                location: Logger.location.ESCROW_PAGEALLOWANCES,
             });
         }
 
         if (!isValidPositiveNumber(params.pageNum) || !isValidPositiveNumber(params.pageSize)) {
             log.throwMissingArgumentError(Logger.message.invalid_page_param, {
-                location: Logger.location.AUTHORITY_PAGEALLOWANCES,
+                location: Logger.location.ESCROW_PAGEALLOWANCES,
             });
         }
 
@@ -104,7 +139,7 @@ export default class Authority {
             }
         } catch (error) {
             return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
-                location: Logger.location.AUTHORITY_PAGEALLOWANCES,
+                location: Logger.location.ESCROW_PAGEALLOWANCES,
                 error,
             });
         }
@@ -118,28 +153,18 @@ export default class Authority {
      * @returns {Promise<Array<BigNumber>>}
      */
     async allowances(params: AllowancesOptions): Promise<Array<BigNumber>> {
-
-        if (!this.contractDeployed) {
-            log.throwArgumentError(
-                Logger.message.contract_not_deployed_or_loaded,
-                'contractAddress',
-                this.contractAddress,
-                {
-                    location: Logger.location.AUTHORITY_ALLOWANCES,
-                },
-            );
-        }
+        this.assertContractLoaded(Logger.location.ESCROW_ALLOWANCES);
 
         if (!params.to || !ethers.utils.isAddress(params.to)) {
             log.throwMissingArgumentError(Logger.message.invalid_to_address, {
-                location: Logger.location.AUTHORITY_ALLOWANCES,
+                location: Logger.location.ESCROW_ALLOWANCES,
             });
         }
-        
+
         params.uuids.forEach(uuid => {
             if (!isValidUUID(uuid)) {
                 log.throwMissingArgumentError(Logger.message.no_uuid_or_not_valid, {
-                    location: Logger.location.AUTHORITY_ALLOWANCES,
+                    location: Logger.location.ESCROW_ALLOWANCES,
                 });
             }
         });
@@ -148,7 +173,7 @@ export default class Authority {
             return this.contractDeployed.allowances(params.to, params.uuids);
         } catch (error) {
             return log.throwError(Logger.message.ethers_error, Logger.code.NETWORK, {
-                location: Logger.location.AUTHORITY_ALLOWANCES,
+                location: Logger.location.ESCROW_ALLOWANCES,
                 error,
             });
         }
