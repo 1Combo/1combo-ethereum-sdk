@@ -1,6 +1,22 @@
 export default {
   "abi": [
     {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "accounting_",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [],
+      "name": "AlreadyInitialized",
+      "type": "error"
+    },
+    {
       "inputs": [],
       "name": "CallerNotAllowed",
       "type": "error"
@@ -17,36 +33,12 @@ export default {
     },
     {
       "inputs": [],
-      "name": "NotApprovable",
-      "type": "error"
-    },
-    {
-      "inputs": [],
       "name": "SetNotContainsCollection",
       "type": "error"
     },
     {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "previousOwner",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "newOwner",
-          "type": "address"
-        }
-      ],
-      "name": "OwnershipTransferred",
-      "type": "event"
-    },
-    {
       "inputs": [],
-      "name": "owner",
+      "name": "_accounting",
       "outputs": [
         {
           "internalType": "address",
@@ -60,32 +52,62 @@ export default {
     },
     {
       "inputs": [],
-      "name": "renounceOwnership",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
+      "name": "_agent",
+      "outputs": [
         {
           "internalType": "address",
-          "name": "newOwner",
+          "name": "",
           "type": "address"
         }
       ],
-      "name": "transferOwnership",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
     },
     {
-      "inputs": [
+      "inputs": [],
+      "name": "_collectionProxy",
+      "outputs": [
         {
           "internalType": "address",
-          "name": "accounting_",
+          "name": "",
           "type": "address"
         }
       ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [],
+      "name": "_setManager",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [],
+      "name": "_vault",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [],
       "name": "config",
       "outputs": [],
       "stateMutability": "nonpayable",
@@ -110,12 +132,7 @@ export default {
         },
         {
           "internalType": "address",
-          "name": "locker_",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "authority_",
+          "name": "escrow_",
           "type": "address"
         }
       ],
@@ -173,9 +190,9 @@ export default {
           "type": "address"
         },
         {
-          "internalType": "bool",
-          "name": "payInEther_",
-          "type": "bool"
+          "internalType": "address",
+          "name": "token_",
+          "type": "address"
         },
         {
           "internalType": "string",
@@ -262,9 +279,9 @@ export default {
           "type": "uint256"
         },
         {
-          "internalType": "bool",
-          "name": "payInEther_",
-          "type": "bool"
+          "internalType": "address",
+          "name": "token_",
+          "type": "address"
         },
         {
           "internalType": "string",
@@ -397,24 +414,24 @@ export default {
         {
           "components": [
             {
-              "internalType": "uint256",
-              "name": "price",
-              "type": "uint256"
-            },
-            {
               "internalType": "address",
               "name": "creator",
               "type": "address"
             },
             {
               "internalType": "address",
-              "name": "locker",
+              "name": "escrow",
               "type": "address"
             },
             {
               "internalType": "address",
-              "name": "authority",
+              "name": "escrowIndexer",
               "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "price",
+              "type": "uint256"
             }
           ],
           "internalType": "struct IComboCollProxy.ComboCollMeta[]",

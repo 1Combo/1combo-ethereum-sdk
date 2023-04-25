@@ -9,9 +9,14 @@
     "tscd": "tsc -d src/index.ts",
     "doc": "typedoc --skipErrorChecking src/index.ts"
   },
-  "keywords": [],
+  "keywords": ["1Combo", "1Combo-SDK", "Ethereum", "NFT", "ERC721", "ERC1155"],
   "author": "",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/1Combo/1combo-ethereum-sdk"
+  },
+  "homepage": "https://github.com/1Combo/1combo-ethereum-sdk/blob/main/README.md",
   "devDependencies": {
     "@types/aes-js": "^3.1.1",
     "@types/bn.js": "^5.1.1",

@@ -7,6 +7,11 @@ export default {
     },
     {
       "inputs": [],
+      "name": "EmptyStringParam",
+      "type": "error"
+    },
+    {
+      "inputs": [],
       "name": "IllegalOrder",
       "type": "error"
     },
@@ -75,93 +80,7 @@ export default {
     },
     {
       "inputs": [],
-      "name": "accounting",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function",
-      "constant": true
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "name": "allRegistries",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "version",
-          "type": "uint256"
-        },
-        {
-          "internalType": "address",
-          "name": "creator",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "combo",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function",
-      "constant": true
-    },
-    {
-      "inputs": [],
-      "name": "authorityFactory",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function",
-      "constant": true
-    },
-    {
-      "inputs": [],
-      "name": "comboCollCoreFactory",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function",
-      "constant": true
-    },
-    {
-      "inputs": [],
       "name": "comboCollProxy",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function",
-      "constant": true
-    },
-    {
-      "inputs": [],
-      "name": "lockerFactory",
       "outputs": [
         {
           "internalType": "address",
@@ -209,6 +128,34 @@ export default {
       "constant": true
     },
     {
+      "inputs": [],
+      "name": "templateComboCollCore",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [],
+      "name": "templateEscrow",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
       "inputs": [
         {
           "internalType": "address",
@@ -237,59 +184,12 @@ export default {
     },
     {
       "inputs": [],
-      "name": "totalRegistry",
+      "name": "totalCollection",
       "outputs": [
         {
           "internalType": "uint256",
           "name": "",
           "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function",
-      "constant": true
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "pageNum_",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "pageSize_",
-          "type": "uint256"
-        }
-      ],
-      "name": "getRegistries",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "total",
-          "type": "uint256"
-        },
-        {
-          "components": [
-            {
-              "internalType": "uint256",
-              "name": "version",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address",
-              "name": "creator",
-              "type": "address"
-            },
-            {
-              "internalType": "address",
-              "name": "combo",
-              "type": "address"
-            }
-          ],
-          "internalType": "struct ComboCollFactory.Registry[]",
-          "name": "registries",
-          "type": "tuple[]"
         }
       ],
       "stateMutability": "view",
@@ -314,7 +214,7 @@ export default {
           "type": "uint256"
         }
       ],
-      "name": "getRegistriesOf",
+      "name": "getCollections",
       "outputs": [
         {
           "internalType": "uint256",
@@ -322,26 +222,9 @@ export default {
           "type": "uint256"
         },
         {
-          "components": [
-            {
-              "internalType": "uint256",
-              "name": "version",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address",
-              "name": "creator",
-              "type": "address"
-            },
-            {
-              "internalType": "address",
-              "name": "combo",
-              "type": "address"
-            }
-          ],
-          "internalType": "struct ComboCollFactory.Registry[]",
-          "name": "registries",
-          "type": "tuple[]"
+          "internalType": "address[]",
+          "name": "collections",
+          "type": "address[]"
         }
       ],
       "stateMutability": "view",
@@ -354,9 +237,19 @@ export default {
           "internalType": "address",
           "name": "accounting_",
           "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "comboCollCore_",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "escrow_",
+          "type": "address"
         }
       ],
-      "name": "configFactory",
+      "name": "config",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"

@@ -1,23 +1,19 @@
 export default {
   "abi": [
     {
-      "inputs": [],
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "accounting_",
+          "type": "address"
+        }
+      ],
       "stateMutability": "nonpayable",
       "type": "constructor"
     },
     {
       "inputs": [],
       "name": "AlreadyInitialized",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "AlreadyPublicMint",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "ApprovalToAgent",
       "type": "error"
     },
     {
@@ -43,11 +39,6 @@ export default {
     {
       "inputs": [],
       "name": "TransferFailed",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "ZeroAddress",
       "type": "error"
     },
     {
@@ -222,9 +213,9 @@ export default {
       "name": "VERSION",
       "outputs": [
         {
-          "internalType": "uint256",
+          "internalType": "uint8",
           "name": "",
-          "type": "uint256"
+          "type": "uint8"
         }
       ],
       "stateMutability": "view",
@@ -234,20 +225,6 @@ export default {
     {
       "inputs": [],
       "name": "accounting",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function",
-      "constant": true
-    },
-    {
-      "inputs": [],
-      "name": "agent",
       "outputs": [
         {
           "internalType": "address",
@@ -303,20 +280,6 @@ export default {
           "internalType": "uint256[]",
           "name": "",
           "type": "uint256[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function",
-      "constant": true
-    },
-    {
-      "inputs": [],
-      "name": "collectionProxy",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
         }
       ],
       "stateMutability": "view",
@@ -431,20 +394,6 @@ export default {
     },
     {
       "inputs": [],
-      "name": "proxyRegistryAddress",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function",
-      "constant": true
-    },
-    {
-      "inputs": [],
       "name": "renounceOwnership",
       "outputs": [],
       "stateMutability": "nonpayable",
@@ -544,20 +493,6 @@ export default {
       "type": "function"
     },
     {
-      "inputs": [],
-      "name": "vault",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function",
-      "constant": true
-    },
-    {
       "stateMutability": "payable",
       "type": "receive",
       "payable": true
@@ -567,11 +502,6 @@ export default {
         {
           "internalType": "address",
           "name": "creator_",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "accounting_",
           "type": "address"
         },
         {
@@ -734,12 +664,12 @@ export default {
       "inputs": [
         {
           "internalType": "address",
-          "name": "_owner",
+          "name": "owner",
           "type": "address"
         },
         {
           "internalType": "address",
-          "name": "_operator",
+          "name": "operator",
           "type": "address"
         }
       ],
@@ -912,20 +842,7 @@ export default {
       "inputs": [
         {
           "internalType": "address",
-          "name": "newAccounting_",
-          "type": "address"
-        }
-      ],
-      "name": "migrateTo",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "erc20",
+          "name": "token_",
           "type": "address"
         }
       ],
@@ -933,12 +850,7 @@ export default {
       "outputs": [
         {
           "internalType": "uint256",
-          "name": "ethAmount",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "erc20Amount",
+          "name": "amount",
           "type": "uint256"
         }
       ],

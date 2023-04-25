@@ -66,7 +66,7 @@ export default {
     },
     {
       "inputs": [],
-      "name": "logic",
+      "name": "template",
       "outputs": [
         {
           "internalType": "address",

@@ -43,7 +43,17 @@ export default {
     },
     {
       "inputs": [],
+      "name": "IllegalReceiver",
+      "type": "error"
+    },
+    {
+      "inputs": [],
       "name": "NotCollection",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "NotNative",
       "type": "error"
     },
     {
@@ -60,6 +70,25 @@ export default {
       "inputs": [],
       "name": "ZeroPageParam",
       "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address[]",
+          "name": "collections",
+          "type": "address[]"
+        },
+        {
+          "indexed": false,
+          "internalType": "address[]",
+          "name": "receivers",
+          "type": "address[]"
+        }
+      ],
+      "name": "OneComboCollectionReceiverChangedBatch",
+      "type": "event"
     },
     {
       "anonymous": false,
@@ -132,6 +161,55 @@ export default {
     },
     {
       "inputs": [],
+      "name": "_accounting",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "registeredCollections",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "receiver",
+          "type": "address"
+        },
+        {
+          "internalType": "uint64",
+          "name": "indexInColls",
+          "type": "uint64"
+        },
+        {
+          "internalType": "bool",
+          "name": "native",
+          "type": "bool"
+        },
+        {
+          "internalType": "enum ICollectionType.CollectionType",
+          "name": "typ",
+          "type": "uint8"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [],
       "name": "totalSet",
       "outputs": [
         {
@@ -148,19 +226,6 @@ export default {
       "stateMutability": "view",
       "type": "function",
       "constant": true
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address[]",
-          "name": "collections_",
-          "type": "address[]"
-        }
-      ],
-      "name": "initCollectionTypes",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
     },
     {
       "inputs": [
@@ -452,6 +517,110 @@ export default {
           "internalType": "enum ICollectionType.CollectionType[]",
           "name": "collectionTypes",
           "type": "uint8[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address[]",
+          "name": "collections_",
+          "type": "address[]"
+        },
+        {
+          "internalType": "address[]",
+          "name": "receivers_",
+          "type": "address[]"
+        }
+      ],
+      "name": "setReceivers",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address[]",
+          "name": "collections_",
+          "type": "address[]"
+        }
+      ],
+      "name": "registerNonNativeCollections",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "collection_",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "receiver_",
+          "type": "address"
+        }
+      ],
+      "name": "registerNativeCollection",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address[]",
+          "name": "collections_",
+          "type": "address[]"
+        }
+      ],
+      "name": "receiversOf",
+      "outputs": [
+        {
+          "internalType": "address[]",
+          "name": "receivers",
+          "type": "address[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "receiver_",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "pageNum_",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "pageSize_",
+          "type": "uint256"
+        }
+      ],
+      "name": "pageCollectionsOf",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "total",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address[]",
+          "name": "collections",
+          "type": "address[]"
         }
       ],
       "stateMutability": "view",

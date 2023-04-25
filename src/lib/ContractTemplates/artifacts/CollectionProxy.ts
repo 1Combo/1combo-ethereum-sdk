@@ -1,6 +1,32 @@
 export default {
   "abi": [
     {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "accounting_",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "comboCollProxy_",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "setManager_",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "vault_",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
       "inputs": [],
       "name": "CallerNotAllowed",
       "type": "error"
@@ -8,11 +34,6 @@ export default {
     {
       "inputs": [],
       "name": "DuplicateCollections",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "MigrateFailed",
       "type": "error"
     },
     {
@@ -55,48 +76,60 @@ export default {
       "type": "event"
     },
     {
-      "anonymous": false,
-      "inputs": [
+      "inputs": [],
+      "name": "_accounting",
+      "outputs": [
         {
-          "indexed": true,
           "internalType": "address",
-          "name": "from",
+          "name": "",
           "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "to",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "address[]",
-          "name": "collections",
-          "type": "address[]"
         }
       ],
-      "name": "OneComboCollectionMigrated",
-      "type": "event"
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
     },
     {
-      "anonymous": false,
-      "inputs": [
+      "inputs": [],
+      "name": "_comboCollProxy",
+      "outputs": [
         {
-          "indexed": true,
           "internalType": "address",
-          "name": "previousOwner",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "newOwner",
+          "name": "",
           "type": "address"
         }
       ],
-      "name": "OwnershipTransferred",
-      "type": "event"
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [],
+      "name": "_setManager",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [],
+      "name": "_vault",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -119,57 +152,15 @@ export default {
       "constant": true
     },
     {
-      "inputs": [],
-      "name": "owner",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function",
-      "constant": true
-    },
-    {
-      "inputs": [],
-      "name": "renounceOwnership",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "newOwner",
-          "type": "address"
-        }
-      ],
-      "name": "transferOwnership",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "accounting_",
-          "type": "address"
-        }
-      ],
-      "name": "config",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
       "inputs": [
         {
           "internalType": "address",
           "name": "collection_",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "creator_",
           "type": "address"
         }
       ],
@@ -327,9 +318,9 @@ export default {
           "type": "address"
         },
         {
-          "internalType": "bool",
-          "name": "payInEther_",
-          "type": "bool"
+          "internalType": "address",
+          "name": "token_",
+          "type": "address"
         },
         {
           "components": [
@@ -386,24 +377,6 @@ export default {
       "stateMutability": "view",
       "type": "function",
       "constant": true
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address[]",
-          "name": "collections_",
-          "type": "address[]"
-        },
-        {
-          "internalType": "address",
-          "name": "newAccounting_",
-          "type": "address"
-        }
-      ],
-      "name": "migrate",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
     },
     {
       "inputs": [

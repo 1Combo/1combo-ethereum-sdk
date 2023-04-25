@@ -1,9 +1,35 @@
 export default {
   "abi": [
     {
-      "inputs": [],
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "accounting_",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "externals_",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "emergencyPause_",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "weth_",
+          "type": "address"
+        }
+      ],
       "stateMutability": "nonpayable",
       "type": "constructor"
+    },
+    {
+      "inputs": [],
+      "name": "AmountMismatched",
+      "type": "error"
     },
     {
       "inputs": [],
@@ -21,14 +47,49 @@ export default {
       "type": "error"
     },
     {
-      "inputs": [],
-      "name": "UnexpectedEtherBalance",
-      "type": "error"
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "previousAdmin",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "newAdmin",
+          "type": "address"
+        }
+      ],
+      "name": "AdminChanged",
+      "type": "event"
     },
     {
-      "inputs": [],
-      "name": "ZeroAddress",
-      "type": "error"
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "beacon",
+          "type": "address"
+        }
+      ],
+      "name": "BeaconUpgraded",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint8",
+          "name": "version",
+          "type": "uint8"
+        }
+      ],
+      "name": "Initialized",
+      "type": "event"
     },
     {
       "anonymous": false,
@@ -42,19 +103,13 @@ export default {
         {
           "indexed": true,
           "internalType": "address",
-          "name": "erc20",
+          "name": "token",
           "type": "address"
         },
         {
           "indexed": false,
           "internalType": "uint256",
-          "name": "erc20Amount",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "ethAmount",
+          "name": "amount",
           "type": "uint256"
         }
       ],
@@ -81,19 +136,52 @@ export default {
       "type": "event"
     },
     {
+      "anonymous": false,
       "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "Paused",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "Unpaused",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "implementation",
+          "type": "address"
+        }
+      ],
+      "name": "Upgraded",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "_accounting",
+      "outputs": [
         {
           "internalType": "address",
           "name": "",
           "type": "address"
-        }
-      ],
-      "name": "collectionEarningsERC20",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
         }
       ],
       "stateMutability": "view",
@@ -101,19 +189,55 @@ export default {
       "constant": true
     },
     {
-      "inputs": [
+      "inputs": [],
+      "name": "_emergencyPause",
+      "outputs": [
         {
           "internalType": "address",
           "name": "",
           "type": "address"
         }
       ],
-      "name": "collectionEarningsEther",
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [],
+      "name": "_externals",
       "outputs": [
         {
-          "internalType": "uint256",
+          "internalType": "address",
           "name": "",
-          "type": "uint256"
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [],
+      "name": "_weth",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [],
+      "name": "agent",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
         }
       ],
       "stateMutability": "view",
@@ -133,31 +257,16 @@ export default {
           "type": "address"
         }
       ],
-      "name": "collectionTotalClaimedERC20",
+      "name": "ledgers",
       "outputs": [
         {
           "internalType": "uint256",
-          "name": "",
+          "name": "pending",
           "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function",
-      "constant": true
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "name": "collectionTotalClaimedEther",
-      "outputs": [
+        },
         {
           "internalType": "uint256",
-          "name": "",
+          "name": "totalClaimed",
           "type": "uint256"
         }
       ],
@@ -180,19 +289,13 @@ export default {
       "constant": true
     },
     {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "name": "platformEarningsERC20",
+      "inputs": [],
+      "name": "paused",
       "outputs": [
         {
-          "internalType": "uint256",
+          "internalType": "bool",
           "name": "",
-          "type": "uint256"
+          "type": "bool"
         }
       ],
       "stateMutability": "view",
@@ -201,12 +304,12 @@ export default {
     },
     {
       "inputs": [],
-      "name": "platformEarningsEther",
+      "name": "proxiableUUID",
       "outputs": [
         {
-          "internalType": "uint256",
+          "internalType": "bytes32",
           "name": "",
-          "type": "uint256"
+          "type": "bytes32"
         }
       ],
       "stateMutability": "view",
@@ -234,15 +337,61 @@ export default {
       "type": "function"
     },
     {
-      "stateMutability": "payable",
-      "type": "receive",
-      "payable": true
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newImplementation",
+          "type": "address"
+        }
+      ],
+      "name": "upgradeTo",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
     },
     {
       "inputs": [
         {
           "internalType": "address",
-          "name": "accounting_",
+          "name": "newImplementation",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        }
+      ],
+      "name": "upgradeToAndCall",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function",
+      "payable": true
+    },
+    {
+      "stateMutability": "payable",
+      "type": "receive",
+      "payable": true
+    },
+    {
+      "inputs": [],
+      "name": "pause",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "unpause",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "owner_",
           "type": "address"
         }
       ],
@@ -255,11 +404,11 @@ export default {
       "inputs": [
         {
           "internalType": "address",
-          "name": "collection_",
+          "name": "newCollection_",
           "type": "address"
         }
       ],
-      "name": "initForNewCollection",
+      "name": "initLedger",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -282,9 +431,9 @@ export default {
           "type": "uint256"
         },
         {
-          "internalType": "bool",
-          "name": "payInEther_",
-          "type": "bool"
+          "internalType": "address",
+          "name": "token_",
+          "type": "address"
         },
         {
           "internalType": "address[]",
@@ -311,9 +460,9 @@ export default {
           "type": "address"
         },
         {
-          "internalType": "bool",
-          "name": "payInEther_",
-          "type": "bool"
+          "internalType": "address",
+          "name": "token_",
+          "type": "address"
         },
         {
           "internalType": "address[]",
@@ -333,18 +482,11 @@ export default {
       "payable": true
     },
     {
-      "inputs": [],
-      "name": "claim",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
       "inputs": [
         {
-          "internalType": "address",
-          "name": "targetERC20_",
-          "type": "address"
+          "internalType": "address[]",
+          "name": "tokens_",
+          "type": "address[]"
         },
         {
           "internalType": "address[]",
@@ -361,55 +503,8 @@ export default {
       "inputs": [
         {
           "internalType": "address[]",
-          "name": "collections_",
+          "name": "tokens_",
           "type": "address[]"
-        }
-      ],
-      "name": "claimablesOfCollections",
-      "outputs": [
-        {
-          "components": [
-            {
-              "internalType": "address",
-              "name": "token",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "ethAmount",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "erc20Amount",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "ethTotalClaimed",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "erc20TotalClaimed",
-              "type": "uint256"
-            }
-          ],
-          "internalType": "struct IVault.ClaimableDetail[]",
-          "name": "",
-          "type": "tuple[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function",
-      "constant": true
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "targetERC20_",
-          "type": "address"
         },
         {
           "internalType": "address[]",
@@ -423,51 +518,9 @@ export default {
           "components": [
             {
               "internalType": "address",
-              "name": "token",
+              "name": "collection",
               "type": "address"
             },
-            {
-              "internalType": "uint256",
-              "name": "ethAmount",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "erc20Amount",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "ethTotalClaimed",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "erc20TotalClaimed",
-              "type": "uint256"
-            }
-          ],
-          "internalType": "struct IVault.ClaimableDetail[]",
-          "name": "",
-          "type": "tuple[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function",
-      "constant": true
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address[]",
-          "name": "receivers_",
-          "type": "address[]"
-        }
-      ],
-      "name": "claimablesOfReceivers",
-      "outputs": [
-        {
-          "components": [
             {
               "internalType": "address",
               "name": "token",
@@ -475,74 +528,12 @@ export default {
             },
             {
               "internalType": "uint256",
-              "name": "ethAmount",
+              "name": "pending",
               "type": "uint256"
             },
             {
               "internalType": "uint256",
-              "name": "erc20Amount",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "ethTotalClaimed",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "erc20TotalClaimed",
-              "type": "uint256"
-            }
-          ],
-          "internalType": "struct IVault.ClaimableDetail[]",
-          "name": "",
-          "type": "tuple[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function",
-      "constant": true
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "targetERC20_",
-          "type": "address"
-        },
-        {
-          "internalType": "address[]",
-          "name": "receivers_",
-          "type": "address[]"
-        }
-      ],
-      "name": "claimablesOfReceivers",
-      "outputs": [
-        {
-          "components": [
-            {
-              "internalType": "address",
-              "name": "token",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "ethAmount",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "erc20Amount",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "ethTotalClaimed",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "erc20TotalClaimed",
+              "name": "totalClaimed",
               "type": "uint256"
             }
           ],

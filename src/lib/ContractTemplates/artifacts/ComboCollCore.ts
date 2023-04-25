@@ -1,18 +1,19 @@
 export default {
   "abi": [
     {
-      "inputs": [],
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "accounting_",
+          "type": "address"
+        }
+      ],
       "stateMutability": "nonpayable",
       "type": "constructor"
     },
     {
       "inputs": [],
       "name": "AlreadyInitialized",
-      "type": "error"
-    },
-    {
-      "inputs": [],
-      "name": "ApprovalToAgent",
       "type": "error"
     },
     {
@@ -228,6 +229,20 @@ export default {
     },
     {
       "inputs": [],
+      "name": "VERSION",
+      "outputs": [
+        {
+          "internalType": "uint8",
+          "name": "",
+          "type": "uint8"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [],
       "name": "accounting",
       "outputs": [
         {
@@ -239,38 +254,6 @@ export default {
       "stateMutability": "view",
       "type": "function",
       "constant": true
-    },
-    {
-      "inputs": [],
-      "name": "agent",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function",
-      "constant": true
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "operator_",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "tokenId_",
-          "type": "uint256"
-        }
-      ],
-      "name": "approve",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
     },
     {
       "inputs": [
@@ -294,12 +277,22 @@ export default {
     },
     {
       "inputs": [],
-      "name": "comboCollProxy",
+      "name": "collectionMeta",
       "outputs": [
         {
           "internalType": "address",
-          "name": "",
+          "name": "creator",
           "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "escrow",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "price",
+          "type": "uint256"
         }
       ],
       "stateMutability": "view",
@@ -361,31 +354,6 @@ export default {
       "constant": true
     },
     {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "owner_",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "operator_",
-          "type": "address"
-        }
-      ],
-      "name": "isApprovedForAll",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function",
-      "constant": true
-    },
-    {
       "inputs": [],
       "name": "owner",
       "outputs": [
@@ -408,20 +376,6 @@ export default {
         }
       ],
       "name": "ownerOf",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function",
-      "constant": true
-    },
-    {
-      "inputs": [],
-      "name": "proxyRegistryAddress",
       "outputs": [
         {
           "internalType": "address",
@@ -495,24 +449,6 @@ export default {
       "inputs": [
         {
           "internalType": "address",
-          "name": "operator_",
-          "type": "address"
-        },
-        {
-          "internalType": "bool",
-          "name": "approved_",
-          "type": "bool"
-        }
-      ],
-      "name": "setApprovalForAll",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
           "name": "from",
           "type": "address"
         },
@@ -546,20 +482,6 @@ export default {
       "type": "function"
     },
     {
-      "inputs": [],
-      "name": "vault",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function",
-      "constant": true
-    },
-    {
       "stateMutability": "payable",
       "type": "receive",
       "payable": true
@@ -568,8 +490,18 @@ export default {
       "inputs": [
         {
           "internalType": "address",
-          "name": "accounting_",
+          "name": "creator_",
           "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "escrow_",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "price_",
+          "type": "uint256"
         },
         {
           "components": [
@@ -694,6 +626,67 @@ export default {
         }
       ],
       "name": "supportsInterface",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "operator_",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenId_",
+          "type": "uint256"
+        }
+      ],
+      "name": "approve",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "operator_",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "approved_",
+          "type": "bool"
+        }
+      ],
+      "name": "setApprovalForAll",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "owner_",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "operator_",
+          "type": "address"
+        }
+      ],
+      "name": "isApprovedForAll",
       "outputs": [
         {
           "internalType": "bool",
@@ -1042,6 +1035,19 @@ export default {
       "type": "function"
     },
     {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "newPrice_",
+          "type": "uint256"
+        }
+      ],
+      "name": "setPrice",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
       "inputs": [],
       "name": "getComboRules",
       "outputs": [
@@ -1175,7 +1181,7 @@ export default {
       "inputs": [
         {
           "internalType": "address",
-          "name": "erc20",
+          "name": "token_",
           "type": "address"
         }
       ],
@@ -1183,12 +1189,7 @@ export default {
       "outputs": [
         {
           "internalType": "uint256",
-          "name": "ethAmount",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "erc20Amount",
+          "name": "amount",
           "type": "uint256"
         }
       ],
